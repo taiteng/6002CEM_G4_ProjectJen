@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'user_login.dart';
 import 'login_register_bg.dart';
 
+class usernameFieldValidator{
+  static String? validate(String value){
+    if(value.isEmpty)
+      return 'Username must be filled';
+    else if(!value.isEmpty && !RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
+      return "Enter correct name";
+    }else{
+      return null;
+    }
+  }
+}
+
 class UserRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

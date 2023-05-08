@@ -2,6 +2,30 @@ import 'package:flutter/material.dart';
 import 'user_register.dart';
 import 'login_register_bg.dart';
 
+class emailFieldValidator{
+  static String? validate(String value){
+    if(value.isEmpty)
+      return 'Email must be filled';
+    else if(!value.isEmpty && !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}').hasMatch(value)){
+      return "Enter correct email";
+    }else{
+      return null;
+    }
+  }
+}
+
+class passwordFieldValidator{
+  static String? validate(String value){
+    if(value.isEmpty)
+      return 'Password must be filled';
+    if(value != null && value.length<8){
+      return 'Enter min. 8 characters';
+    }else{
+      return null;
+    }
+  }
+}
+
 class UserLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
