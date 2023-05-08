@@ -27,6 +27,9 @@ class passwordFieldValidator{
 }
 
 class UserLogin extends StatelessWidget {
+
+  const UserLogin({super.key});
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -94,6 +97,12 @@ class UserLogin extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: ElevatedButton(
                 onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.0),
+                  ),
+                ),
                 child: Container(
                   alignment: Alignment.center,
                   height: 50.0,

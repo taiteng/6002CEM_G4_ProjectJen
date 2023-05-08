@@ -14,7 +14,18 @@ class usernameFieldValidator{
   }
 }
 
-class UserRegister extends StatelessWidget {
+class UserRegister extends StatefulWidget {
+
+  const UserRegister({super.key});
+
+  @override
+  State<UserRegister> createState() => _UserRegisterState();
+}
+
+class _UserRegisterState extends State<UserRegister> {
+
+  String? dropdownValue;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -90,10 +101,37 @@ class UserRegister extends StatelessWidget {
             SizedBox(height: size.height * 0.05),
 
             Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              child: DropdownButton(
+                value: dropdownValue,
+                isExpanded: true,
+                hint: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Choose your role'),
+                ),
+                items: ['Renter', 'Owner'].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                  });
+                },
+              ),
+            ),
+
+            SizedBox(height: size.height * 0.05),
+
+            Container(
               alignment: Alignment.centerRight,
               margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: ElevatedButton(
                 onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.0),
+                  ),
+                ),
                 child: Container(
                   alignment: Alignment.center,
                   height: 50.0,
