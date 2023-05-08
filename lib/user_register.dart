@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'user_register.dart';
+import 'user_login.dart';
 import 'login_register_bg.dart';
 
-class UserLogin extends StatelessWidget {
+class UserRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -16,13 +16,37 @@ class UserLogin extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: const Text(
-                "LOGIN",
+                "REGISTER",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF2661FA),
                     fontSize: 36
                 ),
                 textAlign: TextAlign.left,
+              ),
+            ),
+
+            SizedBox(height: size.height * 0.03),
+
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              child: const TextField(
+                decoration: InputDecoration(
+                    labelText: "Name"
+                ),
+              ),
+            ),
+
+            SizedBox(height: size.height * 0.03),
+
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              child: const TextField(
+                decoration: InputDecoration(
+                    labelText: "Mobile Number"
+                ),
               ),
             ),
 
@@ -51,18 +75,6 @@ class UserLogin extends StatelessWidget {
               ),
             ),
 
-            Container(
-              alignment: Alignment.centerRight,
-              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: const Text(
-                "Forgot your password?",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Color(0XFF2661FA)
-                ),
-              ),
-            ),
-
             SizedBox(height: size.height * 0.05),
 
             Container(
@@ -85,11 +97,11 @@ class UserLogin extends StatelessWidget {
                   ),
                   padding: const EdgeInsets.all(0),
                   child: const Text(
-                    "LOGIN",
+                    "SIGN UP",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -101,10 +113,10 @@ class UserLogin extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
               child: GestureDetector(
                 onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserRegister()))
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserLogin()))
                 },
                 child: const Text(
-                  "Don't Have an Account? Sign up",
+                  "Already Have an Account? Sign in",
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
