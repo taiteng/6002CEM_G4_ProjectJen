@@ -1,12 +1,11 @@
 import 'dart:async';
-//import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'user_login.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:projectjen/auth.dart';
 
 Future main() async{
-  //WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -14,11 +13,10 @@ class MyApp extends StatelessWidget {
 
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Project Jen',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -39,13 +37,11 @@ class _SplashScreenState extends State<SplashScreen>{
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3),
+    Timer(const Duration(seconds: 3),
             ()=>Navigator.pushReplacement(context,
-            MaterialPageRoute(builder:
-                (context) =>
-                UserLogin()
-            )
-        )
+            MaterialPageRoute(builder: (context) => const Auth(),
+            ),
+        ),
     );
   }
 

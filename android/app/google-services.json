@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "715088160645",
+    "firebase_url": "https://projectjen-624d5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "projectjen-624d5",
+    "storage_bucket": "projectjen-624d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715088160645:android:a3970f4bc1e245d20306ec",
+        "android_client_info": {
+          "package_name": "com.example.projectjen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "715088160645-f2pm2nf1d7rovet86gs3nbgvodpo0u7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfOPsDvUQltnQiLnplHF2-jxA5FO6GAcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "715088160645-f2pm2nf1d7rovet86gs3nbgvodpo0u7a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projectjen/home.dart';
 import 'user_login.dart';
 import 'login_register_bg.dart';
-
-class usernameFieldValidator{
-  static String? validate(String value){
-    if(value.isEmpty)
-      return 'Username must be filled';
-    else if(!value.isEmpty && !RegExp(r'^[a-z A-Z]+$').hasMatch(value)){
-      return "Enter correct name";
-    }else{
-      return null;
-    }
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserRegister extends StatefulWidget {
 
@@ -24,7 +15,88 @@ class UserRegister extends StatefulWidget {
 
 class _UserRegisterState extends State<UserRegister> {
 
+  @override
+  void dispose(){
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    usernameController.dispose();
+    phoneNumberController.dispose();
+    super.dispose();
+
+  }
+
   String? dropdownValue;
+
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final usernameController = TextEditingController();
+
+  void signUp() async{
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    try{
+      if(passwordController.text == confirmPasswordController.text){
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+
+        await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+          'Email' : emailController.text,
+          'Phone' : phoneNumberController.text,
+          'Password' : passwordController.text,
+          'Username' : usernameController.text,
+          'ProfilePic' : 'https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+          'Role' : dropdownValue.toString(),
+        });
+
+        Navigator.pop(context);
+
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const Home()));
+      }
+      else{
+        Navigator.pop(context);
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const AlertDialog(
+              backgroundColor: Colors.deepPurpleAccent,
+              title: Text('Password does not match!'),
+            );
+          },
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      showErrorMessage(e.code);
+    }
+  }
+
+  void showErrorMessage(String message){
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepPurpleAccent,
+          title: Text(message),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,150 +104,244 @@ class _UserRegisterState extends State<UserRegister> {
 
     return Scaffold(
       body: Background(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: const Text(
-                "REGISTER",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFff4a39),
-                    fontSize: 36
-                ),
-                textAlign: TextAlign.left,
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.03),
-
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: const TextField(
-                decoration: InputDecoration(
-                    labelText: "Name"
-                ),
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.03),
-
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: const TextField(
-                decoration: InputDecoration(
-                    labelText: "Mobile Number"
-                ),
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.03),
-
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: const TextField(
-                decoration: InputDecoration(
-                    labelText: "Username"
-                ),
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.03),
-
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: const TextField(
-                decoration: InputDecoration(
-                    labelText: "Password"
-                ),
-                obscureText: true,
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.05),
-
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: DropdownButton(
-                value: dropdownValue,
-                isExpanded: true,
-                hint: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Choose your role'),
-                ),
-                items: ['Renter', 'Owner'].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
-                },
-              ),
-            ),
-
-            SizedBox(height: size.height * 0.05),
-
-            Container(
-              alignment: Alignment.centerRight,
-              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
-                  ),
-                ),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50.0,
-                  width: size.width * 0.5,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(80.0),
-                      gradient: const LinearGradient(
-                          colors: [
-                            Color.fromARGB(255, 255, 136, 34),
-                            Color.fromARGB(255, 255, 177, 41)
-                          ]
-                      )
-                  ),
-                  padding: const EdgeInsets.all(0),
-                  child: const Text(
-                    "SIGN UP",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: const Text(
+                  "REGISTER",
+                  style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFFe7494b),
+                      fontSize: 36
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.email_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                              labelText: "Email"
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.phone_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: phoneNumberController,
+                          decoration: const InputDecoration(
+                              labelText: "Phone Number"
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.account_circle_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: usernameController,
+                          decoration: const InputDecoration(
+                              labelText: "Username"
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.password_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: passwordController,
+                          obscuringCharacter: '*',
+                          decoration: const InputDecoration(
+                              labelText: "Password"
+                          ),
+                          obscureText: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.password_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: confirmPasswordController,
+                          obscuringCharacter: '*',
+                          decoration: const InputDecoration(
+                              labelText: "Confirm Password"
+                          ),
+                          obscureText: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Icon(Icons.person_outline_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                    SizedBox(
+                      width: 300,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: DropdownButton(
+                          value: dropdownValue,
+                          isExpanded: true,
+                          hint: const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Choose your role'),
+                          ),
+                          items: ['Renter', 'Owner'].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              dropdownValue = newValue!;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 5),
+
+              Container(
+                alignment: Alignment.centerRight,
+                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: ElevatedButton(
+                  onPressed: signUp,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
+                    ),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50.0,
+                    width: size.width * 0.5,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80.0),
+                        gradient: const LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 255, 136, 34),
+                              Color.fromARGB(255, 255, 177, 41)
+                            ]
+                        )
+                    ),
+                    padding: const EdgeInsets.all(0),
+                    child: const Text(
+                      "SIGN UP",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            Container(
-              alignment: Alignment.centerRight,
-              margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-              child: GestureDetector(
-                onTap: () => {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserLogin()))
-                },
-                child: const Text(
-                  "Already Have an Account? Sign in",
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFff4a39),
+              Container(
+                alignment: Alignment.centerRight,
+                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                child: GestureDetector(
+                  onTap: () => {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UserLogin()))
+                  },
+                  child: const Text(
+                    "Already Have an Account? Sign in",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFe7494b),
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
