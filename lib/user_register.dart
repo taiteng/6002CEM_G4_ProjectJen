@@ -38,7 +38,7 @@ class _UserRegisterState extends State<UserRegister> {
   final usernameController = TextEditingController();
   final confettiController = ConfettiController();
 
-  bool isPlaying = false;
+  bool isPlaying = true;
 
   void signUp() async{
     showDialog(
@@ -64,20 +64,11 @@ class _UserRegisterState extends State<UserRegister> {
           'Phone' : phoneNumberController.text,
           'Password' : passwordController.text,
           'Username' : usernameController.text,
-          'ProfilePic' : 'https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
+          'ProfilePic' : 'https://media.istockphoto.com/id/1316420668/vector/user-icon-human-person-symbol-social-profile-icon-avatar-login-sign-web-user-symbol.jpg?s=612x612&w=0&k=20&c=AhqW2ssX8EeI2IYFm6-ASQ7rfeBWfrFFV4E87SaFhJE=',
           'Role' : dropdownValue.toString(),
         });
 
-        isPlaying = !isPlaying;
-
         Navigator.pop(context);
-
-        if(isPlaying){
-          confettiController.stop();
-        }
-        else{
-          confettiController.play();
-        }
 
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const Home()));
@@ -123,12 +114,6 @@ class _UserRegisterState extends State<UserRegister> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              ConfettiWidget(
-                confettiController: confettiController,
-                blastDirection: pi / 2,
-                gravity: 0.01,
-              ),
-
               Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -307,11 +292,27 @@ class _UserRegisterState extends State<UserRegister> {
 
               const SizedBox(height: 5),
 
+              ConfettiWidget(
+                confettiController: confettiController,
+                blastDirection: pi / 2,
+                gravity: 0.01,
+              ),
               Container(
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: ElevatedButton(
-                  onPressed: signUp,
+                  onPressed: () {
+                    signUp();
+
+                    isPlaying = !isPlaying;
+
+                    if(isPlaying){
+                      confettiController.stop();
+                    }
+                    else{
+                      confettiController.play();
+                    }
+                    },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
