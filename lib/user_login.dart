@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectjen/home.dart';
-import 'user_register.dart';
-import 'login_register_bg.dart';
+import 'package:projectjen/user_forgot_password.dart';
+import 'package:projectjen/user_register.dart';
+import 'package:projectjen/login_register_bg.dart';
 
 class UserLogin extends StatefulWidget {
 
@@ -45,7 +46,7 @@ class _UserLoginState extends State<UserLogin> {
           context: context,
           builder: (context) {
             return const AlertDialog(
-              backgroundColor: Colors.deepPurpleAccent,
+              backgroundColor: Colors.pinkAccent,
               title: Text('Incorrect Email'),
             );
           },
@@ -56,7 +57,7 @@ class _UserLoginState extends State<UserLogin> {
           context: context,
           builder: (context) {
             return const AlertDialog(
-              backgroundColor: Colors.deepPurpleAccent,
+              backgroundColor: Colors.pinkAccent,
               title: Text('Incorrect Password'),
             );
           },
@@ -144,11 +145,16 @@ class _UserLoginState extends State<UserLogin> {
               Container(
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: const Text(
-                  "Forgot your password?",
-                  style: TextStyle(
+                child: GestureDetector(
+                  onTap: () => {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserForgotPassword()))
+                  },
+                  child: const Text(
+                    "Forgot Password?",
+                    style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFFe7494b),
+                    ),
                   ),
                 ),
               ),
@@ -202,7 +208,7 @@ class _UserLoginState extends State<UserLogin> {
                   child: const Text(
                     "Don't Have an Account? Sign up",
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFe7494b),
                     ),

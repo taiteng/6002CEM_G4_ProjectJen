@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:projectjen/home.dart';
 import 'user_login.dart';
 import 'login_register_bg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:confetti/confetti.dart';
 
 class UserRegister extends StatefulWidget {
 
@@ -22,8 +25,8 @@ class _UserRegisterState extends State<UserRegister> {
     confirmPasswordController.dispose();
     usernameController.dispose();
     phoneNumberController.dispose();
+    confettiController.dispose();
     super.dispose();
-
   }
 
   String? dropdownValue;
@@ -33,6 +36,9 @@ class _UserRegisterState extends State<UserRegister> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final usernameController = TextEditingController();
+  final confettiController = ConfettiController();
+
+  bool isPlaying = false;
 
   void signUp() async{
     showDialog(
@@ -62,7 +68,16 @@ class _UserRegisterState extends State<UserRegister> {
           'Role' : dropdownValue.toString(),
         });
 
+        isPlaying = !isPlaying;
+
         Navigator.pop(context);
+
+        if(isPlaying){
+          confettiController.stop();
+        }
+        else{
+          confettiController.play();
+        }
 
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const Home()));
@@ -74,8 +89,8 @@ class _UserRegisterState extends State<UserRegister> {
           context: context,
           builder: (context) {
             return const AlertDialog(
-              backgroundColor: Colors.deepPurpleAccent,
-              title: Text('Password does not match!'),
+              backgroundColor: Colors.pinkAccent,
+              title: Text('Password Does Not Match'),
             );
           },
         );
@@ -91,7 +106,7 @@ class _UserRegisterState extends State<UserRegister> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.pinkAccent,
           title: Text(message),
         );
       },
@@ -108,6 +123,12 @@ class _UserRegisterState extends State<UserRegister> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              ConfettiWidget(
+                confettiController: confettiController,
+                blastDirection: pi / 2,
+                gravity: 0.01,
+              ),
+
               Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(horizontal: 40),
