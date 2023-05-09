@@ -19,12 +19,13 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
 
+
 flutter:
 
   uses-material-design: true
 
   assets:
-    - assets/images/assets.png
+    - assets/images/logo.png
     - assets/images/main.png
     - assets/images/top1.png
     - assets/images/top2.png

@@ -11,8 +11,8 @@ Future main() async{
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
 
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -58,8 +58,8 @@ class _SplashScreenState extends State<SplashScreen>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //logo
-            Image.asset('assets/images/assets.png', height: 120,),
-            const SizedBox(height: 20,),
+            Image.asset('assets/images/logo.png', height: 500,),
+            const SizedBox(height: 5,),
             const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation(Colors.black),
             )
