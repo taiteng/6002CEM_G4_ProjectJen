@@ -42,7 +42,7 @@ class _UserRegisterState extends State<UserRegister> {
                 "REGISTER",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF2661FA),
+                    color: Color(0xFFff4a39),
                     fontSize: 36
                 ),
                 textAlign: TextAlign.left,
@@ -170,7 +170,7 @@ class _UserRegisterState extends State<UserRegister> {
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF2661FA)
+                      color: Color(0xFFff4a39),
                   ),
                 ),
               ),
