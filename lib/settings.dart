@@ -37,8 +37,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           IconButton(
             onPressed: signOut,
-            icon: const Icon(Icons.logout_rounded
-            ),
+            icon: const Icon(Icons.logout_rounded),
           ),
         ],
       ),
