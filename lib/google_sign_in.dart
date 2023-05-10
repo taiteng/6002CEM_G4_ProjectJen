@@ -39,6 +39,7 @@ class GoogleSignInProvider extends ChangeNotifier{
         'ProfilePic' : user!.photoURL,
         'Role' : 'Renter',
         'LoginMethod' : 'Google',
+        'UID' : FirebaseAuth.instance.currentUser!.uid,
       });
     } catch (e) {
       print(e.toString());

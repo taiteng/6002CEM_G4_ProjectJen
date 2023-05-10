@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/home.dart';
 import 'user_login.dart';
 import 'login_register_bg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:confetti/confetti.dart';
 
 class UserRegister extends StatefulWidget {
 
@@ -25,7 +25,6 @@ class _UserRegisterState extends State<UserRegister> {
     confirmPasswordController.dispose();
     usernameController.dispose();
     phoneNumberController.dispose();
-    confettiController.dispose();
     super.dispose();
   }
 
@@ -36,20 +35,8 @@ class _UserRegisterState extends State<UserRegister> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final usernameController = TextEditingController();
-  final confettiController = ConfettiController();
-
-  bool isPlaying = true;
 
   void signUp() async{
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
     try{
       if(passwordController.text == confirmPasswordController.text){
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -66,16 +53,14 @@ class _UserRegisterState extends State<UserRegister> {
           'ProfilePic' : 'https://media.istockphoto.com/id/1316420668/vector/user-icon-human-person-symbol-social-profile-icon-avatar-login-sign-web-user-symbol.jpg?s=612x612&w=0&k=20&c=AhqW2ssX8EeI2IYFm6-ASQ7rfeBWfrFFV4E87SaFhJE=',
           'Role' : dropdownValue.toString(),
           'LoginMethod' : 'Email',
+          'UID' : FirebaseAuth.instance.currentUser!.uid,
         });
 
-        Navigator.pop(context);
-
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const Home()));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
+        });
       }
       else{
-        Navigator.pop(context);
-
         showDialog(
           context: context,
           builder: (context) {
@@ -292,27 +277,11 @@ class _UserRegisterState extends State<UserRegister> {
 
               const SizedBox(height: 5),
 
-              ConfettiWidget(
-                confettiController: confettiController,
-                blastDirection: pi / 2,
-                gravity: 0.01,
-              ),
               Container(
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: ElevatedButton(
-                  onPressed: () {
-                    signUp();
-
-                    isPlaying = !isPlaying;
-
-                    if(isPlaying){
-                      confettiController.stop();
-                    }
-                    else{
-                      confettiController.play();
-                    }
-                    },
+                  onPressed: signUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shape: RoundedRectangleBorder(

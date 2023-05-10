@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/settings.dart';
+import 'package:projectjen/user_settings.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 
 class Home extends StatefulWidget {
