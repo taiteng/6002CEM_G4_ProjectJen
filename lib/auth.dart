@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/home.dart';
 import 'package:projectjen/user_login.dart';
 
 class Auth extends StatelessWidget {

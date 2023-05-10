@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectjen/google_sign_in.dart';
+import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/home.dart';
 import 'package:projectjen/user_forgot_password.dart';
 import 'package:projectjen/user_register.dart';
@@ -19,7 +20,7 @@ class UserLogin extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'User Login',
         theme: ThemeData(
-          primarySwatch: Colors.cyan,
+          primarySwatch: Colors.deepOrange,
         ),
         home: UserLoginPage(),
       ),
@@ -42,28 +43,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final passwordController = TextEditingController();
 
   void signIn() async{
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
     try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
 
-      Navigator.pop(context);
-
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const Home()));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
+      });
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-
       if(e.code == 'user-not-found'){
         showDialog(
           context: context,

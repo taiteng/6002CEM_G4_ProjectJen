@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:projectjen/home.dart';
-import 'package:projectjen/settings.dart';
+import 'package:projectjen/owner_home.dart';
+import 'package:projectjen/user_settings.dart';
+import 'package:projectjen/user_task.dart';
 
 class HiddenDrawer extends StatefulWidget {
-  const HiddenDrawer({Key? key}) : super(key: key);
+  const HiddenDrawer({Key? key,}) : super(key: key);
 
   @override
   State<HiddenDrawer> createState() => _HiddenDrawerState();
@@ -41,7 +43,16 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           selectedStyle: myTextStyle,
           colorLineSelected: Colors.deepPurpleAccent,
         ),
-        Settings(),
+        UserSettings(),
+      ),
+      ScreenHiddenDrawer(
+        ItemHiddenMenu(
+          name: 'Task',
+          baseStyle: myTextStyle,
+          selectedStyle: myTextStyle,
+          colorLineSelected: Colors.deepPurpleAccent,
+        ),
+        UserTask(),
       ),
     ];
   }
