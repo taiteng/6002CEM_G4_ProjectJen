@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/owner_home.dart';
 import 'package:projectjen/user_login.dart';
 import 'package:projectjen/user_function.dart';
+import 'package:projectjen/user_recently_viewed.dart';
 import 'google_sign_in.dart';
 import 'package:provider/provider.dart';
 
@@ -109,6 +110,16 @@ class _UserSettingsState extends State<UserSettings> {
                       leading: Icon(Icons.account_circle),
                       title: Text(data['Username']),
                     ),
+                    const Divider(),
+                    GestureDetector(
+                      onTap: () => {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRecentlyViewed(),),),
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.remove_red_eye),
+                        title: Text('Recently Viewed'),
+                      ),
+                    ),
                     SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -132,7 +143,7 @@ class _UserSettingsState extends State<UserSettings> {
                     if(data['Role'] == 'Owner')
                       GestureDetector(
                         onTap: () => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome()))
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome(),),),
                         },
                         child: ListTile(
                           leading: Icon(Icons.people),
@@ -153,6 +164,7 @@ class _UserSettingsState extends State<UserSettings> {
                         title: Text('Edit Notifications'),
                       ),
                     ),
+                    const Divider(),
                     GestureDetector(
                       onTap: () {},
                       child: ListTile(
@@ -160,6 +172,7 @@ class _UserSettingsState extends State<UserSettings> {
                         title: Text('Edit Profile'),
                       ),
                     ),
+                    const Divider(),
                     GestureDetector(
                       onTap: signOut,
                       child: ListTile(
