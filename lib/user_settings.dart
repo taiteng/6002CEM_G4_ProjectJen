@@ -20,8 +20,7 @@ class _UserSettingsState extends State<UserSettings> {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  final CollectionReference _user = FirebaseFirestore.instance.collection(
-      'Users');
+  final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
 
   Future<String> getUsername() async {
     final String? uid = user?.uid.toString();
