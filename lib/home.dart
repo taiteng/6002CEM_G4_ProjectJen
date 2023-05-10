@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/property_list_model.dart';
-import 'package:projectjen/user_settings.dart';
-import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
+import 'package:projectjen/get_property_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
