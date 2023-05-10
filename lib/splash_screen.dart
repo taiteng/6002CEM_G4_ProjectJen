@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Project Jen',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepOrange,
       ),
       home: const SplashScreen(),
     );
