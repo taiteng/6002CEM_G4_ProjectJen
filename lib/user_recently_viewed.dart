@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class UserRecentlyViewed extends StatefulWidget {
+  const UserRecentlyViewed({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<UserRecentlyViewed> createState() => _UserRecentlyViewedState();
 }
 
-class _HomeState extends State<Home> {
-
+class _UserRecentlyViewedState extends State<UserRecentlyViewed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
