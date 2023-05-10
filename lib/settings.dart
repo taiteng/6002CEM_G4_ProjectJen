@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/user_login.dart';
 import 'package:projectjen/user_function.dart';
+import 'google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -25,8 +27,21 @@ class _SettingsState extends State<Settings> {
     return Username.toString();
   }
 
+  Future<String> getLoginMethod() async {
+    final String? uid = user?.uid.toString();
+    String Username = await FirebaseFirestore.instance.collection("Users").doc(uid).get().then((value) => value.get('LoginMethod'));
+
+    return Username.toString();
+  }
+
   void signOut() async{
-    await FirebaseAuth.instance.signOut();
+    if(getLoginMethod().toString() == 'Email'){
+      await FirebaseAuth.instance.signOut();
+    }
+    else if (getLoginMethod().toString() == 'Google'){
+      final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+      await provider.googleLogin();
+    }
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => UserLogin()));
   }
 
@@ -62,14 +77,11 @@ class _SettingsState extends State<Settings> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(data['Email'],
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                        ),
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(data['ProfilePic']),
                       ),
-                      Text(data['Password'],
+                      Text(data['Email'],
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,

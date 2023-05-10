@@ -62,10 +62,10 @@ class _UserRegisterState extends State<UserRegister> {
         await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
           'Email' : emailController.text,
           'Phone' : phoneNumberController.text,
-          'Password' : passwordController.text,
           'Username' : usernameController.text,
           'ProfilePic' : 'https://media.istockphoto.com/id/1316420668/vector/user-icon-human-person-symbol-social-profile-icon-avatar-login-sign-web-user-symbol.jpg?s=612x612&w=0&k=20&c=AhqW2ssX8EeI2IYFm6-ASQ7rfeBWfrFFV4E87SaFhJE=',
           'Role' : dropdownValue.toString(),
+          'LoginMethod' : 'Email',
         });
 
         Navigator.pop(context);

@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projectjen/google_sign_in.dart';
 import 'package:projectjen/home.dart';
 import 'package:projectjen/user_forgot_password.dart';
 import 'package:projectjen/user_register.dart';
 import 'package:projectjen/login_register_bg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
-class UserLogin extends StatefulWidget {
-
-   UserLogin({super.key});
+class UserLogin extends StatelessWidget {
+  const UserLogin({Key? key}) : super(key: key);
 
   @override
-  State<UserLogin> createState() => _UserLoginState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => GoogleSignInProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'User Login',
+        theme: ThemeData(
+          primarySwatch: Colors.cyan,
+        ),
+        home: UserLoginPage(),
+      ),
+    );
+  }
 }
 
-class _UserLoginState extends State<UserLogin> {
+
+class UserLoginPage extends StatefulWidget {
+
+  const UserLoginPage({super.key});
+
+  @override
+  State<UserLoginPage> createState() => _UserLoginPageState();
+}
+
+class _UserLoginPageState extends State<UserLoginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -227,13 +250,21 @@ class _UserLoginState extends State<UserLogin> {
                     IconButton(
                       onPressed: () {},
                       padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.facebook_rounded, size: 45, color: Colors.blueAccent,),
+                      icon: Image.asset('assets/images/facebook.png'),
+                      iconSize: 45,
                     ),
                     const SizedBox(height: 20, width: 20,),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                        await provider.googleLogin();
+
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => const Home()));
+                      },
                       padding: EdgeInsets.zero,
-                      icon: const Icon(Icons.email_rounded, size: 45, color: Colors.deepOrange,),
+                      icon: Image.asset('assets/images/google-plus.png'),
+                      iconSize: 45,
                     ),
                   ],
                 ),
