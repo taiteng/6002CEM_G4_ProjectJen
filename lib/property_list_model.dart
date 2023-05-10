@@ -24,7 +24,7 @@ class Property {
         required this.salesType
       });
 
-  // Map<String, dynamic> toJson() => {
+  // toJson() => {
   //   'amenities': amenities,
   //   'bathrooms': bathrooms,
   //   'bedrooms' : bedrooms,
@@ -36,4 +36,6 @@ class Property {
   //   'price' : price,
   //   'salesType' : salesType
   // };
+
+
 }
