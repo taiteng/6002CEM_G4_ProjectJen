@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectjen/(Demo)get_property_details.dart';
+import 'package:projectjen/user_get_recently_viewed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
                             child: ListTile(
                               leading: Icon(Icons.home),
                               tileColor: Colors.yellowAccent,
-                              title: GetPropertyDetails(propertyID: propertyIDs[index],),
+                              title: GetRecentlyViewed(propertyID: propertyIDs[index],),
                             ),
                           );
                         },

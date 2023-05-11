@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class GetPropertyDetails extends StatelessWidget {
+class GetRecentlyViewed extends StatelessWidget {
 
   final String propertyID;
 
-  const GetPropertyDetails({Key? key, required this.propertyID}) : super(key: key);
+  const GetRecentlyViewed({Key? key, required this.propertyID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

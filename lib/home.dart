@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectjen/(Demo)get_property_details.dart';
+import 'package:projectjen/user_get_recently_viewed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
           child: Column(
             children: [
               SizedBox(
-                height: 30,
+                height: 15,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
               SizedBox(
-                height: 5,
+                height: 20,
               ),
               ConstrainedBox(
                 constraints: BoxConstraints(minWidth: double.infinity),
@@ -120,7 +120,7 @@ class _HomeState extends State<Home> {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                       return ListTile(
                         title: Text(data['name']),
-                        subtitle: Text(data['location']),
+                        subtitle: Text(data['address']),
                       );
                     }).toList(),
                   );

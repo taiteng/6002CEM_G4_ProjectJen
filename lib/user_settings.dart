@@ -8,7 +8,6 @@ import 'package:projectjen/user_function.dart';
 import 'package:projectjen/user_recently_viewed.dart';
 import 'package:provider/provider.dart';
 import 'package:projectjen/google_sign_in.dart';
-import 'package:slide_to_act/slide_to_act.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
@@ -190,35 +189,6 @@ class _UserSettingsState extends State<UserSettings> {
                           title: Text('Click to Access Owner\'s Page'),
                         ),
                       ),
-                    // SlideAction(
-                    //   onSubmit: (){
-                    //     if(data['Role'] == 'Owner'){
-                    //       Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome(),),);
-                    //     }
-                    //     else{
-                    //       showDialog(
-                    //         context: context,
-                    //         builder: (context) {
-                    //           return AlertDialog(
-                    //             backgroundColor: Colors.pinkAccent,
-                    //             title: Text('You are not a owner'),
-                    //           );
-                    //         },
-                    //       );
-                    //     }
-                    //   },
-                    //   borderRadius: 4,
-                    //   innerColor: CupertinoColors.inactiveGray,
-                    //   outerColor: CupertinoColors.white,
-                    //   elevation: 0,
-                    //   text: 'Slide to access',
-                    //   textStyle: TextStyle(
-                    //     fontWeight: FontWeight.w600,
-                    //     fontSize: 16,
-                    //     color: Colors.black54,
-                    //   ),
-                    //   sliderRotate: false,
-                    // ),
                     SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
