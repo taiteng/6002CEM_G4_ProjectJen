@@ -94,6 +94,7 @@ class _UserRegisterState extends State<UserRegister> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Background(
         child: SingleChildScrollView(
           child: Column(

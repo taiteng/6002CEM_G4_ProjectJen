@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:projectjen/google_sign_in.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/home.dart';
 import 'package:projectjen/user_forgot_password.dart';
 import 'package:projectjen/user_register.dart';
 import 'package:projectjen/login_register_bg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class UserLogin extends StatelessWidget {
@@ -14,20 +12,16 @@ class UserLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'User Login',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-        ),
-        home: UserLoginPage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'User Login',
+      theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
       ),
+      home: UserLoginPage(),
     );
   }
 }
-
 
 class UserLoginPage extends StatefulWidget {
 
@@ -49,9 +43,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         password: passwordController.text,
       );
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
-      });
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
     } on FirebaseAuthException catch (e) {
       if(e.code == 'user-not-found'){
         showDialog(
@@ -83,6 +75,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Background(
         child: SingleChildScrollView(
           child: Column(
@@ -110,16 +103,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Icon(Icons.email_rounded, size: 35, color: Colors.deepOrangeAccent,),
-                    SizedBox(
+                    Container(
                       width: 300,
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextField(
-                          controller: emailController,
-                          decoration: const InputDecoration(
-                              labelText: "Email"
-                          ),
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: const InputDecoration(
+                            labelText: "Email"
                         ),
                       ),
                     ),
@@ -135,19 +126,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Icon(Icons.password_rounded, size: 35, color: Colors.deepOrangeAccent,),
-                    SizedBox(
+                    Container(
                       width: 300,
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        child: TextField(
-                          controller: passwordController,
-                          obscuringCharacter: '*',
-                          decoration: const InputDecoration(
-                              labelText: "Password"
-                          ),
-                          obscureText: true,
+                      alignment: Alignment.centerRight,
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        controller: passwordController,
+                        obscuringCharacter: '*',
+                        decoration: const InputDecoration(
+                            labelText: "Password"
                         ),
+                        obscureText: true,
                       ),
                     ),
                   ],
@@ -189,13 +178,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     height: 50.0,
                     width: size.width * 0.5,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(80.0),
-                        gradient: const LinearGradient(
-                            colors: [
-                              Color.fromARGB(255, 255, 136, 34),
-                              Color.fromARGB(255, 255, 177, 41)
-                            ]
-                        )
+                      borderRadius: BorderRadius.circular(80.0),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 255, 136, 34),
+                          Color.fromARGB(255, 255, 177, 41),
+                        ],
+                      ),
                     ),
                     padding: const EdgeInsets.all(0),
                     child: const Text(
@@ -247,9 +236,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       onPressed: () async {
                         final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
                         await provider.googleLogin();
-
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => const Home()));
                       },
                       padding: EdgeInsets.zero,
                       icon: Image.asset('assets/images/google-plus.png'),
