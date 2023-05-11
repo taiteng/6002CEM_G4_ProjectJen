@@ -128,8 +128,11 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
           ),
         );
       }
+      else if(snapshot.connectionState ==  ConnectionState.waiting){
+        return Text('Waiting for Upload');
+      }
       else{
-        return Text('Smtg went wrong :(');
+        return Text('');
       }
     },
   );

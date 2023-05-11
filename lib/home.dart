@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/home_property_list.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -122,7 +123,7 @@ class _HomeState extends State<Home> {
                             ),
                           ) //BUY Button
                       ),
-                    ),
+                    )
                 ],
               ),
               SizedBox(
@@ -176,148 +177,34 @@ class _HomeState extends State<Home> {
                 height: 10,
               ),
               StreamBuilder(
-                  stream: _property,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Something went wrong');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text("Loading");
-                    }
-                    return ListView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
+                stream: _property,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
+                  return ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    children:
+                    snapshot.data!.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
-                        return Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Card(
-                              elevation: 8,
-                              shadowColor: Colors.black,
-                              child: Column(
-                                children: [
-                                  Stack(
-                                      children : [
-                                        Container(
-                                          height : 150,
-                                          width: MediaQuery.of(context).size.width,
-                                          child: Image.network(
-                                            data['image'],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 10,
-                                          right: 10,
-                                          child: LikeButton(
-                                            size: 25,
-                                            animationDuration: Duration(milliseconds: 1000),
-                                            likeBuilder: (isTapped){
-                                              if(isTapped)
-                                                return Icon(
-                                                  Icons.favorite,
-                                                  color: Colors.red,
-                                                );
-                                              else{
-                                                return Icon(
-                                                  Icons.favorite_border,
-                                                  color: Colors.red,
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ]
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data['name'],
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  size: 15,
-                                                  color: Colors.grey,
-                                                ),
-                                                Text(
-                                                  data['address'],
-                                                  style: const TextStyle(
-                                                    color: Colors.black38,
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    "RM" +
-                                                        data['price']
-                                                            .toString() +
-                                                        "/month",
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 10),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Date Published: " + data['date'],
-                                              style: const TextStyle(
-                                                color: Colors.black38,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }),
+                      return HomePropertyList(
+                        name: data['name'],
+                        address: data['address'],
+                        date: data['date'],
+                        price: data['price'],
+                        imageURL: data['image'],
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
             ],
           ),
         ),
