@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectjen/user_get_recently_viewed.dart';
+import 'package:like_button/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
@@ -10,51 +10,119 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final Stream<QuerySnapshot> _property = FirebaseFirestore.instance.collection('Property').snapshots();
+  final Stream<QuerySnapshot> _property =
+  FirebaseFirestore.instance.collection('Property').orderBy('date', descending: true).snapshots();
+
+  bool sellButtonClicked = false;
+  bool buyButtonClicked = true;
+
+  final TextEditingController _searchController = TextEditingController();
+
+  // void _beginSearch() {
+  //   String searchQuery = _searchController.text;
+  //   if (searchQuery.isNotEmpty) {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => ResultsScreen(searchQuery),
+  //       ),
+  //     );
+  //   }
+  // }
+
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-
           child: Column(
             children: [
               SizedBox(
                 height: 15,
               ),
-              Row(
+              Row( //Buttons for Sell and buy
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ConstrainedBox(
-                    constraints:
-                    BoxConstraints.tightFor(width: 100, height: 40),
-                    child: OutlinedButton(
-                        onPressed: () {},
-                        child: Text(
-                          "BUY",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ) //BUY Button
+                  if(buyButtonClicked)
+                    ConstrainedBox(
+                      constraints:
+                      BoxConstraints.tightFor(width: 100, height: 40),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              buyButtonClicked = true;
+                              sellButtonClicked = false;
+                            });
+                          },
+                          child: Text(
+                            "BUY",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ) //BUY Button
+                      ),
+                    )
+                  else
+                    ConstrainedBox(
+                      constraints:
+                      BoxConstraints.tightFor(width: 100, height: 40),
+                      child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              buyButtonClicked = true;
+                              sellButtonClicked = false;
+                            });
+                          },
+                          child: Text(
+                            "BUY",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ) //BUY Button
+                      ),
                     ),
-                  ),
-                  ConstrainedBox(
-                    constraints:
-                    BoxConstraints.tightFor(width: 100, height: 40),
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text(
-                          "SELL",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ) //BUY Button
+
+                  if(sellButtonClicked)
+                    ConstrainedBox(
+                      constraints:
+                      BoxConstraints.tightFor(width: 100, height: 40),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              buyButtonClicked = false;
+                              sellButtonClicked = true;
+                            });
+                          },
+                          child: Text(
+                            "RENT",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ) //BUY Button
+                      ),
+                    )
+                  else
+                    ConstrainedBox(
+                      constraints:
+                      BoxConstraints.tightFor(width: 100, height: 40),
+                      child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              buyButtonClicked = false;
+                              sellButtonClicked = true;
+                            });
+                          },
+                          child: Text(
+                            "RENT",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ) //BUY Button
+                      ),
                     ),
-                  ),
                 ],
               ),
               SizedBox(
@@ -67,6 +135,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(),
                         border: OutlineInputBorder(
@@ -79,6 +148,10 @@ class _HomeState extends State<Home> {
                           size: 30,
                         ),
                       ),
+                      textInputAction: TextInputAction.search,
+                      onSubmitted: (value){
+                        //_beginSearch();
+                      },
                     ),
                   ],
                 ),
@@ -95,8 +168,7 @@ class _HomeState extends State<Home> {
                 children: [
                   Text(
                     "Recent Properties",
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -104,28 +176,148 @@ class _HomeState extends State<Home> {
                 height: 10,
               ),
               StreamBuilder(
-                stream: _property,
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-                  if(snapshot.hasError){
-                    return Text('Something went wrong');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
-                  }
+                  stream: _property,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading");
+                    }
+                    return ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
 
-                  return ListView(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                      return ListTile(
-                        title: Text(data['name']),
-                        subtitle: Text(data['address']),
-                      );
-                    }).toList(),
-                  );
-                }
-              ),
+                        return Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Card(
+                              elevation: 8,
+                              shadowColor: Colors.black,
+                              child: Column(
+                                children: [
+                                  Stack(
+                                      children : [
+                                        Container(
+                                          height : 150,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Image.network(
+                                            data['image'],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 10,
+                                          right: 10,
+                                          child: LikeButton(
+                                            size: 25,
+                                            animationDuration: Duration(milliseconds: 1000),
+                                            likeBuilder: (isTapped){
+                                              if(isTapped)
+                                                return Icon(
+                                                  Icons.favorite,
+                                                  color: Colors.red,
+                                                );
+                                              else{
+                                                return Icon(
+                                                  Icons.favorite_border,
+                                                  color: Colors.red,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              data['name'],
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on_outlined,
+                                                  size: 15,
+                                                  color: Colors.grey,
+                                                ),
+                                                Text(
+                                                  data['address'],
+                                                  style: const TextStyle(
+                                                    color: Colors.black38,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                ElevatedButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    "RM" +
+                                                        data['price']
+                                                            .toString() +
+                                                        "/month",
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 10),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Date Published: " + data['date'],
+                                              style: const TextStyle(
+                                                color: Colors.black38,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
             ],
           ),
         ),

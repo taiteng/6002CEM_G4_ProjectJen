@@ -5,6 +5,8 @@ import 'package:projectjen/owner_home.dart';
 import 'package:projectjen/user_settings.dart';
 import 'package:projectjen/user_task.dart';
 
+import 'favorite.dart';
+
 class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({Key? key,}) : super(key: key);
 
@@ -35,6 +37,15 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           colorLineSelected: Colors.deepPurpleAccent,
         ),
         Home(),
+      ),
+      ScreenHiddenDrawer(
+        ItemHiddenMenu(
+          name: 'Favourite',
+          baseStyle: myTextStyle,
+          selectedStyle: myTextStyle,
+          colorLineSelected: Colors.deepPurpleAccent,
+        ),
+        const Favourite(),
       ),
       ScreenHiddenDrawer(
         ItemHiddenMenu(
