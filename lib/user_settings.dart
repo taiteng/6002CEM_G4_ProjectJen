@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:projectjen/owner_home.dart';
-import 'package:projectjen/user_login.dart';
 import 'package:projectjen/user_function.dart';
 import 'package:projectjen/user_recently_viewed.dart';
-import 'google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:projectjen/google_sign_in.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({Key? key}) : super(key: key);
@@ -22,13 +23,6 @@ class _UserSettingsState extends State<UserSettings> {
 
   final CollectionReference _user = FirebaseFirestore.instance.collection('Users');
 
-  Future<String> getUsername() async {
-    final String? uid = user?.uid.toString();
-    String Username = await FirebaseFirestore.instance.collection("Users").doc(uid).get().then((value) => value.get('Username'));
-
-    return Username.toString();
-  }
-
   Future<String> getLoginMethod() async {
     final String? uid = user?.uid.toString();
     String loginmethod = await FirebaseFirestore.instance.collection("Users").doc(uid).get().then((value) => value.get('LoginMethod'));
@@ -37,17 +31,51 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   void signOut() async{
-    if(getLoginMethod().toString() == 'Email'){
-      await FirebaseAuth.instance.signOut();
-    }
-    else if (getLoginMethod().toString() == 'Google'){
-      final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-      await provider.googleLogin();
-    }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const UserLogin()));
+    await FirebaseAuth.instance.signOut();
+  }
+
+  void signOutFacebook() async{
+
+  }
+
+  void signOutGoogle() async{
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+    await provider.googleLogout();
   }
 
   bool roleSwitchController = false;
+
+  void changeRole(String e, String p, String u, String pp, String lm) async{
+    final String? uid = user?.uid.toString();
+    String userRole = await FirebaseFirestore.instance.collection("Users").doc(uid).get().then((value) => value.get('Role'));
+
+    if(userRole == 'Owner'){
+      FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'Email' : e.toString(),
+        'Phone' : p.toString(),
+        'Username' : u.toString(),
+        'ProfilePic' : pp.toString(),
+        'LoginMethod' : lm.toString(),
+        'UID' : FirebaseAuth.instance.currentUser!.uid,
+        'Role': 'Renter',
+      });
+    }
+    else{
+      FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+        'Email' : e.toString(),
+        'Phone' : p.toString(),
+        'Username' : u.toString(),
+        'ProfilePic' : pp.toString(),
+        'LoginMethod' : lm.toString(),
+        'UID' : FirebaseAuth.instance.currentUser!.uid,
+        'Role': 'Owner',
+      });
+    }
+
+    setState(() {
+
+    });
+  }
 
   TextStyle headingStyle = const TextStyle(
       fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
@@ -97,6 +125,19 @@ class _UserSettingsState extends State<UserSettings> {
                     SizedBox(height: 10,),
                     ListTile(
                       leading: Icon(Icons.email),
+                      title: Text(data['UID']),
+                      trailing: IconButton(
+                        icon: Icon(Icons.copy),
+                        onPressed: () async {
+                          await Clipboard.setData(ClipboardData(text: data['UID'])).then((_){
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("User ID has been copied to clipboard")));
+                          });
+                        },
+                      ),
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: Icon(Icons.email),
                       title: Text(data['Email']),
                     ),
                     const Divider(),
@@ -128,13 +169,13 @@ class _UserSettingsState extends State<UserSettings> {
                     ),
                     ListTile(
                       leading: const Icon(Icons.person),
-                      title: Text("Role"),
+                      title: Text(data['Role']),
                       trailing: Switch(
-                          value: roleSwitchController,
+                          value: (data['Role'] == 'Owner')?roleSwitchController = true: roleSwitchController = false,
                           activeColor: Colors.deepOrangeAccent,
                           onChanged: (val) {
                             setState(() {
-                              roleSwitchController = val;
+                              changeRole(data['Email'], data['Phone'], data['Username'], data['ProfilePic'], data['LoginMethod']);
                             });
                           }),
                     ),
@@ -146,9 +187,38 @@ class _UserSettingsState extends State<UserSettings> {
                         },
                         child: ListTile(
                           leading: Icon(Icons.people),
-                          title: Text('Access to Owners\'s Home Page Here'),
+                          title: Text('Click to Access Owner\'s Page'),
                         ),
                       ),
+                    // SlideAction(
+                    //   onSubmit: (){
+                    //     if(data['Role'] == 'Owner'){
+                    //       Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome(),),);
+                    //     }
+                    //     else{
+                    //       showDialog(
+                    //         context: context,
+                    //         builder: (context) {
+                    //           return AlertDialog(
+                    //             backgroundColor: Colors.pinkAccent,
+                    //             title: Text('You are not a owner'),
+                    //           );
+                    //         },
+                    //       );
+                    //     }
+                    //   },
+                    //   borderRadius: 4,
+                    //   innerColor: CupertinoColors.inactiveGray,
+                    //   outerColor: CupertinoColors.white,
+                    //   elevation: 0,
+                    //   text: 'Slide to access',
+                    //   textStyle: TextStyle(
+                    //     fontWeight: FontWeight.w600,
+                    //     fontSize: 16,
+                    //     color: Colors.black54,
+                    //   ),
+                    //   sliderRotate: false,
+                    // ),
                     SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -173,7 +243,17 @@ class _UserSettingsState extends State<UserSettings> {
                     ),
                     const Divider(),
                     GestureDetector(
-                      onTap: signOut,
+                      onTap: () async {
+                        if(data['LoginMethod'] == 'Email'){
+                          signOut();
+                        }
+                        else if (data['LoginMethod'] == 'Google'){
+                          signOutGoogle();
+                        }
+                        else if(data['LoginMethod'] == 'Google'){
+                          signOutFacebook();
+                        }
+                      },
                       child: ListTile(
                         leading: Icon(Icons.logout),
                         title: Text('Sign Out'),

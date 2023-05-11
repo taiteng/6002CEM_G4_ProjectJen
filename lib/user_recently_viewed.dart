@@ -16,7 +16,7 @@ class _UserRecentlyViewedState extends State<UserRecentlyViewed> {
         child:Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Text('Home'),
+            Text('Recently Viewed'),
           ],
         ),
       ),

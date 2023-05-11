@@ -34,7 +34,7 @@ class GoogleSignInProvider extends ChangeNotifier{
 
       await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
         'Email' : user!.email,
-        'Phone' : user!.phoneNumber,
+        'Phone' : '0123456789',
         'Username' : user!.displayName,
         'ProfilePic' : user!.photoURL,
         'Role' : 'Renter',
@@ -44,11 +44,17 @@ class GoogleSignInProvider extends ChangeNotifier{
     } catch (e) {
       print(e.toString());
     }
+
     notifyListeners();
   }
 
   Future googleLogout() async{
-    await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
+    try{
+      //await googleSignIn.signOut();
+      await googleSignIn.disconnect();
+      await FirebaseAuth.instance.signOut();
+    } catch (e){
+      print(e.toString());
+    }
   }
 }
