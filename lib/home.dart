@@ -274,7 +274,7 @@ class _HomeState extends State<Home> {
                             Map<String, dynamic> data =
                                 document.data()! as Map<String, dynamic>;
 
-                            return HomePropertyList(
+                            return PropertyListCard(
                               name: data['Name'],
                               address: data['Address'],
                               date: data['Date'],

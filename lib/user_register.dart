@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/home.dart';
 import 'user_login.dart';
 import 'login_register_bg.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

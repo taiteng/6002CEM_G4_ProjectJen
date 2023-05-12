@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:projectjen/owner_view_property_details.dart';
 
-class HomePropertyList extends StatelessWidget {
+class PropertyListCard extends StatelessWidget {
   final String imageURL, name, address, date;
   final int price;
 
-  const HomePropertyList({Key? key,
+  const PropertyListCard({Key? key,
     required this.imageURL,
     required this.name,
     required this.address,

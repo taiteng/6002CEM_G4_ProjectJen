@@ -6,6 +6,9 @@ import 'package:projectjen/owner_home.dart';
 import 'package:projectjen/property_text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class OwnerAddProperty extends StatefulWidget {
   const OwnerAddProperty({Key? key}) : super(key: key);
@@ -19,45 +22,18 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
   final nameController = TextEditingController();
   final lotSizeController = TextEditingController();
   final priceController = TextEditingController();
-  final locationController = TextEditingController();
+  final addressController = TextEditingController();
   final amenityController = TextEditingController();
   final facilityController = TextEditingController();
 
-  String? categoryValue, saleTypeValue, stateValue;
-
-  // XFile? image;
-  //
-  // final ImagePicker picker = ImagePicker();
-  //
-  // Future getImage() async {
-  //   var img = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //   setState(() {
-  //     image = img;
-  //   });
-  // }
-
-  // image != null
-  // ? Padding(
-  // padding: const EdgeInsets.all(4),
-  // child: ClipRRect(
-  // borderRadius: BorderRadius.circular(8),
-  // child: Image.file(
-  // //to show image, you type like this.
-  // File(image!.path),
-  // fit: BoxFit.cover,
-  // width: MediaQuery.of(context).size.width,
-  // height: 200,
-  // ),
-  // ),
-  // )
-  //     : Text(
-  // "(No Image Received)",
-  // style: TextStyle(fontSize: 16),
-  // ),
+  String? categoryValue, salesTypeValue, stateValue;
 
   PlatformFile? _pickedFile;
   UploadTask? _uploadTask;
+  String? urlDownload;
+  String? DocID;
+
+  final User? user = FirebaseAuth.instance.currentUser;
 
   Future selectFile() async{
     final result = await FilePicker.platform.pickFiles();
@@ -76,15 +52,55 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
     setState(() {
       _uploadTask = ref.putFile(file);
     });
-    
+
     final snapshot = await _uploadTask!.whenComplete(() {});
 
-    final urlDownload = await snapshot.ref.getDownloadURL();
-    print('Download URL: $urlDownload');
+    urlDownload = await snapshot.ref.getDownloadURL();
+    //print('Download URL: $urlDownload');
 
     setState(() {
       _uploadTask = null;
     });
+  }
+
+  Future uploadToFirebase() async{
+    try{
+      await uploadFile();
+
+      String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+
+      await FirebaseFirestore.instance.collection('Property').add({
+        'Name' : nameController.text,
+      }).then((DocumentReference docID) async {
+        await FirebaseFirestore.instance.collection('Property').doc(docID.id?.toString()).set({
+          'Name' : nameController.text,
+          'LotSize' : int.parse(lotSizeController.text),
+          'Price' : int.parse(priceController.text),
+          'Address' : addressController.text,
+          'Amenities' : amenityController.text,
+          'Facilities' : facilityController.text,
+          'Image' : urlDownload.toString(),
+          'Category' : categoryValue.toString(),
+          'SalesType' : salesTypeValue.toString(),
+          'State' : stateValue.toString(),
+          'NumOfVisits' : 0,
+          'Date' : currentDate.toString(),
+          'PropertyID' : docID.id.toString(),
+        });
+
+        DocID = docID.id.toString();
+      });
+
+      await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(DocID.toString()).set({
+        'pID' : DocID.toString(),
+      });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OwnerHome()));
+      });
+    } catch (e){
+      print(e);
+    }
   }
 
   @override
@@ -92,7 +108,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
     nameController.dispose();
     lotSizeController.dispose();
     priceController.dispose();
-    locationController.dispose();
+    addressController.dispose();
     amenityController.dispose();
     facilityController.dispose();
 
@@ -209,7 +225,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: DropdownButton(
-                    value: saleTypeValue,
+                    value: salesTypeValue,
                     isExpanded: true,
                     hint: const Align(
                       alignment: Alignment.centerLeft,
@@ -218,7 +234,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                     items: ['Rent', 'Sell',].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        saleTypeValue = newValue!;
+                        salesTypeValue = newValue!;
                       });
                     },
                   ),
@@ -241,7 +257,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
               ),
               SizedBox(height: 10,),
               PropertyTextField(
-                controller: locationController,
+                controller: addressController,
                 hintText: 'Address',
               ),
               SizedBox(height: 10,),
@@ -264,7 +280,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                       alignment: Alignment.centerLeft,
                       child: Text('State'),
                     ),
-                    items: ['Perlis', 'Kedah', 'Penang', 'Perak', 'Selangor', 'Negeri Sembilan', 'Malacca', 'Johore', 'Kelantan', 'Terengganu', 'Pahang', 'Kuala Lumpur', 'Putrajaya',].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
+                    items: ['Perlis', 'Kedah', 'Penang', 'Perak', 'Selangor', 'Negeri Sembilan', 'Malacca', 'Johor', 'Kelantan', 'Terengganu', 'Pahang', 'Kuala Lumpur', 'Putrajaya',].map((v) => DropdownMenuItem(value: v, child: Text(v))).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
                         stateValue = newValue!;
@@ -317,7 +333,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: SlideAction(
                   onSubmit: (){
-                    uploadFile();
+                    uploadToFirebase();
                   },
                   borderRadius: 4,
                   innerColor: CupertinoColors.inactiveGray,
@@ -334,7 +350,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
               ),
               SizedBox(height: 10,),
               buildProgress(),
-              SizedBox(height: 10,),
+              SizedBox(height: 20,),
             ],
           ),
         ),
