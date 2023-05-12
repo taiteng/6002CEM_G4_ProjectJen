@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/owner_add_property.dart';
 import 'package:projectjen/owner_get_property.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:projectjen/owner_rent_assign.dart';
+import 'package:projectjen/owner_task.dart';
 
 class OwnerHome extends StatefulWidget {
   const OwnerHome({Key? key}) : super(key: key);
@@ -33,7 +36,55 @@ class _OwnerHomeState extends State<OwnerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        color: Colors.deepOrange,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
+          child: GNav(
+            backgroundColor: Colors.deepOrange,
+            color: Colors.white,
+            activeColor: Colors.white,
+            gap: 10,
+            tabBackgroundColor: Colors.amber,
+            padding: EdgeInsets.all(16),
+            selectedIndex: 0,
+            tabs: [
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+              ),
+              GButton(
+                icon: Icons.warehouse,
+                text: 'Rent',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(),),);
+                },
+              ),
+              GButton(
+                icon: Icons.task,
+                text: 'Task',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
       appBar: AppBar(
+        titleSpacing: 00.0,
+        centerTitle: true,
+        toolbarHeight: 60.2,
+        toolbarOpacity: 0.8,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(25),
+              bottomLeft: Radius.circular(25)),
+        ),
+        elevation: 0.00,
         title: const Text('Owner Home'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
@@ -41,13 +92,16 @@ class _OwnerHomeState extends State<OwnerHome> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerAddProperty(),),);
-        },
-        backgroundColor: Colors.pinkAccent,
-        child: const Icon(Icons.add),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_home,),
+            color: Colors.white,
+            tooltip: 'Add Icon',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerAddProperty(),),);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
