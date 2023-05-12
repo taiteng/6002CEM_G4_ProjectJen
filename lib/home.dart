@@ -10,8 +10,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final Stream<QuerySnapshot> _property =
-  FirebaseFirestore.instance.collection('Property').orderBy('Date', descending: true).snapshots();
+  final Stream<QuerySnapshot> _property = FirebaseFirestore.instance
+      .collection('Property')
+      .orderBy('Date', descending: true)
+      .snapshots();
 
   bool sellButtonClicked = false;
   bool buyButtonClicked = true;
@@ -30,182 +32,264 @@ class _HomeState extends State<Home> {
   //   }
   // }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.deepOrange,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 15,
-              ),
-              Row( //Buttons for Sell and buy
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
                 children: [
-                  if(buyButtonClicked)
-                    ConstrainedBox(
-                      constraints:
-                      const BoxConstraints.tightFor(width: 100, height: 40),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              buyButtonClicked = true;
-                              sellButtonClicked = false;
-                            });
-                          },
-                          child: const Text(
-                            "BUY",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ) //BUY Button
-                      ),
-                    )
-                  else
-                    ConstrainedBox(
-                      constraints:
-                      const BoxConstraints.tightFor(width: 100, height: 40),
-                      child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              buyButtonClicked = true;
-                              sellButtonClicked = false;
-                            });
-                          },
-                          child: const Text(
-                            "BUY",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ) //BUY Button
-                      ),
-                    ),
+                  Row(
+                    //Buttons for Sell and buy
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (buyButtonClicked)
+                        ConstrainedBox(
+                          constraints: const BoxConstraints.tightFor(
+                              width: 100, height: 40),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  buyButtonClicked = true;
+                                  sellButtonClicked = false;
+                                });
+                              },
+                              child: const Text(
+                                "BUY",
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 15,
+                                ),
+                              ) //BUY Button
+                              ),
+                        )
+                      else
+                        ConstrainedBox(
+                          constraints: const BoxConstraints.tightFor(
+                              width: 100, height: 40),
+                          child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  buyButtonClicked = true;
+                                  sellButtonClicked = false;
+                                });
+                              },
+                              child: const Text(
+                                "BUY",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                ),
+                              ) //BUY Button
+                              ),
+                        ),
+                      if (sellButtonClicked)
+                        ConstrainedBox(
+                          constraints: const BoxConstraints.tightFor(
+                              width: 100, height: 40),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  buyButtonClicked = false;
+                                  sellButtonClicked = true;
+                                });
+                              },
+                              child: const Text(
+                                "RENT",
+                                style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 15,
+                                ),
+                              ) //BUY Button
+                              ),
+                        )
+                      else
+                        ConstrainedBox(
+                          constraints: const BoxConstraints.tightFor(
+                              width: 100, height: 40),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                buyButtonClicked = false;
+                                sellButtonClicked = true;
+                              });
+                            },
+                            child: const Text(
+                              "RENT",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ), //BUY Button
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ConstrainedBox(
+                    constraints:
+                        const BoxConstraints(minWidth: double.infinity),
+                    child: Column(
+                      children: [
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(minWidth: double.infinity),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _searchController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderSide: BorderSide(
+                                            color: Colors.transparent,
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        hintText: "E.g. Penang Condominium",
+                                        hintStyle: TextStyle(
+                                          color: Colors.deepOrangeAccent,
+                                        ),
+                                        prefixIcon: const Icon(
+                                          Icons.search,
+                                          color: Colors.deepOrangeAccent,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      textInputAction: TextInputAction.search,
+                                      onSubmitted: (value) {
+                                        //_beginSearch();
+                                      },
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.deepOrangeAccent,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: SizedBox(
+                                      width: 50,
+                                      height: 50,
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.orangeAccent),
+                                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+                                        ),
+                                        onPressed: () {
 
-                  if(sellButtonClicked)
-                    ConstrainedBox(
-                      constraints:
-                      const BoxConstraints.tightFor(width: 100, height: 40),
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              buyButtonClicked = false;
-                              sellButtonClicked = true;
-                            });
-                          },
-                          child: const Text(
-                            "RENT",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ) //BUY Button
-                      ),
-                    )
-                  else
-                    ConstrainedBox(
-                      constraints:
-                      const BoxConstraints.tightFor(width: 100, height: 40),
-                      child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              buyButtonClicked = false;
-                              sellButtonClicked = true;
-                            });
-                          },
-                          child: const Text(
-                            "RENT",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ) //BUY Button
-                      ),
-                    )
+                                        },
+                                        child: Icon(
+                                          Icons.filter_list_rounded,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
+            ),
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
               ),
-              ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: double.infinity),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.white,
+                      width: 20.0,
+                    ),
+                  ),
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: const BorderSide(width: 0.8),
-                        ),
-                        hintText: "E.g. Penang Condominium",
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          size: 30,
-                        ),
+                    Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Row(
+                        children: [
+                          const Text(
+                            "Recent Properties",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      textInputAction: TextInputAction.search,
-                      onSubmitted: (value){
-                        //_beginSearch();
+                    ),
+                    StreamBuilder(
+                      stream: _property,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return const Text('Something went wrong');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text("Loading");
+                        }
+                        return ListView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          children: snapshot.data!.docs
+                              .map((DocumentSnapshot document) {
+                            Map<String, dynamic> data =
+                                document.data()! as Map<String, dynamic>;
+
+                            return HomePropertyList(
+                              name: data['Name'],
+                              address: data['Address'],
+                              date: data['Date'],
+                              price: data['Price'],
+                              imageURL: data['Image'],
+                            );
+                          }).toList(),
+                        );
                       },
                     ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: .2,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Recent Properties",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              StreamBuilder(
-                stream: _property,
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text('Something went wrong');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text("Loading");
-                  }
-                  return ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    children:
-                    snapshot.data!.docs.map((DocumentSnapshot document) {
-                      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-
-                      return HomePropertyList(
-                        name: data['Name'],
-                        address: data['Address'],
-                        date: data['Date'],
-                        price: data['Price'],
-                        imageURL: data['Image'],
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
