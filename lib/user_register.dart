@@ -56,6 +56,10 @@ class _UserRegisterState extends State<UserRegister> {
           'UID' : FirebaseAuth.instance.currentUser!.uid,
         });
 
+        await FirebaseFirestore.instance.collection('OwnerProperty').doc(FirebaseAuth.instance.currentUser!.uid).collection('OwnerPropertyIDs').doc('j7HIy8dCj9mlYsQfvzyr').set({
+          'pID' : 'j7HIy8dCj9mlYsQfvzyr',
+        });
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer(pageNum: 0,)));
         });

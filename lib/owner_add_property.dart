@@ -164,7 +164,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
               SizedBox(height: 10,),
               PropertyTextField(
                 controller: lotSizeController,
-                hintText: 'Floor Size (Square Feet)',
+                hintText: 'Lot Size (Square Feet)',
               ),
               SizedBox(height: 10,),
               Padding(
@@ -316,7 +316,9 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: SlideAction(
-                  onSubmit: (){ },
+                  onSubmit: (){
+                    uploadFile();
+                  },
                   borderRadius: 4,
                   innerColor: CupertinoColors.inactiveGray,
                   outerColor: CupertinoColors.white,
