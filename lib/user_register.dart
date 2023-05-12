@@ -57,7 +57,7 @@ class _UserRegisterState extends State<UserRegister> {
         });
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer(pageNum: 0,)));
         });
       }
       else{

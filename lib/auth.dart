@@ -39,7 +39,7 @@ class _AuthPageState extends State<AuthPage> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot){
           if(snapshot.hasData){
-            return const HiddenDrawer();
+            return const HiddenDrawer(pageNum: 0,);
           }
           else if(snapshot.hasError){
             return const Center(child: Text('Something Went Wrong :('),);

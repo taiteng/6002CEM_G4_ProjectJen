@@ -17,7 +17,7 @@ class OwnerAddProperty extends StatefulWidget {
 class _OwnerAddPropertyState extends State<OwnerAddProperty> {
 
   final nameController = TextEditingController();
-  final floorSizeController = TextEditingController();
+  final lotSizeController = TextEditingController();
   final priceController = TextEditingController();
   final locationController = TextEditingController();
   final amenityController = TextEditingController();
@@ -90,7 +90,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
   @override
   void dispose(){
     nameController.dispose();
-    floorSizeController.dispose();
+    lotSizeController.dispose();
     priceController.dispose();
     locationController.dispose();
     amenityController.dispose();
@@ -163,7 +163,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
               ),
               SizedBox(height: 10,),
               PropertyTextField(
-                controller: floorSizeController,
+                controller: lotSizeController,
                 hintText: 'Floor Size (Square Feet)',
               ),
               SizedBox(height: 10,),

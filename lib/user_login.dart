@@ -43,7 +43,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
         password: passwordController.text,
       );
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer(pageNum: 0,)));
     } on FirebaseAuthException catch (e) {
       if(e.code == 'user-not-found'){
         showDialog(

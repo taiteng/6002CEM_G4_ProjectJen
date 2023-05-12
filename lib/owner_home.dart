@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/owner_add_property.dart';
-import 'package:projectjen/user_settings.dart';
 
 class OwnerHome extends StatefulWidget {
   const OwnerHome({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _OwnerHomeState extends State<OwnerHome> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const UserSettings(),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
           },
         ),
       ),
