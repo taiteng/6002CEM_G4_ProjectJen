@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/user_get_recently_viewed.dart';
+import 'package:intl/intl.dart';
 
 class UserRecentlyViewed extends StatefulWidget {
   const UserRecentlyViewed({Key? key}) : super(key: key);
@@ -13,13 +14,15 @@ class UserRecentlyViewed extends StatefulWidget {
 
 class _UserRecentlyViewedState extends State<UserRecentlyViewed> {
 
+  String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+
   List<String> _pIDs = [];
 
   final User? user = FirebaseAuth.instance.currentUser;
 
   //https://firebase.flutter.dev/docs/firestore/usage/
   Future getPropertyIDs() async{
-    await FirebaseFirestore.instance.collection('RecentlyViewed').doc(user?.uid.toString()).collection('PropertyIDs').get().then(
+    await FirebaseFirestore.instance.collection('RecentlyViewed').doc(user?.uid.toString()).collection('PropertyIDs').where('Date', isEqualTo: currentDate).get().then(
           (snapshot) => snapshot.docs.forEach((properties) {
             if (properties.exists) {
               _pIDs.add(properties.reference.id);
