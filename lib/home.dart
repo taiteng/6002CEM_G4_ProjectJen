@@ -195,11 +195,11 @@ class _HomeState extends State<Home> {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
 
                       return HomePropertyList(
-                        name: data['name'],
-                        address: data['address'],
-                        date: data['date'],
-                        price: data['price'],
-                        imageURL: data['image'],
+                        name: data['Name'],
+                        address: data['Address'],
+                        date: data['Date'],
+                        price: data['Price'],
+                        imageURL: data['Image'],
                       );
                     }).toList(),
                   );
