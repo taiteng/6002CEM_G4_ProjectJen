@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/home_property_list.dart';
+import 'package:projectjen/property_list_card.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

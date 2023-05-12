@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:projectjen/home.dart';
-import 'package:projectjen/owner_home.dart';
 import 'package:projectjen/user_settings.dart';
 import 'package:projectjen/user_task.dart';
 
 import 'favorite.dart';
 
 class HiddenDrawer extends StatefulWidget {
-  const HiddenDrawer({Key? key,}) : super(key: key);
+
+  final int pageNum;
+
+  const HiddenDrawer({Key? key, required this.pageNum,}) : super(key: key);
 
   @override
   State<HiddenDrawer> createState() => _HiddenDrawerState();
@@ -18,7 +20,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
 
   List<ScreenHiddenDrawer> _pages = [];
 
-  final myTextStyle = TextStyle(
+  final myTextStyle = const TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 18,
     color: Colors.white,
@@ -36,7 +38,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           selectedStyle: myTextStyle,
           colorLineSelected: Colors.deepPurpleAccent,
         ),
-        Home(),
+        const Home(),
       ),
       ScreenHiddenDrawer(
         ItemHiddenMenu(
@@ -54,7 +56,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           selectedStyle: myTextStyle,
           colorLineSelected: Colors.deepPurpleAccent,
         ),
-        UserSettings(),
+        const UserSettings(),
       ),
       ScreenHiddenDrawer(
         ItemHiddenMenu(
@@ -63,7 +65,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           selectedStyle: myTextStyle,
           colorLineSelected: Colors.deepPurpleAccent,
         ),
-        UserTask(),
+        const UserTask(),
       ),
     ];
   }
@@ -73,7 +75,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
     return HiddenDrawerMenu(
       backgroundColorMenu: Colors.orangeAccent,
       screens: _pages,
-      initPositionSelected: 0,
+      initPositionSelected: widget.pageNum,
       slidePercent: 40,
       contentCornerRadius: 25,
     );

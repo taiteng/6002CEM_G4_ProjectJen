@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/property_list_card.dart';
 
 class GetRecentlyViewed extends StatelessWidget {
 
@@ -16,7 +17,13 @@ class GetRecentlyViewed extends StatelessWidget {
       builder: ((context, snapshot){
       if (snapshot.connectionState == ConnectionState.done){
         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-        return Text('Name: ' + data['name'] + ' Facilities: ' + data['facilities']);
+        return HomePropertyList(
+          name: data['name'],
+          address: data['address'],
+          date: data['date'],
+          price: data['price'],
+          imageURL: data['image'],
+        );
       }
       else{
         return Text('Loading...');

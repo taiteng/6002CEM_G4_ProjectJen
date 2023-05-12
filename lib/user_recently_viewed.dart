@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/user_get_recently_viewed.dart';
 
 class UserRecentlyViewed extends StatefulWidget {
@@ -37,6 +38,15 @@ class _UserRecentlyViewedState extends State<UserRecentlyViewed> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recently Viewed'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
+          },
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -52,14 +62,7 @@ class _UserRecentlyViewedState extends State<UserRecentlyViewed> {
                       return ListView.builder(
                         itemCount: _pIDs.length,
                         itemBuilder: (context, index){
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListTile(
-                              leading: Icon(Icons.home),
-                              tileColor: Colors.yellowAccent,
-                              title: GetRecentlyViewed(propertyID: _pIDs[index],),
-                            ),
-                          );
+                          return GetRecentlyViewed(propertyID: _pIDs[index],);
                         },
                       );
                     }
