@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/property_list_card.dart';
 
@@ -12,7 +11,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final Stream<QuerySnapshot> _property =
-  FirebaseFirestore.instance.collection('Property').orderBy('date', descending: true).snapshots();
+  FirebaseFirestore.instance.collection('Property').orderBy('Date', descending: true).snapshots();
 
   bool sellButtonClicked = false;
   bool buyButtonClicked = true;
@@ -41,7 +40,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Row( //Buttons for Sell and buy
@@ -50,7 +49,7 @@ class _HomeState extends State<Home> {
                   if(buyButtonClicked)
                     ConstrainedBox(
                       constraints:
-                      BoxConstraints.tightFor(width: 100, height: 40),
+                      const BoxConstraints.tightFor(width: 100, height: 40),
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
@@ -58,7 +57,7 @@ class _HomeState extends State<Home> {
                               sellButtonClicked = false;
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             "BUY",
                             style: TextStyle(
                               fontSize: 15,
@@ -69,7 +68,7 @@ class _HomeState extends State<Home> {
                   else
                     ConstrainedBox(
                       constraints:
-                      BoxConstraints.tightFor(width: 100, height: 40),
+                      const BoxConstraints.tightFor(width: 100, height: 40),
                       child: OutlinedButton(
                           onPressed: () {
                             setState(() {
@@ -77,7 +76,7 @@ class _HomeState extends State<Home> {
                               sellButtonClicked = false;
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             "BUY",
                             style: TextStyle(
                               fontSize: 15,
@@ -89,7 +88,7 @@ class _HomeState extends State<Home> {
                   if(sellButtonClicked)
                     ConstrainedBox(
                       constraints:
-                      BoxConstraints.tightFor(width: 100, height: 40),
+                      const BoxConstraints.tightFor(width: 100, height: 40),
                       child: ElevatedButton(
                           onPressed: () {
                             setState(() {
@@ -97,7 +96,7 @@ class _HomeState extends State<Home> {
                               sellButtonClicked = true;
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             "RENT",
                             style: TextStyle(
                               fontSize: 15,
@@ -108,7 +107,7 @@ class _HomeState extends State<Home> {
                   else
                     ConstrainedBox(
                       constraints:
-                      BoxConstraints.tightFor(width: 100, height: 40),
+                      const BoxConstraints.tightFor(width: 100, height: 40),
                       child: OutlinedButton(
                           onPressed: () {
                             setState(() {
@@ -116,7 +115,7 @@ class _HomeState extends State<Home> {
                               sellButtonClicked = true;
                             });
                           },
-                          child: Text(
+                          child: const Text(
                             "RENT",
                             style: TextStyle(
                               fontSize: 15,
@@ -126,11 +125,11 @@ class _HomeState extends State<Home> {
                     )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ConstrainedBox(
-                constraints: BoxConstraints(minWidth: double.infinity),
+                constraints: const BoxConstraints(minWidth: double.infinity),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,13 +137,13 @@ class _HomeState extends State<Home> {
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(),
+                        contentPadding: const EdgeInsets.symmetric(),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide(width: 0.8),
+                          borderSide: const BorderSide(width: 0.8),
                         ),
                         hintText: "E.g. Penang Condominium",
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.search,
                           size: 30,
                         ),
@@ -157,23 +156,23 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Divider(
+              const Divider(
                 color: Colors.grey,
                 thickness: .2,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: const [
                   Text(
                     "Recent Properties",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               StreamBuilder(
@@ -181,10 +180,10 @@ class _HomeState extends State<Home> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return Text('Something went wrong');
+                    return const Text('Something went wrong');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
+                    return const Text("Loading");
                   }
                   return ListView(
                     physics: const NeverScrollableScrollPhysics(),
