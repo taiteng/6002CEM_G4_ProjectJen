@@ -78,6 +78,7 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
       initPositionSelected: widget.pageNum,
       slidePercent: 40,
       contentCornerRadius: 25,
+      isTitleCentered: true,
     );
   }
 }

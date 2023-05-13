@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/owner_get_rent_property.dart';
 import 'package:projectjen/owner_home.dart';
 import 'package:projectjen/owner_task.dart';
 
@@ -12,6 +15,23 @@ class OwnerRentAssign extends StatefulWidget {
 }
 
 class _OwnerRentAssignState extends State<OwnerRentAssign> {
+
+  List<String> _pIDs = [];
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  Future getPropertyIDs() async{
+    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').where('SalesType', isEqualTo: 'Rent').get().then(
+          (snapshot) => snapshot.docs.forEach((properties) {
+        if (properties.exists) {
+          _pIDs.add(properties.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +96,26 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('OwnerRentAssign'),
+            Expanded(
+              child: FutureBuilder(
+                  future: getPropertyIDs(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error.toString()));
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      return ListView.builder(
+                        itemCount: _pIDs.length,
+                        itemBuilder: (context, index){
+                          return GetOwnerRentProperty(propertyID: _pIDs[index],);
+                        },
+                      );
+                    }
+                    else {
+                      return const Text("loading");
+                    }
+                  }
+              ),
+            ),
           ],
         ),
       ),
