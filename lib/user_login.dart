@@ -40,6 +40,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
   final passwordController = TextEditingController();
 
   Future<UserCredential> signInWithFacebook() async {
+    //App ID: 786474549715950
+    //App Secret: f70971eee1554b5b50efed88c3fe73e7
+    //Callback URL: https://projectjen-624d5.firebaseapp.com/__/auth/handler
     final LoginResult? loginResult = await FacebookAuth.instance.login();
 
     final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult!.accessToken!.token);
