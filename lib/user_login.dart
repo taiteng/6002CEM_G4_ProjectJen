@@ -7,6 +7,7 @@ import 'package:projectjen/user_register.dart';
 import 'package:projectjen/login_register_bg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 class UserLogin extends StatelessWidget {
   const UserLogin({Key? key}) : super(key: key);
@@ -39,9 +40,27 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   Future<UserCredential> signInWithFacebook() async {
     final LoginResult? loginResult = await FacebookAuth.instance.login();
+
     final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult!.accessToken!.token);
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<UserCredential> signInWithTwitter() async {
+    final twitterLogin = new TwitterLogin(
+        apiKey: '<your consumer key>',
+        apiSecretKey:' <your consumer secret>',
+        redirectURI: '<your_scheme>://'
+    );
+
+    final authResult = await twitterLogin.login();
+
+    final twitterAuthCredential = TwitterAuthProvider.credential(
+      accessToken: authResult.authToken!,
+      secret: authResult.authTokenSecret!,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
   }
 
   void signIn() async{
