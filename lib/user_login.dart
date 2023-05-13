@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/google_sign_in.dart';
 import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:projectjen/user_forgot_password.dart';
@@ -46,24 +47,50 @@ class _UserLoginPageState extends State<UserLoginPage> {
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
-  Future<UserCredential> signInWithTwitter() async {
+  void signInWithTwitter() async {
     //API Key: fjd995xhFyzcCjOFtxTEmSEVr
     //API Key Secret: 6xV2yo1KaU4svMK58Wfsy7nwFDzHqI7B0z598Y3H55BAM9H4Qw
+    //Client ID: OVVTOXN0a1dMYzJDOWRLOG40SDE6MTpjaQ
+    //Client Secret: aR64QO7DDp230ZxAn0bDHMF_PBfkUqiWwA80pRWQGsYo-B33dk
     //Callback URL: https://projectjen-624d5.firebaseapp.com/__/auth/handler
-    final twitterLogin = new TwitterLogin(
-        apiKey: '<your consumer key>',
-        apiSecretKey:' <your consumer secret>',
-        redirectURI: '<your_scheme>://'
-    );
 
-    final authResult = await twitterLogin.login();
+    try{
+      final twitterLogin = TwitterLogin(
+          apiKey: 'fjd995xhFyzcCjOFtxTEmSEVr',
+          apiSecretKey: '6xV2yo1KaU4svMK58Wfsy7nwFDzHqI7B0z598Y3H55BAM9H4Qw',
+          redirectURI: 'flutter-twitter-login://'
+      );
 
-    final twitterAuthCredential = TwitterAuthProvider.credential(
-      accessToken: authResult.authToken!,
-      secret: authResult.authTokenSecret!,
-    );
+      final authResult = await twitterLogin.login();
 
-    return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+      if(authResult.status == TwitterLoginStatus.loggedIn){
+        final twitterCredentials = TwitterAuthProvider.credential(
+          accessToken: authResult.authToken!,
+          secret: authResult.authTokenSecret!,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(twitterCredentials);
+
+        final User? user = FirebaseAuth.instance.currentUser;
+
+        final userDetails = authResult.user;
+
+        await FirebaseFirestore.instance.collection('Users').doc(FirebaseAuth.instance.currentUser!.uid).set({
+          'Email' : userDetails!.email,
+          'Phone' : '0123456789',
+          'Username' : userDetails!.screenName,
+          'ProfilePic' : userDetails!.thumbnailImage,
+          'Role' : 'Renter',
+          'LoginMethod' : 'Twitter',
+          'UID' : FirebaseAuth.instance.currentUser!.uid,
+        });
+      }
+      else{
+        print('Smtg went wrong');
+      }
+    } catch (e){
+      print(e);
+    }
   }
 
   void signIn() async{
@@ -256,7 +283,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        signInWithFacebook();
+                      },
                       padding: EdgeInsets.zero,
                       icon: Image.asset('assets/images/facebook.png'),
                       iconSize: 45,
@@ -274,8 +303,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     const SizedBox(height: 20, width: 20,),
                     IconButton(
                       onPressed: () async {
-                        final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-                        await provider.googleLogin();
+                        signInWithTwitter();
                       },
                       padding: EdgeInsets.zero,
                       icon: Image.asset('assets/images/twitter.png'),
