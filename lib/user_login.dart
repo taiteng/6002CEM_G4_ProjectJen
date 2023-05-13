@@ -6,6 +6,7 @@ import 'package:projectjen/user_forgot_password.dart';
 import 'package:projectjen/user_register.dart';
 import 'package:projectjen/login_register_bg.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class UserLogin extends StatelessWidget {
   const UserLogin({Key? key}) : super(key: key);
@@ -35,6 +36,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<UserCredential> signInWithFacebook() async {
+    final LoginResult? loginResult = await FacebookAuth.instance.login();
+    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult!.accessToken!.token);
+
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
 
   void signIn() async{
     try{
@@ -239,6 +247,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
                       },
                       padding: EdgeInsets.zero,
                       icon: Image.asset('assets/images/google-plus.png'),
+                      iconSize: 45,
+                    ),
+                    const SizedBox(height: 20, width: 20,),
+                    IconButton(
+                      onPressed: () async {
+                        final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                        await provider.googleLogin();
+                      },
+                      padding: EdgeInsets.zero,
+                      icon: Image.asset('assets/images/twitter.png'),
                       iconSize: 45,
                     ),
                   ],
