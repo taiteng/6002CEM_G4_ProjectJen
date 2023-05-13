@@ -33,6 +33,10 @@ class _UserSettingsState extends State<UserSettings> {
     await FirebaseAuth.instance.signOut();
   }
 
+  void signOutTwitter() async{
+    await FirebaseAuth.instance.signOut();
+  }
+
   void signOutFacebook() async{
 
   }
@@ -220,8 +224,11 @@ class _UserSettingsState extends State<UserSettings> {
                         else if (data['LoginMethod'] == 'Google'){
                           signOutGoogle();
                         }
-                        else if(data['LoginMethod'] == 'Google'){
+                        else if(data['LoginMethod'] == 'Facebook'){
                           signOutFacebook();
+                        }
+                        else if(data['LoginMethod'] == 'Twitter'){
+                          signOutTwitter();
                         }
                       },
                       child: ListTile(
