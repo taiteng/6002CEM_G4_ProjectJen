@@ -101,6 +101,11 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
         });
+
+        await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
+          'pID' : widget.propertyID.toString(),
+          'SalesType' : salesTypeValue.toString(),
+        });
       }
       else{
         await uploadFile();
@@ -119,6 +124,11 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'NumOfVisits' : widget.numOfVisits,
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
+        });
+
+        await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
+          'pID' : widget.propertyID.toString(),
+          'SalesType' : salesTypeValue.toString(),
         });
       }
 

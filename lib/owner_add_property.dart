@@ -93,6 +93,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
 
       await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(DocID.toString()).set({
         'pID' : DocID.toString(),
+        'SalesType' : salesTypeValue.toString(),
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
