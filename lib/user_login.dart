@@ -47,6 +47,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
   }
 
   Future<UserCredential> signInWithTwitter() async {
+    //API Key: fjd995xhFyzcCjOFtxTEmSEVr
+    //API Key Secret: 6xV2yo1KaU4svMK58Wfsy7nwFDzHqI7B0z598Y3H55BAM9H4Qw
+    //Callback URL: https://projectjen-624d5.firebaseapp.com/__/auth/handler
     final twitterLogin = new TwitterLogin(
         apiKey: '<your consumer key>',
         apiSecretKey:' <your consumer secret>',
