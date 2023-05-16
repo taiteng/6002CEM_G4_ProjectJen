@@ -34,16 +34,29 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  List<String> _uIDs = [];
+  List<String> _uRVIDs = [];
+  List<String> _uFIDs = [];
 
   int RecentlyViewedCount = 0;
   int FavouriteCount = 0;
 
-  getUserID() async{
+  getRecentlyViewedUserID() async{
     await FirebaseFirestore.instance.collection('RecentlyViewed').get().then(
           (snapshot) => snapshot.docs.forEach((users) {
         if (users.exists) {
-          _uIDs.add(users.reference.id);
+          _uRVIDs.add(users.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
+  getFavouriteUserID() async{
+    await FirebaseFirestore.instance.collection('Favourite').get().then(
+          (snapshot) => snapshot.docs.forEach((users) {
+        if (users.exists) {
+          _uFIDs.add(users.reference.id);
         } else {
           print("Ntg to see here");
         }
@@ -59,14 +72,14 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
       final docOwnerProperty = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString());
       await docOwnerProperty.delete();
 
-      await getUserID();
+      await getRecentlyViewedUserID();
 
-      while(RecentlyViewedCount < _uIDs.length){
-        await FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uIDs[RecentlyViewedCount]).collection('PropertyIDs').get().then(
+      while(RecentlyViewedCount < _uRVIDs.length){
+        await FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').get().then(
               (snapshot) => snapshot.docs.forEach((propertyID) async {
             if (propertyID.exists) {
               if(propertyID.reference.id.toString() == widget.propertyID.toString()){
-                final RecentlyViewedPropertyID = FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uIDs[RecentlyViewedCount]).collection('PropertyIDs').doc(widget.propertyID.toString());
+                final RecentlyViewedPropertyID = FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').doc(widget.propertyID.toString());
                 await RecentlyViewedPropertyID.delete();
               }
             } else {
@@ -78,12 +91,14 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
         RecentlyViewedCount++;
       }
 
-      while(FavouriteCount < _uIDs.length){
-        await FirebaseFirestore.instance.collection('Favourite').doc(_uIDs[FavouriteCount]).collection('FavouriteProperty').get().then(
+      await getFavouriteUserID();
+
+      while(FavouriteCount < _uFIDs.length){
+        await FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').get().then(
               (snapshot) => snapshot.docs.forEach((propertyID) async {
             if (propertyID.exists) {
               if(propertyID.reference.id.toString() == widget.propertyID.toString()){
-                final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.propertyID.toString());
+                final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.propertyID.toString());
                 await FavouritePropertyID.delete();
               }
             } else {
