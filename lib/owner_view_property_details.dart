@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projectjen/owner_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class OwnerViewPropertyDetails extends StatefulWidget {
 
@@ -31,6 +32,75 @@ class OwnerViewPropertyDetails extends StatefulWidget {
 
 class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
 
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  List<String> _uIDs = [];
+
+  int RecentlyViewedCount = 0;
+  int FavouriteCount = 0;
+
+  getUserID() async{
+    await FirebaseFirestore.instance.collection('RecentlyViewed').get().then(
+          (snapshot) => snapshot.docs.forEach((users) {
+        if (users.exists) {
+          _uIDs.add(users.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+  
+  deleteProperty() async {
+    try{
+      final docProperty = FirebaseFirestore.instance.collection('Property').doc(widget.propertyID.toString());
+      await docProperty.delete();
+
+      final docOwnerProperty = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString());
+      await docOwnerProperty.delete();
+
+      await getUserID();
+
+      while(RecentlyViewedCount < _uIDs.length){
+        await FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uIDs[RecentlyViewedCount]).collection('PropertyIDs').get().then(
+              (snapshot) => snapshot.docs.forEach((propertyID) async {
+            if (propertyID.exists) {
+              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
+                final RecentlyViewedPropertyID = FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uIDs[RecentlyViewedCount]).collection('PropertyIDs').doc(widget.propertyID.toString());
+                await RecentlyViewedPropertyID.delete();
+              }
+            } else {
+              print("Ntg to see here");
+            }
+          }),
+        );
+
+        RecentlyViewedCount++;
+      }
+
+      while(FavouriteCount < _uIDs.length){
+        await FirebaseFirestore.instance.collection('Favourite').doc(_uIDs[FavouriteCount]).collection('FavouriteProperty').get().then(
+              (snapshot) => snapshot.docs.forEach((propertyID) async {
+            if (propertyID.exists) {
+              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
+                final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.propertyID.toString());
+                await FavouritePropertyID.delete();
+              }
+            } else {
+              print("Ntg to see here");
+            }
+          }),
+        );
+
+        FavouriteCount++;
+      }
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome(),),);
+    } catch (e){
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     CollectionReference _property = FirebaseFirestore.instance.collection('Property');
@@ -55,40 +125,40 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
           },
         ),
       ),
-      floatingActionButton: Wrap( //will break to another line on overflow
-        direction: Axis.vertical, //use vertical to show  on vertical axis
+      floatingActionButton: Wrap(
+        direction: Axis.vertical,
         children: <Widget>[
           Container(
-              margin:EdgeInsets.all(10),
-              child: FloatingActionButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerEditProperty(
-                    propertyID: widget.propertyID.toString(),
-                    name: widget.name.toString(),
-                    date: widget.date.toString(),
-                    address: widget.address.toString(),
-                    amenities: widget.amenities.toString(),
-                    category: widget.category.toString(),
-                    facilities: widget.facilities.toString(),
-                    image: widget.image.toString(),
-                    state: widget.state.toString(),
-                    salesType: widget.salesType.toString(),
-                    price: widget.price,
-                    lotSize: widget.lotSize,
-                    numOfVisits: widget.numOfVisits,
-                  ),),);
-                },
-                backgroundColor: Colors.pinkAccent,
-                child: Icon(Icons.edit),
-              )
+            margin:EdgeInsets.all(10),
+            child: FloatingActionButton(
+              heroTag: 'EditBtn',
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerEditProperty(
+                  propertyID: widget.propertyID.toString(),
+                  name: widget.name.toString(),
+                  date: widget.date.toString(),
+                  address: widget.address.toString(),
+                  amenities: widget.amenities.toString(),
+                  category: widget.category.toString(),
+                  facilities: widget.facilities.toString(),
+                  image: widget.image.toString(),
+                  state: widget.state.toString(),
+                  salesType: widget.salesType.toString(),
+                  price: widget.price,
+                  lotSize: widget.lotSize,
+                  numOfVisits: widget.numOfVisits,
+                ),),);
+              },
+              backgroundColor: Colors.pinkAccent,
+              child: Icon(Icons.edit),
+            ),
           ),
 
           Container(
               margin:EdgeInsets.all(10),
               child: FloatingActionButton(
-                onPressed: (){
-
-                },
+                heroTag: 'DeleteBtn',
+                onPressed: deleteProperty,
                 backgroundColor: Colors.deepPurpleAccent,
                 child: Icon(Icons.delete),
               )

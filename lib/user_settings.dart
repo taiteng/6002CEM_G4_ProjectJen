@@ -18,19 +18,6 @@ class UserSettings extends StatefulWidget {
 
 class _UserSettingsState extends State<UserSettings> {
 
-  // void buildChatbot() async{
-  //   //Kommunicate.io App ID: 2c217c317f7e06320b1763917bf92a9ad
-  //   try {
-  //     dynamic conversationObject = {
-  //       'appId': '2c217c317f7e06320b1763917bf92a9ad' // The [APP_ID](https://dashboard.kommunicate.io/settings/install) obtained from kommunicate dashboard.
-  //     };
-  //     dynamic result = await KommunicateFlutterPlugin.buildConversation(conversationObject);
-  //     print("Conversation builder success : " + result.toString());
-  //   } on Exception catch (e) {
-  //     print("Conversation builder error occurred : " + e.toString());
-  //   }
-  // }
-
   final User? user = FirebaseAuth.instance.currentUser;
 
   final CollectionReference _user = FirebaseFirestore.instance.collection('Users');

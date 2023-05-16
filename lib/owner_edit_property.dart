@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:projectjen/owner_view_property_details.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
