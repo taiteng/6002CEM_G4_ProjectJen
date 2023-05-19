@@ -48,7 +48,6 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
   PlatformFile? _pickedFile;
   UploadTask? _uploadTask;
   String? urlDownload;
-  String? DocID;
 
   final User? user = FirebaseAuth.instance.currentUser;
 
