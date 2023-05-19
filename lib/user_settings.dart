@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:projectjen/owner_home.dart';
+import 'package:projectjen/user_edit_profile.dart';
 import 'package:projectjen/user_function.dart';
 import 'package:projectjen/user_recently_viewed.dart';
 import 'package:provider/provider.dart';
@@ -93,7 +94,6 @@ class _UserSettingsState extends State<UserSettings> {
   @override
   void initState() {
     super.initState();
-    //buildChatbot();
   }
 
   @override
@@ -215,7 +215,17 @@ class _UserSettingsState extends State<UserSettings> {
                     ),
                     const Divider(),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => UserEditProfile(
+                          profilePic: data['ProfilePic'],
+                          email: data['Email'],
+                          loginMethod: data['LoginMethod'],
+                          phone: data['Phone'],
+                          role: data['Role'],
+                          uID: data['UID'],
+                          username: data['Username'],
+                        ),),);
+                      },
                       child: ListTile(
                         leading: Icon(Icons.edit),
                         title: Text('Edit Profile'),
