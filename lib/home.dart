@@ -10,15 +10,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool sellButtonClicked = false;
+  bool buyButtonClicked = true;
+  bool isFavourited = false;
+
+  final TextEditingController _searchController = TextEditingController();
+
+  //Get properties by date in descending order
   final Stream<QuerySnapshot> _property = FirebaseFirestore.instance
       .collection('Property')
       .orderBy('Date', descending: true)
       .snapshots();
 
-  bool sellButtonClicked = false;
-  bool buyButtonClicked = true;
 
-  final TextEditingController _searchController = TextEditingController();
+  //Get current propertyID
+  // getCurrentPropertyID() async {
+  //   await FirebaseFirestore.instance.doc('Property').collection('PropertyID').get().then(
+  //           (snapshot) => snapshot.docs.forEach((propertyID) {
+  //             if(propertyID.exists){
+  //               propertyIDList.add(propertyID.reference.id);
+  //             }else{
+  //               print("No id");
+  //             }
+  //           }));
+  // }
 
   // void _beginSearch() {
   //   String searchQuery = _searchController.text;
@@ -233,6 +248,14 @@ class _HomeState extends State<Home> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 2,
+                      spreadRadius: 0,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
                   border: Border(
                     top: BorderSide(
                       color: Colors.white,
@@ -270,11 +293,12 @@ class _HomeState extends State<Home> {
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           children: snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
+                              .map((DocumentSnapshot document)  {
                             Map<String, dynamic> data =
                                 document.data()! as Map<String, dynamic>;
 
                             return PropertyListCard(
+                              id: data['PropertyID'],
                               name: data['Name'],
                               address: data['Address'],
                               date: data['Date'],
