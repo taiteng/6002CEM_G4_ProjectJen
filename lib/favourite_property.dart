@@ -1,26 +1,26 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-class PropertyListCard extends StatefulWidget {
+class FavouriteProperty extends StatefulWidget {
   final String imageURL, name, address, date, id;
   final int price;
 
-  const PropertyListCard({
-    Key? key,
-    required this.imageURL,
-    required this.name,
-    required this.address,
-    required this.date,
-    required this.price,
-    required this.id,
-  }) : super(key: key);
+  const FavouriteProperty(
+      {Key? key,
+      required this.id,
+      required this.imageURL,
+      required this.name,
+      required this.address,
+      required this.date,
+      required this.price})
+      : super(key: key);
 
   @override
-  _PropertyListCardState createState() => _PropertyListCardState();
+  State<FavouriteProperty> createState() => _FavouritePropertyState();
 }
 
-class _PropertyListCardState extends State<PropertyListCard> {
+class _FavouritePropertyState extends State<FavouriteProperty> {
   bool isFavourite = false;
   final User? user = FirebaseAuth.instance.currentUser;
 
@@ -32,16 +32,16 @@ class _PropertyListCardState extends State<PropertyListCard> {
 
   // Check if the current propertyID exists in Firestore
   Future<void> checkFavouriteProperty() async {
-
     final propertyIDSnapshot = await FirebaseFirestore.instance
         .collection('Favourite')
         .doc(user?.uid.toString())
         .collection('FavouriteProperty')
-        .doc(widget.id)
+        .doc(widget.id.toString())
         .get();
 
+    isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
     setState(() {
-      isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
+
     });
   }
 
@@ -51,23 +51,23 @@ class _PropertyListCardState extends State<PropertyListCard> {
         .collection("Favourite")
         .doc(user?.uid.toString())
         .collection("FavouriteProperty")
-        .doc(widget.id);
+        .doc(widget.id.toString());
 
     if (isFavourite) {
       await favouriteRef.delete();
     } else {
-      await favouriteRef.set({'PID': widget.id});
+      await favouriteRef.set({'PID': widget.id.toString()});
     }
-
+    isFavourite = !isFavourite;
     setState(() {
-      isFavourite = !isFavourite;
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Card(
@@ -89,16 +89,22 @@ class _PropertyListCardState extends State<PropertyListCard> {
                     top: 10,
                     right: 10,
                     child: IconButton(
-                      icon: isFavourite //If database got the property, return the favourite else not favourite
-                          ? Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            )
-                          : Icon(
-                              Icons.favorite_border,
-                              color: Colors.red,
-                            ),
-                      onPressed: operationFavouriteProperty,
+                      icon:
+                          isFavourite //If database got the property, return the favourite else not favourite
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.red,
+                                ),
+                      onPressed: (){
+                        operationFavouriteProperty();
+                        setState(() {
+
+                        });
+                      }
                     ),
                   ),
                 ],

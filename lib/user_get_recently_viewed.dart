@@ -18,6 +18,7 @@ class GetRecentlyViewed extends StatelessWidget {
       if (snapshot.connectionState == ConnectionState.done){
         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
         return PropertyListCard(
+          id: data['PropertyID'],
           name: data['Name'],
           address: data['Address'],
           date: data['Date'],
