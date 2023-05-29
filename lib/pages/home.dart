@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.deepOrange,
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

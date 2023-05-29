@@ -179,6 +179,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
       ),
       backgroundColor: Colors.grey[300],
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -65,6 +65,7 @@ class _FavouriteState extends State<Favourite> {
     checkFavouriteProperty();
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             ClipRRect(

@@ -101,6 +101,7 @@ class _UserSettingsState extends State<UserSettings> {
     return Scaffold(
       backgroundColor: Colors.white,
       body:SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Container(
           padding: const EdgeInsets.all(12),
           alignment: Alignment.center,

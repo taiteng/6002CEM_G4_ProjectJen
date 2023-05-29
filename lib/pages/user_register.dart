@@ -98,6 +98,7 @@ class _UserRegisterState extends State<UserRegister> {
       resizeToAvoidBottomInset: false,
       body: Background(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
