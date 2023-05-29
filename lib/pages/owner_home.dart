@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/owner_get_rent_property.dart';
-import 'package:projectjen/owner_home.dart';
-import 'package:projectjen/owner_task.dart';
+import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/pages/owner_add_property.dart';
+import 'package:projectjen/widgets/owner_get_property.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:projectjen/pages/owner_rent_assign.dart';
+import 'package:projectjen/pages/owner_task.dart';
 
-class OwnerRentAssign extends StatefulWidget {
-  const OwnerRentAssign({Key? key}) : super(key: key);
+class OwnerHome extends StatefulWidget {
+  const OwnerHome({Key? key}) : super(key: key);
 
   @override
-  State<OwnerRentAssign> createState() => _OwnerRentAssignState();
+  State<OwnerHome> createState() => _OwnerHomeState();
 }
 
-class _OwnerRentAssignState extends State<OwnerRentAssign> {
+class _OwnerHomeState extends State<OwnerHome> {
 
   List<String> _pIDs = [];
 
   final User? user = FirebaseAuth.instance.currentUser;
 
   Future getPropertyIDs() async{
-    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').where('SalesType', isEqualTo: 'Rent').get().then(
+    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').get().then(
           (snapshot) => snapshot.docs.forEach((properties) {
         if (properties.exists) {
           _pIDs.add(properties.reference.id);
@@ -49,18 +50,18 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
             gap: 10,
             tabBackgroundColor: Colors.amber,
             padding: EdgeInsets.all(16),
-            selectedIndex: 1,
+            selectedIndex: 0,
             tabs: [
               GButton(
                 icon: Icons.home,
                 text: 'Home',
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerHome(),),);
-                },
               ),
               GButton(
                 icon: Icons.warehouse,
                 text: 'Rent',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(),),);
+                },
               ),
               GButton(
                 icon: Icons.task,
@@ -84,13 +85,23 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
               bottomLeft: Radius.circular(25)),
         ),
         elevation: 0.00,
-        title: const Text('Owner Rent Assign'),
+        title: const Text('Owner Home'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_home,),
+            color: Colors.white,
+            tooltip: 'Add Icon',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerAddProperty(),),);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -106,7 +117,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
                       return ListView.builder(
                         itemCount: _pIDs.length,
                         itemBuilder: (context, index){
-                          return GetOwnerRentProperty(propertyID: _pIDs[index],);
+                          return GetOwnerProperty(propertyID: _pIDs[index],);
                         },
                       );
                     }

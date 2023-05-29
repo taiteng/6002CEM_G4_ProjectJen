@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/user_login.dart';
+import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/pages/user_login.dart';
 import 'package:provider/provider.dart';
-import 'package:projectjen/google_sign_in.dart';
+import 'package:projectjen/data/google_sign_in.dart';
 
 class Auth extends StatelessWidget {
   const Auth({Key? key}) : super(key: key);

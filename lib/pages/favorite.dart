@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/favourite_property.dart';
+import 'package:projectjen/widgets/favourite_property.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Favourite extends StatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/google_sign_in.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/user_forgot_password.dart';
-import 'package:projectjen/user_register.dart';
-import 'package:projectjen/login_register_bg.dart';
+import 'package:projectjen/data/google_sign_in.dart';
+import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/pages/user_forgot_password.dart';
+import 'package:projectjen/pages/user_register.dart';
+import 'package:projectjen/const/login_register_bg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:twitter_login/twitter_login.dart';
