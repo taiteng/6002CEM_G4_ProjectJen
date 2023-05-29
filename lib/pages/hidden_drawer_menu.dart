@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
-import 'package:projectjen/home.dart';
-import 'package:projectjen/user_settings.dart';
-import 'package:projectjen/user_task.dart';
+import 'package:projectjen/pages/home.dart';
+import 'package:projectjen/pages/user_settings.dart';
+import 'package:projectjen/pages/user_task.dart';
 
 import 'favorite.dart';
 

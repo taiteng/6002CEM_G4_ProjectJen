@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projectjen/login_register_bg.dart';
-import 'package:projectjen/user_login.dart';
+import 'package:projectjen/const/login_register_bg.dart';
+import 'package:projectjen/pages/user_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserForgotPassword extends StatefulWidget {

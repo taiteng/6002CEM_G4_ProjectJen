@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:projectjen/auth.dart';
+import 'package:projectjen/pages/auth.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
