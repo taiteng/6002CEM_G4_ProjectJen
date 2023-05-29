@@ -138,6 +138,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
       resizeToAvoidBottomInset: false,
       body: Background(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
