@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/property_text_field.dart';
+import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/widgets/property_text_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
