@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/hidden_drawer_menu.dart';
-import 'package:projectjen/user_get_recently_viewed.dart';
+import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/widgets/user_get_recently_viewed.dart';
 import 'package:intl/intl.dart';
 
 class UserRecentlyViewed extends StatefulWidget {
