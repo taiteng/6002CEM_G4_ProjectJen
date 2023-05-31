@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
-import 'package:projectjen/pages/owner_home.dart';
-import 'package:projectjen/pages/owner_rent_assign.dart';
+import 'package:projectjen/pages/owner/owner_home.dart';
+import 'package:projectjen/pages/owner/owner_rent_assign.dart';
 
 class OwnerTask extends StatefulWidget {
   const OwnerTask({Key? key}) : super(key: key);

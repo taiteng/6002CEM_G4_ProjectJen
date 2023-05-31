@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
-import 'package:projectjen/widgets/property_text_field.dart';
+import 'package:projectjen/widgets/property_text_form_field.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -183,14 +183,16 @@ class _UserEditProfileState extends State<UserEditProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 10,),
-              PropertyTextField(
+              PropertyTextFormField(
                 controller: usernameController,
                 hintText: 'Username',
+                emptyText: 'Please enter username',
               ),
               SizedBox(height: 10,),
-              PropertyTextField(
+              PropertyTextFormField(
                 controller: phoneController,
                 hintText: 'Phone',
+                emptyText: 'Please enter phone number',
               ),
               SizedBox(height: 10,),
               GestureDetector(

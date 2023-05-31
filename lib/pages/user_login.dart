@@ -36,6 +36,8 @@ class UserLoginPage extends StatefulWidget {
 
 class _UserLoginPageState extends State<UserLoginPage> {
 
+  final _formKey = GlobalKey<FormState>();
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -139,184 +141,209 @@ class _UserLoginPageState extends State<UserLoginPage> {
       body: Background(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: const Text(
-                  "LOGIN",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFe7494b),
-                      fontSize: 36,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-
-              SizedBox(height: size.height * 0.03),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Icon(Icons.email_rounded, size: 35, color: Colors.deepOrangeAccent,),
-                    Container(
-                      width: 300,
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                            labelText: "Email"
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: size.height * 0.03),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Icon(Icons.password_rounded, size: 35, color: Colors.deepOrangeAccent,),
-                    Container(
-                      width: 300,
-                      alignment: Alignment.centerRight,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        controller: passwordController,
-                        obscuringCharacter: '*',
-                        decoration: const InputDecoration(
-                            labelText: "Password"
-                        ),
-                        obscureText: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Container(
-                alignment: Alignment.centerRight,
-                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: GestureDetector(
-                  onTap: () => {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserForgotPassword()))
-                  },
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: const Text(
-                    "Forgot Password?",
+                    "LOGIN",
                     style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFFe7494b),
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: size.height * 0.05),
-
-              Container(
-                alignment: Alignment.centerRight,
-                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: signIn,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32.0),
-                    ),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50.0,
-                    width: size.width * 0.5,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(80.0),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 255, 136, 34),
-                          Color.fromARGB(255, 255, 177, 41),
-                        ],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(0),
-                    child: const Text(
-                      "LOGIN",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              Container(
-                alignment: Alignment.centerRight,
-                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: GestureDetector(
-                  onTap: () => {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRegister()))
-                  },
-                  child: const Text(
-                    "Don't Have an Account? Sign up",
-                    style: TextStyle(
-                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFe7494b),
+                        fontSize: 36,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.03),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(Icons.email_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                      Container(
+                        width: 300,
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter email';
+                            }
+                            return null;
+                          },
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                              labelText: "Email"
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.03),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(Icons.password_rounded, size: 35, color: Colors.deepOrangeAccent,),
+                      Container(
+                        width: 300,
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter password';
+                            }
+                            return null;
+                          },
+                          controller: passwordController,
+                          obscuringCharacter: '*',
+                          decoration: const InputDecoration(
+                              labelText: "Password"
+                          ),
+                          obscureText: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: GestureDetector(
+                    onTap: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const UserForgotPassword()))
+                    },
+                    child: const Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFFe7494b),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              SizedBox(height: size.height * 0.02),
+                SizedBox(height: size.height * 0.05),
 
-              Container(
-                alignment: Alignment.centerRight,
-                margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        signInWithFacebook();
-                      },
-                      padding: EdgeInsets.zero,
-                      icon: Image.asset('assets/images/facebook.png'),
-                      iconSize: 45,
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // If the form is valid, display a snackbar. In the real world,
+                        // you'd often call a server or save the information in a database.
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Processing Data')),
+                        );
+
+                        signIn();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32.0),
+                      ),
                     ),
-                    const SizedBox(height: 20, width: 20,),
-                    IconButton(
-                      onPressed: () async {
-                        final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-                        await provider.googleLogin();
-                      },
-                      padding: EdgeInsets.zero,
-                      icon: Image.asset('assets/images/google-plus.png'),
-                      iconSize: 45,
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 50.0,
+                      width: size.width * 0.5,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80.0),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 255, 136, 34),
+                            Color.fromARGB(255, 255, 177, 41),
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(0),
+                      child: const Text(
+                        "LOGIN",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 20, width: 20,),
-                    IconButton(
-                      onPressed: () async {
-                        signInWithTwitter();
-                      },
-                      padding: EdgeInsets.zero,
-                      icon: Image.asset('assets/images/twitter.png'),
-                      iconSize: 45,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: GestureDetector(
+                    onTap: () => {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const UserRegister()))
+                    },
+                    child: const Text(
+                      "Don't Have an Account? Sign up",
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFe7494b),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.02),
+
+                Container(
+                  alignment: Alignment.centerRight,
+                  margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          signInWithFacebook();
+                        },
+                        padding: EdgeInsets.zero,
+                        icon: Image.asset('assets/images/facebook.png'),
+                        iconSize: 45,
+                      ),
+                      const SizedBox(height: 20, width: 20,),
+                      IconButton(
+                        onPressed: () async {
+                          final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                          await provider.googleLogin();
+                        },
+                        padding: EdgeInsets.zero,
+                        icon: Image.asset('assets/images/google-plus.png'),
+                        iconSize: 45,
+                      ),
+                      const SizedBox(height: 20, width: 20,),
+                      IconButton(
+                        onPressed: () async {
+                          signInWithTwitter();
+                        },
+                        padding: EdgeInsets.zero,
+                        icon: Image.asset('assets/images/twitter.png'),
+                        iconSize: 45,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

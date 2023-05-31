@@ -4,8 +4,8 @@ import 'package:projectjen/pages/hidden_drawer_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/widgets/owner_get_rent_property.dart';
-import 'package:projectjen/pages/owner_home.dart';
-import 'package:projectjen/pages/owner_task.dart';
+import 'package:projectjen/pages/owner/owner_home.dart';
+import 'package:projectjen/pages/owner/owner_task.dart';
 
 class OwnerRentAssign extends StatefulWidget {
   const OwnerRentAssign({Key? key}) : super(key: key);
