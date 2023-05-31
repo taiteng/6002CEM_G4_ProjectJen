@@ -1,3 +1,4 @@
+
 class Property {
   final String amenities;
   final int bathrooms;
@@ -24,18 +25,8 @@ class Property {
         required this.salesType
       });
 
-  // toJson() => {
-  //   'amenities': amenities,
-  //   'bathrooms': bathrooms,
-  //   'bedrooms' : bedrooms,
-  //   'category' : category,
-  //   'facilities' : facilities,
-  //   'floorSize' : floorSize,
-  //   'image' : image,
-  //   'location' : location,
-  //   'price' : price,
-  //   'salesType' : salesType
-  // };
-
+}
+class PropertyListModel{
+  List<Property> propertyList = [];
 
 }

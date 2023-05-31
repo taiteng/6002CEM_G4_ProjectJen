@@ -24,6 +24,11 @@ class GetRecentlyViewed extends StatelessWidget {
           date: data['Date'],
           price: data['Price'],
           imageURL: data['Image'],
+          category: data['Category'],
+          facilities: data['Facilities'],
+          salesType: data['SalesType'],
+          amenities: data['Amenities'],
+          lotSize: data['LotSize'],
         );
       }
       else{
