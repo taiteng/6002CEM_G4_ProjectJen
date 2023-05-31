@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:like_button/like_button.dart';
-import 'package:projectjen/pages/owner_view_property_details.dart';
+import 'package:projectjen/pages/owner/owner_view_property_details.dart';
 
 class GetOwnerRentProperty extends StatelessWidget {
 
