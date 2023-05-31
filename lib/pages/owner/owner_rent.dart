@@ -1,17 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/widgets/owner_get_rent_property.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
-import 'package:projectjen/pages/owner/owner_rent.dart';
+import 'package:projectjen/pages/owner/owner_task.dart';
 
-class OwnerTask extends StatefulWidget {
-  const OwnerTask({Key? key}) : super(key: key);
+class OwnerRent extends StatefulWidget {
+  const OwnerRent({Key? key}) : super(key: key);
 
   @override
-  State<OwnerTask> createState() => _OwnerTaskState();
+  State<OwnerRent> createState() => _OwnerRentState();
 }
 
-class _OwnerTaskState extends State<OwnerTask> {
+class _OwnerRentState extends State<OwnerRent> {
+
+  List<String> _pIDs = [];
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  Future getPropertyIDs() async{
+    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').where('SalesType', isEqualTo: 'Rent').get().then(
+          (snapshot) => snapshot.docs.forEach((properties) {
+        if (properties.exists) {
+          _pIDs.add(properties.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +49,7 @@ class _OwnerTaskState extends State<OwnerTask> {
             gap: 10,
             tabBackgroundColor: Colors.amber,
             padding: EdgeInsets.all(16),
-            selectedIndex: 2,
+            selectedIndex: 1,
             tabs: [
               GButton(
                 icon: Icons.home,
@@ -41,13 +61,13 @@ class _OwnerTaskState extends State<OwnerTask> {
               GButton(
                 icon: Icons.warehouse,
                 text: 'Rent',
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRent(),),);
-                },
               ),
               GButton(
                 icon: Icons.task,
                 text: 'Task',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
+                },
               ),
             ],
           ),
@@ -64,7 +84,7 @@ class _OwnerTaskState extends State<OwnerTask> {
               bottomLeft: Radius.circular(25)),
         ),
         elevation: 0.00,
-        title: const Text('Owner Task'),
+        title: const Text('Owner Rent'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -76,7 +96,26 @@ class _OwnerTaskState extends State<OwnerTask> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('OwnerTask'),
+            Expanded(
+              child: FutureBuilder(
+                  future: getPropertyIDs(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error.toString()));
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      return ListView.builder(
+                        itemCount: _pIDs.length,
+                        itemBuilder: (context, index){
+                          return GetOwnerRentProperty(propertyID: _pIDs[index],);
+                        },
+                      );
+                    }
+                    else {
+                      return const Text("loading");
+                    }
+                  }
+              ),
+            ),
           ],
         ),
       ),
