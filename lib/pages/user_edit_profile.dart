@@ -29,6 +29,8 @@ class UserEditProfile extends StatefulWidget {
 
 class _UserEditProfileState extends State<UserEditProfile> {
 
+  final _formKey = GlobalKey<FormState>();
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
@@ -178,100 +180,105 @@ class _UserEditProfileState extends State<UserEditProfile> {
       backgroundColor: Colors.grey[300],
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 10,),
-              PropertyTextFormField(
-                controller: usernameController,
-                hintText: 'Username',
-                emptyText: 'Please enter username',
-              ),
-              SizedBox(height: 10,),
-              PropertyTextFormField(
-                controller: phoneController,
-                hintText: 'Phone',
-                emptyText: 'Please enter phone number',
-              ),
-              SizedBox(height: 10,),
-              GestureDetector(
-                onTap: (){
-                  selectFile();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(22),
-                  margin: const EdgeInsets.symmetric(horizontal: 25),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Upload Image",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+        child: Form(
+          key: _formKey,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 10,),
+                PropertyTextFormField(
+                  controller: usernameController,
+                  hintText: 'Username',
+                  emptyText: 'Please enter username',
+                ),
+                SizedBox(height: 10,),
+                PropertyTextFormField(
+                  controller: phoneController,
+                  hintText: 'Phone',
+                  emptyText: 'Please enter phone number',
+                ),
+                SizedBox(height: 10,),
+                GestureDetector(
+                  onTap: (){
+                    selectFile();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(22),
+                    margin: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Upload Image",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10,),
-              _pickedFile != null
-                  ? Padding(
-                padding: const EdgeInsets.all(20),
-                child: Image.file(
-                  File(_pickedFile!.path!),
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                ),
-              )
-                  : Text(
-                "(No Image Received)",
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 10,),
-              ElevatedButton(
-                onPressed: (){
-                  uploadToFirebase();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.0),
+                SizedBox(height: 10,),
+                _pickedFile != null
+                    ? Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.file(
+                    File(_pickedFile!.path!),
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
                   ),
+                )
+                    : Text(
+                  "(No Image Received)",
+                  style: TextStyle(fontSize: 16),
                 ),
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(80.0),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 255, 136, 34),
-                        Color.fromARGB(255, 255, 177, 41),
-                      ],
+                SizedBox(height: 10,),
+                ElevatedButton(
+                  onPressed: (){
+                    if (_formKey.currentState!.validate()) {
+                      uploadToFirebase();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32.0),
                     ),
                   ),
-                  padding: const EdgeInsets.all(0),
-                  child: const Text(
-                    "SUBMIT",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 50,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(80.0),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 255, 136, 34),
+                          Color.fromARGB(255, 255, 177, 41),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(0),
+                    child: const Text(
+                      "SUBMIT",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10,),
-              buildProgress(),
-              SizedBox(height: 20,),
-            ],
+                SizedBox(height: 10,),
+                buildProgress(),
+                SizedBox(height: 20,),
+              ],
+            ),
           ),
         ),
       ),
