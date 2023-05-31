@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:projectjen/pages/owner_home.dart';
+import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:projectjen/pages/user_edit_profile.dart';
 import 'package:projectjen/data/user_function.dart';
 import 'package:projectjen/pages/user_recently_viewed.dart';

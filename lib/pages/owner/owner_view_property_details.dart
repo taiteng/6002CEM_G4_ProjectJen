@@ -1,7 +1,7 @@
-import 'package:projectjen/pages/owner_edit_property.dart';
+import 'package:projectjen/pages/owner/owner_edit_property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projectjen/pages/owner_home.dart';
+import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
