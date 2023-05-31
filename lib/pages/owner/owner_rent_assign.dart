@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/model/user_rent_model.dart';
+import 'package:projectjen/pages/owner/owner_add_user.dart';
+import 'package:projectjen/pages/owner/owner_rent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:projectjen/widgets/owner_get_rent_property.dart';
-import 'package:projectjen/pages/owner/owner_home.dart';
-import 'package:projectjen/pages/owner/owner_task.dart';
+import 'package:projectjen/widgets/user_rent_widget.dart';
 
 class OwnerRentAssign extends StatefulWidget {
-  const OwnerRentAssign({Key? key}) : super(key: key);
+
+  final String propertyID;
+
+  const OwnerRentAssign({
+    Key? key,
+    required this.propertyID,
+  }) : super(key: key);
 
   @override
   State<OwnerRentAssign> createState() => _OwnerRentAssignState();
@@ -16,63 +21,87 @@ class OwnerRentAssign extends StatefulWidget {
 
 class _OwnerRentAssignState extends State<OwnerRentAssign> {
 
-  List<String> _pIDs = [];
+  List<UserRentModel> userList = [];
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  Future getPropertyIDs() async{
-    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').where('SalesType', isEqualTo: 'Rent').get().then(
-          (snapshot) => snapshot.docs.forEach((properties) {
-        if (properties.exists) {
-          _pIDs.add(properties.reference.id);
+  Future getRentUsers() async{
+    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').where('pID', isEqualTo: widget.propertyID.toString()).get().then(
+          (snapshot) => snapshot.docs.forEach((rentUser) async {
+        if (rentUser.exists) {
+          await FirebaseFirestore.instance.collection('Users').where('UID', isEqualTo: rentUser.reference.id).get().then(
+                (snapshot) => snapshot.docs.forEach((users) {
+              if (users.exists) {
+                String profileURL = users['ProfilePic'];
+                String username = users['Username'];
+                String uid = users['UID'];
+
+                UserRentModel user = UserRentModel(
+                  profileURL: profileURL,
+                  username: username,
+                  UID: uid,
+                );
+
+                userList.add(user);
+              } else {
+                print("Ntg to see here");
+              }
+            }),
+          );
         } else {
-          print("Ntg to see here");
+          print("0");
         }
       }),
     );
   }
 
+  Future<List<UserRentModel>> fetchRentUsers() async {
+    List<UserRentModel> userList = [];
+
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    final rentUserSnapshot = await FirebaseFirestore.instance
+        .collection('OwnerProperty')
+        .doc(user?.uid.toString())
+        .collection('RentUserID')
+        .where('pID', isEqualTo: widget.propertyID.toString())
+        .get();
+
+    for (final rentUser in rentUserSnapshot.docs) {
+      if (rentUser.exists) {
+        final usersSnapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .where('UID', isEqualTo: rentUser.reference.id)
+            .get();
+
+        for (final userDoc in usersSnapshot.docs) {
+          if (userDoc.exists) {
+            String profileURL = userDoc['ProfilePic'];
+            String username = userDoc['Username'];
+            String uid = userDoc['UID'];
+
+            UserRentModel user = UserRentModel(
+              profileURL: profileURL,
+              username: username,
+              UID: uid,
+            );
+
+            userList.add(user);
+          } else {
+            print("Ntg to see here");
+          }
+        }
+      } else {
+        print("0");
+      }
+    }
+
+    return userList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        color: Colors.deepOrange,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 10,
-          ),
-          child: GNav(
-            backgroundColor: Colors.deepOrange,
-            color: Colors.white,
-            activeColor: Colors.white,
-            gap: 10,
-            tabBackgroundColor: Colors.amber,
-            padding: EdgeInsets.all(16),
-            selectedIndex: 1,
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                text: 'Home',
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerHome(),),);
-                },
-              ),
-              GButton(
-                icon: Icons.warehouse,
-                text: 'Rent',
-              ),
-              GButton(
-                icon: Icons.task,
-                text: 'Task',
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
       appBar: AppBar(
         titleSpacing: 00.0,
         centerTitle: true,
@@ -88,9 +117,29 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerRent(),),);
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.refresh,),
+            color: Colors.white,
+            tooltip: 'Refresh',
+            onPressed: () {
+              setState(() {
+
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_add,),
+            color: Colors.white,
+            tooltip: 'Add Icon',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerAddUser(propertyID: widget.propertyID.toString()),),);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -98,15 +147,23 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
           children: [
             Expanded(
               child: FutureBuilder(
-                  future: getPropertyIDs(),
+                  future: fetchRentUsers(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Center(child: Text(snapshot.error.toString()));
-                    } else if (snapshot.connectionState == ConnectionState.done) {
+                    }
+                    else if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    else if (snapshot.connectionState == ConnectionState.done) {
+                      if(snapshot.hasData){
+                        userList = snapshot.data!;
+                      }
+
                       return ListView.builder(
-                        itemCount: _pIDs.length,
+                        itemCount: userList.length,
                         itemBuilder: (context, index){
-                          return GetOwnerRentProperty(propertyID: _pIDs[index],);
+                          return UserRentWidget(userRentModel: userList[index],);
                         },
                       );
                     }

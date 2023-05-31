@@ -5,7 +5,7 @@ import 'package:projectjen/pages/hidden_drawer_menu.dart';
 import 'package:projectjen/pages/owner/owner_add_property.dart';
 import 'package:projectjen/widgets/owner_get_property.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:projectjen/pages/owner/owner_rent_assign.dart';
+import 'package:projectjen/pages/owner/owner_rent.dart';
 import 'package:projectjen/pages/owner/owner_task.dart';
 
 class OwnerHome extends StatefulWidget {
@@ -60,7 +60,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                 icon: Icons.warehouse,
                 text: 'Rent',
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(),),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRent(),),);
                 },
               ),
               GButton(

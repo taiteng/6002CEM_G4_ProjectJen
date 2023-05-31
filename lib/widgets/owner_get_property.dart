@@ -55,27 +55,6 @@ class GetOwnerProperty extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: LikeButton(
-                            size: 25,
-                            animationDuration: Duration(milliseconds: 1000),
-                            likeBuilder: (isTapped){
-                              if(isTapped)
-                                return Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                );
-                              else{
-                                return Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.red,
-                                );
-                              }
-                            },
-                          ),
-                        ),
                       ],
                     ),
                     Padding(
