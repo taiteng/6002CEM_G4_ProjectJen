@@ -22,7 +22,6 @@ class _HomeState extends State<Home> {
       .orderBy('Date', descending: true)
       .snapshots();
 
-
   //Get current propertyID
   // getCurrentPropertyID() async {
   //   await FirebaseFirestore.instance.doc('Property').collection('PropertyID').get().then(
@@ -70,7 +69,9 @@ class _HomeState extends State<Home> {
                               width: 100, height: 40),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -113,7 +114,9 @@ class _HomeState extends State<Home> {
                               width: 100, height: 40),
                           child: ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.white),
                               ),
                               onPressed: () {
                                 setState(() {
@@ -161,7 +164,8 @@ class _HomeState extends State<Home> {
                     child: Column(
                       children: [
                         ConstrainedBox(
-                          constraints: const BoxConstraints(minWidth: double.infinity),
+                          constraints:
+                              const BoxConstraints(minWidth: double.infinity),
                           child: Column(
                             children: [
                               Row(
@@ -171,24 +175,29 @@ class _HomeState extends State<Home> {
                                       controller: _searchController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           borderSide: BorderSide.none,
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           borderSide: BorderSide(
                                             color: Colors.transparent,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           borderSide: BorderSide(
                                             color: Colors.transparent,
                                           ),
                                         ),
                                         filled: true,
                                         fillColor: Colors.white,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10.0),
                                         hintText: "E.g. Penang Condominium",
                                         hintStyle: TextStyle(
                                           color: Colors.deepOrangeAccent,
@@ -209,7 +218,9 @@ class _HomeState extends State<Home> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: SizedBox(
@@ -217,12 +228,14 @@ class _HomeState extends State<Home> {
                                       height: 50,
                                       child: ElevatedButton(
                                         style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.orangeAccent),
-                                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.orangeAccent),
+                                          padding: MaterialStateProperty.all<
+                                                  EdgeInsetsGeometry>(
+                                              EdgeInsets.zero),
                                         ),
-                                        onPressed: () {
-
-                                        },
+                                        onPressed: () {},
                                         child: Icon(
                                           Icons.filter_list_rounded,
                                           color: Colors.white,
@@ -294,7 +307,7 @@ class _HomeState extends State<Home> {
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           children: snapshot.data!.docs
-                              .map((DocumentSnapshot document)  {
+                              .map((DocumentSnapshot document) {
                             Map<String, dynamic> data =
                                 document.data()! as Map<String, dynamic>;
 
@@ -305,6 +318,11 @@ class _HomeState extends State<Home> {
                               date: data['Date'],
                               price: data['Price'],
                               imageURL: data['Image'],
+                              category: data['Category'],
+                              facilities: data['Facilities'],
+                              salesType: data['SalesType'],
+                              amenities: data['Amenities'],
+                              lotSize: data['LotSize'],
                             );
                           }).toList(),
                         );

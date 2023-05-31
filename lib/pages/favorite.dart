@@ -11,21 +11,24 @@ class Favourite extends StatefulWidget {
 }
 
 class _FavouriteState extends State<Favourite> {
-  bool sellButtonClicked = false;
-  bool buyButtonClicked = true;
-
   final User? user = FirebaseAuth.instance.currentUser;
-
   CollectionReference getPropertyID =
       FirebaseFirestore.instance.collection('Property');
 
   @override
   void initState() {
     super.initState();
-    checkFavouriteProperty();
+    getFavouriteProperty();
   }
 
-  Stream<QuerySnapshot> checkFavouriteProperty() async* {
+  void refreshFavouritePage(){
+    getFavouriteProperty();
+    setState(() {
+
+    });
+  }
+
+  Stream<QuerySnapshot> getFavouriteProperty() async* {
     List<String> propertyIDs = [];
     List<String> favouriteIDs = [];
 
@@ -52,17 +55,13 @@ class _FavouriteState extends State<Favourite> {
         .collection("Property")
         .where(FieldPath.documentId, whereIn: favouriteIDs)
         .snapshots();
-
     //4. Get the data and return to stream"
     yield* favouriteProperty;
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    checkFavouriteProperty();
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -90,7 +89,7 @@ class _FavouriteState extends State<Favourite> {
                 child: Column(
                   children: [
                     StreamBuilder(
-                      stream: checkFavouriteProperty(),
+                      stream: getFavouriteProperty(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
@@ -101,13 +100,19 @@ class _FavouriteState extends State<Favourite> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(Icons.error_outline_outlined, size: 50,),
+                                Icon(
+                                  Icons.error_outline_outlined,
+                                  size: 50,
+                                ),
                                 Text(
                                   "Oops",
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 20),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
                                 ),
-                                SizedBox(height: 20,),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 Text(
                                   "You don't have favourite properties.",
                                   style: TextStyle(fontSize: 15),
@@ -119,26 +124,32 @@ class _FavouriteState extends State<Favourite> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Text("Loading");
-                        }
-                        return ListView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
-                            Map<String, dynamic> data =
-                                document.data()! as Map<String, dynamic>;
+                        }else if(snapshot.connectionState == ConnectionState.active){
+                          return ListView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            children: snapshot.data!.docs
+                                .map((DocumentSnapshot document) {
+                              Map<String, dynamic> data =
+                              document.data()! as Map<String, dynamic>;
 
-                            return FavouriteProperty(
-                              id: data['PropertyID'],
-                              name: data['Name'],
-                              address: data['Address'],
-                              date: data['Date'],
-                              price: data['Price'],
-                              imageURL: data['Image'],
-                            );
-                          }).toList(),
-                        );
+                              return FavouriteProperty(
+                                id: data['PropertyID'],
+                                name: data['Name'],
+                                address: data['Address'],
+                                date: data['Date'],
+                                price: data['Price'],
+                                imageURL: data['Image'],
+                                refreshFavourite: refreshFavouritePage, //recall the page and load new data
+                              );
+                            }).toList(),
+                          );
+
+                        }else{
+                          return const Text("Error");
+                        }
+
                       },
                     ),
                   ],

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 class FavouriteProperty extends StatefulWidget {
   final String imageURL, name, address, date, id;
   final int price;
+  final VoidCallback refreshFavourite;
 
   const FavouriteProperty(
       {Key? key,
+        required this.refreshFavourite,
       required this.id,
       required this.imageURL,
       required this.name,
@@ -24,10 +26,14 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
   bool isFavourite = false;
   final User? user = FirebaseAuth.instance.currentUser;
 
+
   @override
   void initState() {
     super.initState();
     checkFavouriteProperty();
+    setState(() {
+
+    });
   }
 
   // Check if the current propertyID exists in Firestore
@@ -39,9 +45,8 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
         .doc(widget.id.toString())
         .get();
 
-    isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
     setState(() {
-
+      isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
     });
   }
 
@@ -55,12 +60,15 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
 
     if (isFavourite) {
       await favouriteRef.delete();
+      widget.refreshFavourite();
     } else {
       await favouriteRef.set({'PID': widget.id.toString()});
+      widget.refreshFavourite();
     }
-    isFavourite = !isFavourite;
-    setState(() {
 
+
+    setState(() {
+      isFavourite = !isFavourite;
     });
   }
 
@@ -99,8 +107,8 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
                                   Icons.favorite_border,
                                   color: Colors.red,
                                 ),
-                      onPressed: (){
-                        operationFavouriteProperty();
+                      onPressed: () async {
+                        await operationFavouriteProperty();
                         setState(() {
 
                         });
