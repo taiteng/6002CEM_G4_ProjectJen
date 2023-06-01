@@ -63,6 +63,7 @@ class _FavouriteState extends State<Favourite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
@@ -73,7 +74,7 @@ class _FavouriteState extends State<Favourite> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.white,
                       blurRadius: 2,
                       spreadRadius: 0,
                       offset: Offset(2.0, 2.0),
