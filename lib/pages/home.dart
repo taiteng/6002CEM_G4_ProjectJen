@@ -12,7 +12,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool sellButtonClicked = false;
   bool buyButtonClicked = true;
-  bool isFavourited = false;
 
   final TextEditingController _searchController = TextEditingController();
 
@@ -182,14 +181,14 @@ class _HomeState extends State<Home> {
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Colors.transparent,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
-                                          borderSide: BorderSide(
+                                          borderSide: const BorderSide(
                                             color: Colors.transparent,
                                           ),
                                         ),
@@ -199,7 +198,7 @@ class _HomeState extends State<Home> {
                                             const EdgeInsets.symmetric(
                                                 horizontal: 10.0),
                                         hintText: "E.g. Penang Condominium",
-                                        hintStyle: TextStyle(
+                                        hintStyle: const TextStyle(
                                           color: Colors.deepOrangeAccent,
                                         ),
                                         prefixIcon: const Icon(
@@ -212,13 +211,13 @@ class _HomeState extends State<Home> {
                                       onSubmitted: (value) {
                                         //_beginSearch();
                                       },
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.deepOrangeAccent,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   ClipRRect(
@@ -236,7 +235,7 @@ class _HomeState extends State<Home> {
                                               EdgeInsets.zero),
                                         ),
                                         onPressed: () {},
-                                        child: Icon(
+                                        child: const Icon(
                                           Icons.filter_list_rounded,
                                           color: Colors.white,
                                         ),
@@ -255,12 +254,12 @@ class _HomeState extends State<Home> {
               ),
             ),
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
               ),
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -280,10 +279,10 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: Row(
-                        children: [
-                          const Text(
+                        children: const [
+                          Text(
                             "Recent Properties",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
@@ -303,6 +302,7 @@ class _HomeState extends State<Home> {
                           return const Text("Loading");
                         }
                         return ListView(
+                          primary: false,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
