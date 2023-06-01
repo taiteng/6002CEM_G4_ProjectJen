@@ -78,6 +78,8 @@ class _UserEditProfileState extends State<UserEditProfile> {
           'UID' : widget.uID.toString(),
           'Username' : usernameController.text,
         });
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
       }
       else{
         await uploadFile();
@@ -94,7 +96,7 @@ class _UserEditProfileState extends State<UserEditProfile> {
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
+
       });
     } catch (e){
       print(e);
