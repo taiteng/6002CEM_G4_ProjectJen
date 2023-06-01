@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'hidden_drawer_menu.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PropertyDetail extends StatefulWidget {
-
-  final String imageURL, name, address, date, id, category, facilities, contact, state, salesType, amenities;
+  final String imageURL,
+      name,
+      address,
+      date,
+      id,
+      category,
+      facilities,
+      contact,
+      state,
+      salesType,
+      amenities;
   final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const PropertyDetail({
@@ -32,6 +44,88 @@ class PropertyDetail extends StatefulWidget {
 }
 
 class _PropertyDetailState extends State<PropertyDetail> {
+  bool isFavourite = false;
+  final User? user = FirebaseAuth.instance.currentUser;
+  static const formSnackBar = SnackBar(
+    content: Text('Form Submitted!'),
+  );
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController commentsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    checkFavouriteProperty();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    commentsController.dispose();
+    super.dispose();
+  }
+
+  void launchWhatsApp(String phone, String message){
+    final Uri whatsApp = Uri.parse("https://wa.me/6$phone?text=$message");
+    launchUrl(whatsApp, mode: LaunchMode.externalNonBrowserApplication,);
+  }
+
+  void inquiryFormSubmission() async {
+    await FirebaseFirestore.instance
+        .collection("InquiryFormProperty")
+        .doc(widget.id.toString())
+        .set({
+      "PID": user?.uid.toString(),
+      "Name": nameController.text,
+      "Email": emailController.text,
+      "Phone": phoneController.text.toString(),
+      "Comments": commentsController.text,
+    });
+    nameController.clear();
+    phoneController.clear();
+    emailController.clear();
+    commentsController.clear();
+  }
+
+  // Check if the current propertyID exists in Firestore
+  Future<void> checkFavouriteProperty() async {
+    final propertyIDSnapshot = await FirebaseFirestore.instance
+        .collection('Favourite')
+        .doc(user?.uid.toString())
+        .collection('FavouriteProperty')
+        .doc(widget.id)
+        .get();
+
+    setState(() {
+      isFavourite =
+          propertyIDSnapshot.exists; //return true if exist, else false
+    });
+  }
+
+  // Toggle the favourite status of the property
+  Future<void> operationFavouriteProperty() async {
+    final favouriteRef = FirebaseFirestore.instance
+        .collection("Favourite")
+        .doc(user?.uid.toString())
+        .collection("FavouriteProperty")
+        .doc(widget.id);
+
+    if (isFavourite) {
+      await favouriteRef.delete();
+    } else {
+      await favouriteRef.set({'PID': widget.id});
+    }
+
+    setState(() {
+      isFavourite = !isFavourite;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,9 +142,14 @@ class _PropertyDetailState extends State<PropertyDetail> {
         elevation: 0.00,
         title: Text(widget.name),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 0),),);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HiddenDrawer(pageNum: 0),
+              ),
+            );
           },
         ),
       ),
@@ -61,46 +160,68 @@ class _PropertyDetailState extends State<PropertyDetail> {
             height: 60,
             child: OutlinedButton(
               onPressed: () {},
-              child: Icon(Icons.favorite_border),
               style: OutlinedButton.styleFrom(
-                shape: StadiumBorder(),
+                shape: const StadiumBorder(),
                 backgroundColor: Colors.white,
+              ),
+              child: IconButton(
+                icon:
+                    isFavourite //If database got the property, return the favourite else not favourite
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          )
+                        : const Icon(
+                            Icons.favorite_border,
+                            color: Colors.red,
+                          ),
+                onPressed: () {
+                  operationFavouriteProperty();
+                },
               ),
             ),
           ),
-          SizedBox(
-            height: 60,
-            width: 250,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Contact Me"),
-                  SizedBox(width:10,),
-                  Image.asset(
-                    "assets/images/whatsapp.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                ],
+          InkWell(
+            onTap: () {
+              String message = "${widget.imageURL}\nHi, I am interested in ${widget.name} which is for ${widget.salesType} at RM${widget.price}.";
+              launchWhatsApp("0143096966", message);
+            },
+            child: IgnorePointer(
+              child: SizedBox(
+                height: 60,
+                width: 250,
+                child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      alignment: Alignment.center,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Contact Me"),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset(
+                          "assets/images/whatsapp.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                      ],
+                    )),
               ),
-              style: ElevatedButton.styleFrom(
-                alignment: Alignment.center,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              )
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-
-            Container(
+            SizedBox(
               height: 300,
               width: MediaQuery.of(context).size.width,
               child: Image.network(
@@ -109,7 +230,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
                   Row(
@@ -118,7 +239,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                         children: [
                           Text(
                             widget.name,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -130,48 +251,47 @@ class _PropertyDetailState extends State<PropertyDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.location_on_outlined,
-                              size: 20,
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 20,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            widget.address,
+                            style: const TextStyle(
+                              fontSize: 12,
                               color: Colors.grey,
                             ),
-                            Text(
-                              widget.address,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       ElevatedButton(
                         onPressed: () {},
                         child: Container(
                           child: widget.salesType == "Rent"
                               ? Text(
-                                  "RM" + widget.price.toString() + "/month",
-                                  style: TextStyle(fontSize: 12),
+                                  "RM${widget.price}/month",
+                                  style: const TextStyle(fontSize: 12),
                                 )
                               : Text(
-                                  "RM" + widget.price.toString(),
-                                  style: TextStyle(fontSize: 12),
+                                  "RM${widget.price}",
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -181,13 +301,13 @@ class _PropertyDetailState extends State<PropertyDetail> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.bed,
                                 size: 15,
                               ),
                               Text(
-                                "${widget.beds.toString()} Beds",
-                                style: TextStyle(
+                                "  ${widget.beds.toString()} Beds",
+                                style: const TextStyle(
                                   fontSize: 12,
                                 ),
                               ),
@@ -196,23 +316,24 @@ class _PropertyDetailState extends State<PropertyDetail> {
                         ),
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
                           ),
                           height: 35,
-                          width: 100,
+                          width: 120,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.bathtub,
                                 size: 15,
                               ),
                               Text(
-                                "${widget.bathrooms.toString()} Bathrooms",
-                                style: TextStyle(
+                                "  ${widget.bathrooms.toString()} Bathrooms",
+                                style: const TextStyle(
                                   fontSize: 12,
                                 ),
                               ),
@@ -221,7 +342,8 @@ class _PropertyDetailState extends State<PropertyDetail> {
                         ),
                       ),
                       ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -231,13 +353,13 @@ class _PropertyDetailState extends State<PropertyDetail> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.landscape,
                                 size: 15,
                               ),
                               Text(
-                                widget.lotSize.toString() + "Sqft",
-                                style: TextStyle(
+                                "  ${widget.lotSize} Sqft",
+                                style: const TextStyle(
                                   fontSize: 12,
                                 ),
                               ),
@@ -247,7 +369,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Row(
@@ -257,43 +379,52 @@ class _PropertyDetailState extends State<PropertyDetail> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.salesType + " Details",
-                            style: TextStyle(
+                            "${widget.salesType} Details",
+                            style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
-                            "Amenities: " + widget.amenities,
-                            style: TextStyle(
+                            "Amenities: ${widget.amenities}",
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text(
-                            "LotSize: " + widget.lotSize.toString(),
-                            style: TextStyle(
+                            "LotSize: ${widget.lotSize}",
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text(
-                            "Category: " + widget.category,
-                            style: TextStyle(
+                            "Category: ${widget.category}",
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text(
-                            "Facilities: " + widget.facilities,
-                            style: TextStyle(
+                            "Facilities: ${widget.facilities}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "Feel free to contact me at ${widget.contact} for more information!",
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),
@@ -301,76 +432,115 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
-                  Align(
+                  const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Inquiry Form",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  TextField(
-                      //controller: ,
+                  TextFormField(
+                      controller: nameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    contentPadding: const EdgeInsets.all(10.0),
-                    hintText: "Name",
-                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  )),
-                  SizedBox(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        contentPadding: const EdgeInsets.all(10.0),
+                        hintText: "Name",
+                        hintStyle:
+                            TextStyle(color: Colors.grey[600], fontSize: 12),
+                      )),
+                  const SizedBox(
                     height: 5,
                   ),
-                  TextField(
+                  TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: phoneController,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter mobile phone number';
+                        }
+                        return null;
+                      },
                       //controller: ,
                       decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    contentPadding: const EdgeInsets.all(10.0),
-                    hintText: "Mobile Phone",
-                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  )),
-                  SizedBox(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[300],
+                        contentPadding: const EdgeInsets.all(10.0),
+                        hintText: "Mobile Phone",
+                        hintStyle:
+                            TextStyle(color: Colors.grey[600], fontSize: 12),
+                      )),
+                  const SizedBox(
                     height: 5,
                   ),
-                  TextField(
+                  TextFormField(
+                    controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter email';
+                      } else if (value.isNotEmpty) {
+                        bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value);
+                        bool validEmail = false;
+
+                        if (emailValid) {
+                          validEmail = true;
+                          return null;
+                        } else {
+                          validEmail = false;
+                          return "Please provide a valid email address";
+                        }
+                      }
+                      return null;
+                    },
                     //controller: ,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -379,13 +549,13 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
                       ),
@@ -397,10 +567,17 @@ class _PropertyDetailState extends State<PropertyDetail> {
                           TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   TextFormField(
+                    controller: commentsController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your question!';
+                      }
+                      return null;
+                    },
                     keyboardType: TextInputType.multiline,
                     maxLines: 4,
                     //controller: ,
@@ -411,13 +588,13 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
                       ),
@@ -433,12 +610,16 @@ class _PropertyDetailState extends State<PropertyDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
-                        child: Text("Submit"),
+                        onPressed: () {
+                          inquiryFormSubmission();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(formSnackBar);
+                        },
+                        child: const Text("Submit"),
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 100,
                   ),
                 ],
