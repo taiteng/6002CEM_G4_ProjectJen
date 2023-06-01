@@ -3,31 +3,25 @@ import 'package:flutter/material.dart';
 import 'hidden_drawer_menu.dart';
 
 class PropertyDetail extends StatefulWidget {
-  final String imageURL,
-      name,
-      address,
-      date,
-      id,
-      category,
-      facilities,
-      salesType,
-      amenities;
+
+  final String imageURL, name, address, date, id, category, facilities, contact, salesType, amenities;
   final int price, lotSize;
 
-  const PropertyDetail(
-      {Key? key,
-      required this.imageURL,
-      required this.name,
-      required this.address,
-      required this.date,
-      required this.id,
-      required this.category,
-      required this.facilities,
-      required this.salesType,
-      required this.amenities,
-      required this.price,
-      required this.lotSize})
-      : super(key: key);
+  const PropertyDetail({
+    Key? key,
+    required this.imageURL,
+    required this.name,
+    required this.address,
+    required this.date,
+    required this.id,
+    required this.category,
+    required this.facilities,
+    required this.contact,
+    required this.salesType,
+    required this.amenities,
+    required this.price,
+    required this.lotSize,
+  }) : super(key: key);
 
   @override
   State<PropertyDetail> createState() => _PropertyDetailState();

@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 
 class OwnerEditProperty extends StatefulWidget {
 
-  final String propertyID, name, address, amenities, category, facilities, image, date, state, salesType;
+  final String propertyID, name, address, amenities, category, facilities, contact, image, date, state, salesType;
   final int price, lotSize, numOfVisits;
 
   const OwnerEditProperty({Key? key,
@@ -22,6 +22,7 @@ class OwnerEditProperty extends StatefulWidget {
     required this.amenities,
     required this.category,
     required this.facilities,
+    required this.contact,
     required this.image,
     required this.date,
     required this.state,
@@ -44,6 +45,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
   TextEditingController addressController = TextEditingController();
   TextEditingController amenityController = TextEditingController();
   TextEditingController facilityController = TextEditingController();
+  TextEditingController contactController = TextEditingController();
 
   String? categoryValue, salesTypeValue, stateValue;
 
@@ -100,6 +102,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'NumOfVisits' : widget.numOfVisits,
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
+          'Contact' : contactController.text,
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
@@ -124,6 +127,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'NumOfVisits' : widget.numOfVisits,
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
+          'Contact' : contactController.text,
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
@@ -148,6 +152,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
     addressController.dispose();
     amenityController.dispose();
     facilityController.dispose();
+    contactController.dispose();
 
     super.dispose();
   }
@@ -161,6 +166,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
     addressController = new TextEditingController(text: widget.address.toString());
     amenityController = new TextEditingController(text: widget.amenities.toString());
     facilityController = new TextEditingController(text: widget.facilities.toString());
+    contactController = new TextEditingController(text: widget.contact.toString());
     categoryValue = widget.category.toString();
     salesTypeValue = widget.salesType.toString();
     stateValue = widget.state.toString();
@@ -329,6 +335,12 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
                   controller: addressController,
                   hintText: 'Address',
                   emptyText: 'Please enter address',
+                ),
+                SizedBox(height: 10,),
+                PropertyTextFormField(
+                  controller: contactController,
+                  hintText: 'Contact',
+                  emptyText: 'Please enter contact',
                 ),
                 SizedBox(height: 10,),
                 Padding(

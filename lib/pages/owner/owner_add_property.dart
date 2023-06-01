@@ -27,6 +27,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
   final addressController = TextEditingController();
   final amenityController = TextEditingController();
   final facilityController = TextEditingController();
+  final contactController = TextEditingController();
 
   String? categoryValue, salesTypeValue, stateValue;
 
@@ -88,6 +89,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
           'NumOfVisits' : 0,
           'Date' : currentDate.toString(),
           'PropertyID' : docID.id.toString(),
+          'Contact' : contactController.text,
         });
 
         DocID = docID.id.toString();
@@ -114,6 +116,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
     addressController.dispose();
     amenityController.dispose();
     facilityController.dispose();
+    contactController.dispose();
 
     super.dispose();
   }
@@ -281,6 +284,12 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                   controller: addressController,
                   hintText: 'Address',
                   emptyText: 'Please enter address',
+                ),
+                SizedBox(height: 10,),
+                PropertyTextFormField(
+                  controller: contactController,
+                  hintText: 'Contact',
+                  emptyText: 'Please enter contact',
                 ),
                 SizedBox(height: 10,),
                 Padding(

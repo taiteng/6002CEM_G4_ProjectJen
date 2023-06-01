@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../pages/property_detail.dart';
 
 class PropertyListCard extends StatefulWidget {
-  final String imageURL, name, address, date, id, category, facilities, salesType, amenities;
+  final String imageURL, name, address, date, id, category, facilities, contact, salesType, amenities;
   final int price, lotSize;
 
   const PropertyListCard({
@@ -15,8 +15,13 @@ class PropertyListCard extends StatefulWidget {
     required this.address,
     required this.date,
     required this.price,
-    required this.id, required this.category, required this.facilities, required this.salesType, required this.amenities, required this.lotSize,
-
+    required this.id,
+    required this.category,
+    required this.facilities,
+    required this.contact,
+    required this.salesType,
+    required this.amenities,
+    required this.lotSize,
   }) : super(key: key);
 
   @override
@@ -80,6 +85,7 @@ class _PropertyListCardState extends State<PropertyListCard> {
           imageURL: this.widget.imageURL,
           category: this.widget.category,
           facilities: this.widget.facilities,
+          contact: this.widget.contact,
           salesType: this.widget.salesType,
           amenities: this.widget.amenities,
           lotSize: this.widget.lotSize,

@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class OwnerViewPropertyDetails extends StatefulWidget {
 
-  final String propertyID, name, address, amenities, category, facilities, image, date, state, salesType;
+  final String propertyID, name, address, amenities, category, facilities, contact, image, date, state, salesType;
   final int price, lotSize, numOfVisits;
 
   const OwnerViewPropertyDetails({Key? key,
@@ -17,6 +17,7 @@ class OwnerViewPropertyDetails extends StatefulWidget {
     required this.amenities,
     required this.category,
     required this.facilities,
+    required this.contact,
     required this.image,
     required this.date,
     required this.state,
@@ -156,6 +157,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                   amenities: widget.amenities.toString(),
                   category: widget.category.toString(),
                   facilities: widget.facilities.toString(),
+                  contact : widget.contact.toString(),
                   image: widget.image.toString(),
                   state: widget.state.toString(),
                   salesType: widget.salesType.toString(),

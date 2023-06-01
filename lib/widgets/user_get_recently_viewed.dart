@@ -26,6 +26,7 @@ class GetRecentlyViewed extends StatelessWidget {
           imageURL: data['Image'],
           category: data['Category'],
           facilities: data['Facilities'],
+          contact: data['Contact'],
           salesType: data['SalesType'],
           amenities: data['Amenities'],
           lotSize: data['LotSize'],

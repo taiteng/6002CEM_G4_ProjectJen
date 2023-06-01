@@ -32,6 +32,7 @@ class GetOwnerProperty extends StatelessWidget {
                   amenities: data['Amenities'],
                   category: data['Category'],
                   facilities: data['Facilities'],
+                  contact : data['Contact'],
                   image: data['Image'],
                   state: data['State'],
                   salesType: data['SalesType'],
