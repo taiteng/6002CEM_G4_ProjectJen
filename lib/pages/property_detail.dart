@@ -4,8 +4,8 @@ import 'hidden_drawer_menu.dart';
 
 class PropertyDetail extends StatefulWidget {
 
-  final String imageURL, name, address, date, id, category, facilities, contact, salesType, amenities;
-  final int price, lotSize;
+  final String imageURL, name, address, date, id, category, facilities, contact, state, salesType, amenities;
+  final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const PropertyDetail({
     Key? key,
@@ -21,6 +21,10 @@ class PropertyDetail extends StatefulWidget {
     required this.amenities,
     required this.price,
     required this.lotSize,
+    required this.beds,
+    required this.bathrooms,
+    required this.state,
+    required this.numOfVisits,
   }) : super(key: key);
 
   @override
@@ -182,7 +186,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                                 size: 15,
                               ),
                               Text(
-                                "Beds",
+                                "${widget.beds.toString()} Beds",
                                 style: TextStyle(
                                   fontSize: 12,
                                 ),
@@ -207,7 +211,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                                 size: 15,
                               ),
                               Text(
-                                "Bathrooms",
+                                "${widget.bathrooms.toString()} Bathrooms",
                                 style: TextStyle(
                                   fontSize: 12,
                                 ),

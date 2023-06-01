@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class OwnerViewPropertyDetails extends StatefulWidget {
 
   final String propertyID, name, address, amenities, category, facilities, contact, image, date, state, salesType;
-  final int price, lotSize, numOfVisits;
+  final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const OwnerViewPropertyDetails({Key? key,
     required this.propertyID,
@@ -25,6 +25,8 @@ class OwnerViewPropertyDetails extends StatefulWidget {
     required this.price,
     required this.lotSize,
     required this.numOfVisits,
+    required this.beds,
+    required this.bathrooms,
   }) : super(key: key);
 
   @override
@@ -164,6 +166,8 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                   price: widget.price,
                   lotSize: widget.lotSize,
                   numOfVisits: widget.numOfVisits,
+                  beds: widget.beds,
+                  bathrooms: widget.bathrooms,
                 ),),);
               },
               backgroundColor: Colors.pinkAccent,

@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class PropertyTextField extends StatelessWidget {
+class PropertyNumberTextFormField extends StatelessWidget {
   final controller;
   final String hintText;
+  final String emptyText;
 
-  const PropertyTextField({
+  const PropertyNumberTextFormField({
     super.key,
     required this.controller,
     required this.hintText,
+    required this.emptyText,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return emptyText;
+          }
+          return null;
+        },
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
         controller: controller,
         decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(

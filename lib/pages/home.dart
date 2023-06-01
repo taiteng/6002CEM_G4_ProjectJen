@@ -319,10 +319,15 @@ class _HomeState extends State<Home> {
                               price: data['Price'],
                               imageURL: data['Image'],
                               category: data['Category'],
+                              state: data['State'],
                               facilities: data['Facilities'],
                               salesType: data['SalesType'],
                               amenities: data['Amenities'],
                               lotSize: data['LotSize'],
+                              numOfVisits: data['NumOfVisits'],
+                              beds: data['Beds'],
+                              bathrooms: data['Bathrooms'],
+                              contact: data['Contact'],
                             );
                           }).toList(),
                         );

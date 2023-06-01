@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:intl/intl.dart';
 import '../pages/property_detail.dart';
 
 class PropertyListCard extends StatefulWidget {
-  final String imageURL, name, address, date, id, category, facilities, contact, salesType, amenities;
-  final int price, lotSize;
+  final String imageURL, name, address, date, id, category, facilities, contact, state, salesType, amenities;
+  final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const PropertyListCard({
     Key? key,
@@ -22,6 +22,10 @@ class PropertyListCard extends StatefulWidget {
     required this.salesType,
     required this.amenities,
     required this.lotSize,
+    required this.numOfVisits,
+    required this.beds,
+    required this.bathrooms,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -29,6 +33,7 @@ class PropertyListCard extends StatefulWidget {
 }
 
 class _PropertyListCardState extends State<PropertyListCard> {
+  String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   bool isFavourite = false;
   final User? user = FirebaseAuth.instance.currentUser;
 
@@ -72,10 +77,42 @@ class _PropertyListCardState extends State<PropertyListCard> {
     });
   }
 
+  Future<void> insertIntoRecentlyViewedAndIncreaseNumOfVisits() async{
+    try{
+      await FirebaseFirestore.instance.collection('RecentlyViewed').doc(user?.uid.toString()).collection('PropertyIDs').doc(widget.id.toString()).set({
+        'Date' : currentDate.toString(),
+        'pID' : widget.id.toString(),
+      });
+
+      await FirebaseFirestore.instance.collection('Property').doc(widget.id.toString()).set({
+        'Name' : widget.name,
+        'LotSize' : widget.lotSize,
+        'Price' : widget.price,
+        'Address' : widget.address,
+        'Amenities' : widget.amenities,
+        'Facilities' : widget.facilities,
+        'Image' : widget.imageURL,
+        'Category' : widget.category,
+        'SalesType' : widget.salesType,
+        'State' : widget.state,
+        'NumOfVisits' : (widget.numOfVisits + 1),
+        'Date' : widget.date.toString(),
+        'PropertyID' : widget.id,
+        'Contact' : widget.contact,
+        'Beds' : widget.beds,
+        'Bathrooms' : widget.bathrooms,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () async {
+        await insertIntoRecentlyViewedAndIncreaseNumOfVisits();
+
         Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyDetail(
           id: this.widget.id,
           name: this.widget.name,
@@ -89,6 +126,10 @@ class _PropertyListCardState extends State<PropertyListCard> {
           salesType: this.widget.salesType,
           amenities: this.widget.amenities,
           lotSize: this.widget.lotSize,
+          beds: this.widget.beds,
+          bathrooms: this.widget.bathrooms,
+          state: this.widget.state,
+          numOfVisits: this.widget.numOfVisits,
         ),),);
       },
       child: Padding(

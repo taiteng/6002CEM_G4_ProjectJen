@@ -39,6 +39,8 @@ class GetOwnerProperty extends StatelessWidget {
                   price: data['Price'],
                   lotSize: data['LotSize'],
                   numOfVisits: data['NumOfVisits'],
+                  beds: data['Beds'],
+                  bathrooms: data['Bathrooms'],
                 ),),);
               },
               child: Card(

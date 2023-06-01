@@ -13,7 +13,7 @@ import 'package:intl/intl.dart';
 class OwnerEditProperty extends StatefulWidget {
 
   final String propertyID, name, address, amenities, category, facilities, contact, image, date, state, salesType;
-  final int price, lotSize, numOfVisits;
+  final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const OwnerEditProperty({Key? key,
     required this.propertyID,
@@ -30,6 +30,8 @@ class OwnerEditProperty extends StatefulWidget {
     required this.price,
     required this.lotSize,
     required this.numOfVisits,
+    required this.beds,
+    required this.bathrooms,
   }) : super(key: key);
   @override
   State<OwnerEditProperty> createState() => _OwnerEditPropertyState();
@@ -46,6 +48,8 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
   TextEditingController amenityController = TextEditingController();
   TextEditingController facilityController = TextEditingController();
   TextEditingController contactController = TextEditingController();
+  TextEditingController bedsController = TextEditingController();
+  TextEditingController bathroomsController = TextEditingController();
 
   String? categoryValue, salesTypeValue, stateValue;
 
@@ -103,6 +107,8 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
           'Contact' : contactController.text,
+          'Beds' : bedsController.text,
+          'Bathrooms' : bathroomsController.text,
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
@@ -128,6 +134,8 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
           'Contact' : contactController.text,
+          'Beds' : bedsController.text,
+          'Bathrooms' : bathroomsController.text,
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
@@ -153,6 +161,8 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
     amenityController.dispose();
     facilityController.dispose();
     contactController.dispose();
+    bedsController.dispose();
+    bathroomsController.dispose();
 
     super.dispose();
   }
@@ -167,6 +177,8 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
     amenityController = new TextEditingController(text: widget.amenities.toString());
     facilityController = new TextEditingController(text: widget.facilities.toString());
     contactController = new TextEditingController(text: widget.contact.toString());
+    bedsController = new TextEditingController(text: widget.beds.toString());
+    bathroomsController = new TextEditingController(text: widget.bathrooms.toString());
     categoryValue = widget.category.toString();
     salesTypeValue = widget.salesType.toString();
     stateValue = widget.state.toString();
