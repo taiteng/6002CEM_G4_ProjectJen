@@ -93,8 +93,8 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
           'Date' : currentDate.toString(),
           'PropertyID' : docID.id.toString(),
           'Contact' : contactController.text,
-          'Beds' : bedsController.text,
-          'Bathrooms' : bathroomsController.text,
+          'Beds' : int.parse(bedsController.text),
+          'Bathrooms' : int.parse(bathroomsController.text),
         });
 
         DocID = docID.id.toString();
@@ -105,9 +105,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
         'SalesType' : salesTypeValue.toString(),
       });
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OwnerHome()));
-      });
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerHome(),),);
     } catch (e){
       print(e);
     }
@@ -205,7 +203,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                   emptyText: 'Please enter name',
                 ),
                 SizedBox(height: 10,),
-                PropertyTextFormField(
+                PropertyNumberTextFormField(
                   controller: lotSizeController,
                   hintText: 'Lot Size (Square Feet)',
                   emptyText: 'Please enter lot size',
@@ -293,7 +291,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                   emptyText: 'Please enter facilities',
                 ),
                 SizedBox(height: 10,),
-                PropertyTextFormField(
+                PropertyNumberTextFormField(
                   controller: priceController,
                   hintText: 'Price (RM)',
                   emptyText: 'Please enter price',
