@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:projectjen/widgets/property_number_text_form_field.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,8 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
   final amenityController = TextEditingController();
   final facilityController = TextEditingController();
   final contactController = TextEditingController();
+  final bedsController = TextEditingController();
+  final bathroomsController = TextEditingController();
 
   String? categoryValue, salesTypeValue, stateValue;
 
@@ -90,6 +93,8 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
           'Date' : currentDate.toString(),
           'PropertyID' : docID.id.toString(),
           'Contact' : contactController.text,
+          'Beds' : bedsController.text,
+          'Bathrooms' : bathroomsController.text,
         });
 
         DocID = docID.id.toString();
@@ -117,6 +122,8 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
     amenityController.dispose();
     facilityController.dispose();
     contactController.dispose();
+    bedsController.dispose();
+    bathroomsController.dispose();
 
     super.dispose();
   }
@@ -264,8 +271,20 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
                 SizedBox(height: 10,),
                 PropertyTextFormField(
                   controller: amenityController,
-                  hintText: 'Amenities (Specify Number)',
+                  hintText: 'Amenities (Bathrooms, Kitchen, Bedrooms)',
                   emptyText: 'Please enter amenities',
+                ),
+                SizedBox(height: 10,),
+                PropertyNumberTextFormField(
+                  controller: bedsController,
+                  hintText: 'Beds (Input Number)',
+                  emptyText: 'Please enter number of beds',
+                ),
+                SizedBox(height: 10,),
+                PropertyNumberTextFormField(
+                  controller: bathroomsController,
+                  hintText: 'Bathrooms (Input Number)',
+                  emptyText: 'Please enter number of bathrooms',
                 ),
                 SizedBox(height: 10,),
                 PropertyTextFormField(

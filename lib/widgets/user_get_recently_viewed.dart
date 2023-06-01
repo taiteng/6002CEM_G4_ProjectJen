@@ -30,6 +30,10 @@ class GetRecentlyViewed extends StatelessWidget {
           salesType: data['SalesType'],
           amenities: data['Amenities'],
           lotSize: data['LotSize'],
+          beds: data['Beds'],
+          bathrooms: data['Bathrooms'],
+          numOfVisits: data['NumOfVisits'],
+          state: data['State'],
         );
       }
       else{
