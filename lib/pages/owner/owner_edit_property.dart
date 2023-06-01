@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:projectjen/widgets/property_number_text_form_field.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -107,14 +108,16 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
           'Contact' : contactController.text,
-          'Beds' : bedsController.text,
-          'Bathrooms' : bathroomsController.text,
+          'Beds' : int.parse(bedsController.text),
+          'Bathrooms' : int.parse(bathroomsController.text),
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
           'pID' : widget.propertyID.toString(),
           'SalesType' : salesTypeValue.toString(),
         });
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerHome(),),);
       }
       else{
         await uploadFile();
@@ -134,19 +137,17 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Date' : widget.date.toString(),
           'PropertyID' : widget.propertyID.toString(),
           'Contact' : contactController.text,
-          'Beds' : bedsController.text,
-          'Bathrooms' : bathroomsController.text,
+          'Beds' : int.parse(bedsController.text),
+          'Bathrooms' : int.parse(bathroomsController.text),
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
           'pID' : widget.propertyID.toString(),
           'SalesType' : salesTypeValue.toString(),
         });
-      }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => OwnerHome()));
-      });
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerHome(),),);
+      }
     } catch (e){
       print(e);
     }
@@ -261,7 +262,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
                   emptyText: 'Please enter name',
                 ),
                 SizedBox(height: 10,),
-                PropertyTextFormField(
+                PropertyNumberTextFormField(
                   controller: lotSizeController,
                   hintText: 'Lot Size (Square Feet)',
                   emptyText: 'Please enter lot size',
@@ -337,7 +338,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
                   emptyText: 'Please enter facilities',
                 ),
                 SizedBox(height: 10,),
-                PropertyTextFormField(
+                PropertyNumberTextFormField(
                   controller: priceController,
                   hintText: 'Price (RM)',
                   emptyText: 'Please enter price',

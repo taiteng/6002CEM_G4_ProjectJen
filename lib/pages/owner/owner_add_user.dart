@@ -26,12 +26,28 @@ class _OwnerAddUserState extends State<OwnerAddUser> {
 
   addUser() async{
     try{
-      await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').doc(uidController.text.toString()).set({
-        'uID' : uidController.text.toString(),
-        'pID' : widget.propertyID.toString(),
-      });
+      await FirebaseFirestore.instance.collection('Users').where('UID', isEqualTo: uidController.text.toString()).get().then(
+            (snapshot) => snapshot.docs.forEach((u) async {
+          if (u.exists) {
+            await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').doc(uidController.text.toString()).set({
+              'uID' : uidController.text.toString(),
+              'pID' : widget.propertyID.toString(),
+            });
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID.toString(),),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID.toString(),),),);
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  backgroundColor: Colors.pinkAccent,
+                  title: Text('No User Found'),
+                );
+              },
+            );
+          }
+        }),
+      );
     } catch (e) {
       print(e);
     }

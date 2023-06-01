@@ -25,36 +25,6 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  Future getRentUsers() async{
-    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').where('pID', isEqualTo: widget.propertyID.toString()).get().then(
-          (snapshot) => snapshot.docs.forEach((rentUser) async {
-        if (rentUser.exists) {
-          await FirebaseFirestore.instance.collection('Users').where('UID', isEqualTo: rentUser.reference.id).get().then(
-                (snapshot) => snapshot.docs.forEach((users) {
-              if (users.exists) {
-                String profileURL = users['ProfilePic'];
-                String username = users['Username'];
-                String uid = users['UID'];
-
-                UserRentModel user = UserRentModel(
-                  profileURL: profileURL,
-                  username: username,
-                  UID: uid,
-                );
-
-                userList.add(user);
-              } else {
-                print("Ntg to see here");
-              }
-            }),
-          );
-        } else {
-          print("0");
-        }
-      }),
-    );
-  }
-
   Future<List<UserRentModel>> fetchRentUsers() async {
     List<UserRentModel> userList = [];
 
