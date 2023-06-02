@@ -8,26 +8,37 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 
-class OwnerAddTask extends StatefulWidget {
-  const OwnerAddTask({Key? key}) : super(key: key);
+class OwnerEditTask extends StatefulWidget {
+
+  final String taskID, title, desc, dueDate, pID, pName;
+
+  const OwnerEditTask({
+    Key? key,
+    required this.taskID,
+    required this.title,
+    required this.desc,
+    required this.dueDate,
+    required this.pID,
+    required this.pName,
+  }) : super(key: key);
 
   @override
-  State<OwnerAddTask> createState() => _OwnerAddTaskState();
+  State<OwnerEditTask> createState() => _OwnerEditTaskState();
 }
 
-class _OwnerAddTaskState extends State<OwnerAddTask> {
+class _OwnerEditTaskState extends State<OwnerEditTask> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final dueDateController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController dueDateController = TextEditingController();
 
   String? propertyValue;
   String? propertyID;
+  String? propertyName;
 
   List<String> _propertyList = [];
-
 
   final User? user = FirebaseAuth.instance.currentUser;
 
@@ -43,7 +54,7 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
         }),
       );
 
-      await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').add({
+      await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').doc(widget.taskID).set({
         'Title' : titleController.text,
         'Description' : descriptionController.text,
         'DueDate' : dueDateController.text,
@@ -95,6 +106,16 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
   }
 
   @override
+  void initState() {
+    titleController = new TextEditingController(text: widget.title.toString());
+    descriptionController = new TextEditingController(text: widget.desc.toString());
+    dueDateController = new TextEditingController(text: widget.dueDate.toString());
+    propertyValue = widget.pName.toString();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -109,7 +130,7 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
               bottomLeft: Radius.circular(25)),
         ),
         elevation: 0.00,
-        title: const Text('Add Task'),
+        title: const Text('Edit Task'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
