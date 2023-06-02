@@ -96,9 +96,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
             color: Colors.white,
             tooltip: 'Refresh',
             onPressed: () {
-              setState(() {
-
-              });
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID,),),);
             },
           ),
           IconButton(
@@ -131,6 +129,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
                       }
 
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: userList.length,
                         itemBuilder: (context, index){
                           return UserRentWidget(userRentModel: userList[index],);

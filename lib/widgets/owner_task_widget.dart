@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/pages/owner/owner_edit_task.dart';
+import 'package:projectjen/pages/owner/owner_view_user_task_completion.dart';
 
 class OwnerTasksWidget extends StatelessWidget {
 
   final String tasksID;
 
-  const OwnerTasksWidget({Key? key, required this.tasksID}) : super(key: key);
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  OwnerTasksWidget({Key? key, required this.tasksID}) : super(key: key);
+
+  deleteTask() async{
+    try{
+      final docTask = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').doc(tasksID);
+      await docTask.delete();
+    } catch (e){
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +35,9 @@ class OwnerTasksWidget extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerViewUserTaskCompletion(taskID: tasksID, pName: data['pName'], pID: data['pID'],),),);
+              },
               child: Container(
                 height: 120,
                 decoration: const BoxDecoration(
@@ -57,6 +72,14 @@ class OwnerTasksWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 5,),
                             Text(
+                              'Under Property: ${data['pName']}',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                              ),
+                            ),
+                            const SizedBox(width: 5,),
+                            Text(
                               'Due Date: ${data['DueDate']}',
                               style: const TextStyle(
                                 color: Colors.black,
@@ -79,7 +102,14 @@ class OwnerTasksWidget extends StatelessWidget {
                         children: [
                           RawMaterialButton(
                             onPressed: () {
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerEditTask(
+                                taskID: tasksID,
+                                title: data['Title'],
+                                desc: data['Description'],
+                                dueDate: data['DueDate'],
+                                pID: data['pID'],
+                                pName: data['pName'],
+                              ),),);
                             },
                             fillColor: Colors.green,
                             shape: const CircleBorder(),
@@ -92,7 +122,7 @@ class OwnerTasksWidget extends StatelessWidget {
                           const SizedBox(height: 5,),
                           RawMaterialButton(
                             onPressed: () {
-
+                              deleteTask();
                             },
                             fillColor: Colors.red,
                             shape: const CircleBorder(),

@@ -94,6 +94,14 @@ class _OwnerTaskState extends State<OwnerTask> {
         ),
         actions: <Widget>[
           IconButton(
+            icon: const Icon(Icons.refresh,),
+            color: Colors.white,
+            tooltip: 'Refresh',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerTask(),),);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.add_task,),
             color: Colors.white,
             tooltip: 'Add Icon',
@@ -115,6 +123,7 @@ class _OwnerTaskState extends State<OwnerTask> {
                       return Center(child: Text(snapshot.error.toString()));
                     } else if (snapshot.connectionState == ConnectionState.done) {
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: _tIDs.length,
                         itemBuilder: (context, index){
                           return OwnerTasksWidget(tasksID: _tIDs[index],);

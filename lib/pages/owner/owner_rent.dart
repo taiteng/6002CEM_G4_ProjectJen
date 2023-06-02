@@ -104,6 +104,7 @@ class _OwnerRentState extends State<OwnerRent> {
                       return Center(child: Text(snapshot.error.toString()));
                     } else if (snapshot.connectionState == ConnectionState.done) {
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: _pIDs.length,
                         itemBuilder: (context, index){
                           return GetOwnerRentProperty(propertyID: _pIDs[index],);

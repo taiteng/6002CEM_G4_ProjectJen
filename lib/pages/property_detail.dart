@@ -680,7 +680,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       StreamBuilder(
@@ -704,7 +704,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                                 document.data()! as Map<String, dynamic>;
 
                                 return ReviewCard(
-                                  pid: data[widget.id.toString()],
+                                  pid: widget.id.toString(),
                                   name: data['Name'],
                                   rating: data['Rating'],
                                   comment: data['Comment'],
