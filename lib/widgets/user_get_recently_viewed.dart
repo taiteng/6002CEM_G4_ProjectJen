@@ -34,6 +34,7 @@ class GetRecentlyViewed extends StatelessWidget {
           bathrooms: data['Bathrooms'],
           numOfVisits: data['NumOfVisits'],
           state: data['State'],
+          oid:data['OID'],
         );
       }
       else{

@@ -5,7 +5,18 @@ import 'package:intl/intl.dart';
 import '../pages/property_detail.dart';
 
 class PropertyListCard extends StatefulWidget {
-  final String imageURL, name, address, date, id, category, facilities, contact, state, salesType, amenities;
+  final String imageURL,
+      oid,
+      name,
+      address,
+      date,
+      id,
+      category,
+      facilities,
+      contact,
+      state,
+      salesType,
+      amenities;
   final int price, lotSize, numOfVisits, beds, bathrooms;
 
   const PropertyListCard({
@@ -26,6 +37,7 @@ class PropertyListCard extends StatefulWidget {
     required this.beds,
     required this.bathrooms,
     required this.state,
+    required this.oid,
   }) : super(key: key);
 
   @override
@@ -45,7 +57,6 @@ class _PropertyListCardState extends State<PropertyListCard> {
 
   // Check if the current propertyID exists in Firestore
   Future<void> checkFavouriteProperty() async {
-
     final propertyIDSnapshot = await FirebaseFirestore.instance
         .collection('Favourite')
         .doc(user?.uid.toString())
@@ -54,7 +65,8 @@ class _PropertyListCardState extends State<PropertyListCard> {
         .get();
 
     setState(() {
-      isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
+      isFavourite =
+          propertyIDSnapshot.exists; //return true if exist, else false
     });
   }
 
@@ -77,30 +89,39 @@ class _PropertyListCardState extends State<PropertyListCard> {
     });
   }
 
-  Future<void> insertIntoRecentlyViewedAndIncreaseNumOfVisits() async{
-    try{
-      await FirebaseFirestore.instance.collection('RecentlyViewed').doc(user?.uid.toString()).collection('PropertyIDs').doc(widget.id.toString()).set({
-        'Date' : currentDate.toString(),
-        'pID' : widget.id.toString(),
+  Future<void> insertIntoRecentlyViewedAndIncreaseNumOfVisits() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('RecentlyViewed')
+          .doc(user?.uid.toString())
+          .collection('PropertyIDs')
+          .doc(widget.id.toString())
+          .set({
+        'Date': currentDate.toString(),
+        'pID': widget.id.toString(),
       });
 
-      await FirebaseFirestore.instance.collection('Property').doc(widget.id.toString()).set({
-        'Name' : widget.name,
-        'LotSize' : widget.lotSize,
-        'Price' : widget.price,
-        'Address' : widget.address,
-        'Amenities' : widget.amenities,
-        'Facilities' : widget.facilities,
-        'Image' : widget.imageURL,
-        'Category' : widget.category,
-        'SalesType' : widget.salesType,
-        'State' : widget.state,
-        'NumOfVisits' : (widget.numOfVisits + 1),
-        'Date' : widget.date.toString(),
-        'PropertyID' : widget.id,
-        'Contact' : widget.contact,
-        'Beds' : widget.beds,
-        'Bathrooms' : widget.bathrooms,
+      await FirebaseFirestore.instance
+          .collection('Property')
+          .doc(widget.id.toString())
+          .set({
+        'OID' : widget.oid,
+        'Name': widget.name,
+        'LotSize': widget.lotSize,
+        'Price': widget.price,
+        'Address': widget.address,
+        'Amenities': widget.amenities,
+        'Facilities': widget.facilities,
+        'Image': widget.imageURL,
+        'Category': widget.category,
+        'SalesType': widget.salesType,
+        'State': widget.state,
+        'NumOfVisits': (widget.numOfVisits + 1),
+        'Date': widget.date.toString(),
+        'PropertyID': widget.id,
+        'Contact': widget.contact,
+        'Beds': widget.beds,
+        'Bathrooms': widget.bathrooms,
       });
     } catch (e) {
       print(e);
@@ -113,24 +134,29 @@ class _PropertyListCardState extends State<PropertyListCard> {
       onTap: () async {
         await insertIntoRecentlyViewedAndIncreaseNumOfVisits();
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PropertyDetail(
-          id: this.widget.id,
-          name: this.widget.name,
-          address: this.widget.address,
-          date: this.widget.date,
-          price: this.widget.price,
-          imageURL: this.widget.imageURL,
-          category: this.widget.category,
-          facilities: this.widget.facilities,
-          contact: this.widget.contact,
-          salesType: this.widget.salesType,
-          amenities: this.widget.amenities,
-          lotSize: this.widget.lotSize,
-          beds: this.widget.beds,
-          bathrooms: this.widget.bathrooms,
-          state: this.widget.state,
-          numOfVisits: this.widget.numOfVisits,
-        ),),);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PropertyDetail(
+              id: this.widget.id,
+              name: this.widget.name,
+              address: this.widget.address,
+              date: this.widget.date,
+              price: this.widget.price,
+              imageURL: this.widget.imageURL,
+              category: this.widget.category,
+              facilities: this.widget.facilities,
+              contact: this.widget.contact,
+              salesType: this.widget.salesType,
+              amenities: this.widget.amenities,
+              lotSize: this.widget.lotSize,
+              beds: this.widget.beds,
+              bathrooms: this.widget.bathrooms,
+              state: this.widget.state,
+              numOfVisits: this.widget.numOfVisits,
+            ),
+          ),
+        );
       },
       child: Padding(
         padding: EdgeInsets.all(10.0),
@@ -155,15 +181,16 @@ class _PropertyListCardState extends State<PropertyListCard> {
                       top: 10,
                       right: 10,
                       child: IconButton(
-                        icon: isFavourite //If database got the property, return the favourite else not favourite
-                            ? Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )
-                            : Icon(
-                                Icons.favorite_border,
-                                color: Colors.red,
-                              ),
+                        icon:
+                            isFavourite //If database got the property, return the favourite else not favourite
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.red,
+                                  ),
                         onPressed: operationFavouriteProperty,
                       ),
                     ),
@@ -177,7 +204,7 @@ class _PropertyListCardState extends State<PropertyListCard> {
                         height: 10,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             widget.name,
@@ -186,10 +213,18 @@ class _PropertyListCardState extends State<PropertyListCard> {
                               fontSize: 13,
                             ),
                           ),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: Text(
+                              "RM" + widget.price.toString() + "/month",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 10),
+                            ),
+                          ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Row(
                             children: [
@@ -207,22 +242,10 @@ class _PropertyListCardState extends State<PropertyListCard> {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "RM" + widget.price.toString() + "/month",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 10),
-                                ),
-                              ),
-                            ],
-                          )
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Date Published: " + widget.date,
@@ -231,6 +254,23 @@ class _PropertyListCardState extends State<PropertyListCard> {
                               fontSize: 10,
                             ),
                           ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.grey[500],
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                widget.numOfVisits.toString(),
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.grey[500]),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ],

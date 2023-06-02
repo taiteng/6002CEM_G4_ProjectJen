@@ -313,6 +313,7 @@ class _HomeState extends State<Home> {
 
                             return PropertyListCard(
                               id: data['PropertyID'],
+                              oid: data['OID'],
                               name: data['Name'],
                               address: data['Address'],
                               date: data['Date'],

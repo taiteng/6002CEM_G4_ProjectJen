@@ -12,8 +12,6 @@ class Favourite extends StatefulWidget {
 
 class _FavouriteState extends State<Favourite> {
   final User? user = FirebaseAuth.instance.currentUser;
-  CollectionReference getPropertyID =
-      FirebaseFirestore.instance.collection('Property');
 
   @override
   void initState() {
