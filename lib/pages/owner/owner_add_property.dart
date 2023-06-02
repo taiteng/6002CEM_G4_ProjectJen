@@ -95,6 +95,7 @@ class _OwnerAddPropertyState extends State<OwnerAddProperty> {
           'Contact' : contactController.text,
           'Beds' : int.parse(bedsController.text),
           'Bathrooms' : int.parse(bathroomsController.text),
+          'OID' : user?.uid.toString(),
         });
 
         DocID = docID.id.toString();

@@ -110,6 +110,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Contact' : contactController.text,
           'Beds' : int.parse(bedsController.text),
           'Bathrooms' : int.parse(bathroomsController.text),
+          'OID' : user?.uid.toString(),
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
@@ -139,6 +140,7 @@ class _OwnerEditPropertyState extends State<OwnerEditProperty> {
           'Contact' : contactController.text,
           'Beds' : int.parse(bedsController.text),
           'Bathrooms' : int.parse(bathroomsController.text),
+          'OID' : user?.uid.toString(),
         });
 
         await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString()).set({
