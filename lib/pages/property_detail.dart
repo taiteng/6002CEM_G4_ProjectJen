@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:projectjen/widgets/review_card.dart';
+import 'package:projectjen/widgets/review_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'hidden_drawer_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -203,15 +204,15 @@ class _PropertyDetailState extends State<PropertyDetail> {
               ),
               child: IconButton(
                 icon:
-                    isFavourite //If database got the property, return the favourite else not favourite
-                        ? const Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                          )
-                        : const Icon(
-                            Icons.favorite_border,
-                            color: Colors.red,
-                          ),
+                isFavourite //If database got the property, return the favourite else not favourite
+                    ? const Icon(
+                  Icons.favorite,
+                  color: Colors.red,
+                )
+                    : const Icon(
+                  Icons.favorite_border,
+                  color: Colors.red,
+                ),
                 onPressed: () {
                   operationFavouriteProperty();
                 },
@@ -268,7 +269,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
                   Row(
@@ -310,13 +311,13 @@ class _PropertyDetailState extends State<PropertyDetail> {
                         child: Container(
                           child: widget.salesType == "Rent"
                               ? Text(
-                                  "RM${widget.price}/month",
-                                  style: const TextStyle(fontSize: 12),
-                                )
+                            "RM${widget.price}/month",
+                            style: const TextStyle(fontSize: 12),
+                          )
                               : Text(
-                                  "RM${widget.price}",
-                                  style: const TextStyle(fontSize: 12),
-                                ),
+                            "RM${widget.price}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ),
                       ),
                     ],
@@ -329,7 +330,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                     children: [
                       ClipRRect(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                        const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -355,7 +356,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                       ClipRRect(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                        const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -381,7 +382,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                       ),
                       ClipRRect(
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                        const BorderRadius.all(Radius.circular(10)),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -533,8 +534,8 @@ class _PropertyDetailState extends State<PropertyDetail> {
                                 return 'Please enter mobile phone number';
                               } else if (value.isNotEmpty) {
                                 bool phoneValid =
-                                    RegExp(r'(^(?:[+0]9)?[0-9]{10}$)')
-                                        .hasMatch(value);
+                                RegExp(r'(^(?:[+0]9)?[0-9]{10}$)')
+                                    .hasMatch(value);
 
                                 if (phoneValid) {
                                   validEmail = true;
@@ -581,7 +582,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
                               return 'Please enter email';
                             } else if (value.isNotEmpty) {
                               bool emailValid = RegExp(
-                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                                   .hasMatch(value);
 
                               if (emailValid) {
@@ -680,44 +681,68 @@ class _PropertyDetailState extends State<PropertyDetail> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Column(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      StreamBuilder(
-                        stream: getReviews(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text('Something went wrong');
-                          }else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Text("Loading");
-                          }else if(snapshot.connectionState == ConnectionState.active){
-                            return ListView(
-                              primary: false,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: snapshot.data!.docs
-                                  .map((DocumentSnapshot document) {
-                                Map<String, dynamic> data =
-                                document.data()! as Map<String, dynamic>;
-
-                                return ReviewCard(
-                                  pid: widget.id.toString(),
-                                  name: data['Name'],
-                                  rating: data['Rating'],
-                                  comment: data['Comment'],
-                                );
-                              }).toList(),
-                            );
-                          }else{
-                            return Text("ADSAD");
-                          }
-                        },
+                      Text(
+                        "Reviews",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: StreamBuilder(
+                          stream: getReviews(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text('Something went wrong');
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text("Loading");
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              return Container(
+                                height: 100,
+                                child: ListView(
+                                  primary: false,
+                                  shrinkWrap: false,
+                                  scrollDirection: Axis.horizontal,
+                                  children: snapshot.data!.docs
+                                      .map((DocumentSnapshot document) {
+                                    Map<String, dynamic> data =
+                                    document.data()! as Map<String, dynamic>;
+
+                                    return ReviewCard(
+                                      pid: widget.id.toString(),
+                                      imageUrl: widget.imageURL.toString(),
+                                      name: data['Name'],
+                                      rating: data['Rating'],
+                                      comment: data['Comment'],
+                                    );
+                                  }).toList(),
+                                ),
+                              );
+                            } else {
+                              return Text("ADSAD");
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  ReviewDialog(pid: widget.id),
                   const SizedBox(
                     height: 100,
                   ),
