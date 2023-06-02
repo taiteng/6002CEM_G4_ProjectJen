@@ -121,8 +121,6 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference _property = FirebaseFirestore.instance.collection('Property');
-
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 00.0,
@@ -174,7 +172,6 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
               child: Icon(Icons.edit),
             ),
           ),
-
           Container(
               margin:EdgeInsets.all(10),
               child: FloatingActionButton(
@@ -184,33 +181,229 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                 child: Icon(Icons.delete),
               )
           ),
-
-          // Add more buttons here
         ],
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: _property.doc(widget.propertyID).get(),
-        builder: ((context, snapshot){
-          if (snapshot.connectionState == ConnectionState.done){
-            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-            return Center(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 300,
+              width: MediaQuery.of(context).size.width,
+              child: Image.network(
+                widget.image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(15),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(data['PropertyID']),
-                  Text(data['Name']),
-                  Text(data['Address']),
-                  Text(data['Date']),
-                  Text(data['Price'].toString()),
-                  Text(data['Image']),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            widget.name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 20,
+                            color: Colors.grey,
+                          ),
+                          Text(
+                            widget.address,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Container(
+                          child: widget.salesType == "Rent"
+                              ? Text(
+                            "RM${widget.price}/month",
+                            style: const TextStyle(fontSize: 12),
+                          )
+                              : Text(
+                            "RM${widget.price}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(10)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                          ),
+                          height: 35,
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.bed,
+                                size: 15,
+                              ),
+                              Text(
+                                "  ${widget.beds.toString()} Beds",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ClipRRect(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(10)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                          ),
+                          height: 35,
+                          width: 120,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.bathtub,
+                                size: 15,
+                              ),
+                              Text(
+                                "  ${widget.bathrooms.toString()} Bathrooms",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ClipRRect(
+                        borderRadius:
+                        const BorderRadius.all(Radius.circular(10)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                          ),
+                          height: 35,
+                          width: 100,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.landscape,
+                                size: 15,
+                              ),
+                              Text(
+                                "  ${widget.lotSize} Sqft",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${widget.salesType} Details",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Amenities: ${widget.amenities}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "LotSize: ${widget.lotSize}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Category: ${widget.category}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Facilities: ${widget.facilities}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            "Feel free to contact me at ${widget.contact} for more information!",
+                            style: const TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            );
-          }
-          else{
-            return Text('Loading...');
-          }
-        }),),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
+import 'package:projectjen/pages/owner/owner_add_task.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:projectjen/pages/owner/owner_rent.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/widgets/owner_task_widget.dart';
 
 class OwnerTask extends StatefulWidget {
   const OwnerTask({Key? key}) : super(key: key);
@@ -12,6 +16,23 @@ class OwnerTask extends StatefulWidget {
 }
 
 class _OwnerTaskState extends State<OwnerTask> {
+
+  List<String> _tIDs = [];
+
+  final User? user = FirebaseAuth.instance.currentUser;
+
+  Future getTaskIDs() async{
+    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').get().then(
+          (snapshot) => snapshot.docs.forEach((tasks) {
+        if (tasks.exists) {
+          _tIDs.add(tasks.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +92,41 @@ class _OwnerTaskState extends State<OwnerTask> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => const HiddenDrawer(pageNum: 2),),);
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add_task,),
+            color: Colors.white,
+            tooltip: 'Add Icon',
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerAddTask(),),);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('OwnerTask'),
+            Expanded(
+              child: FutureBuilder(
+                  future: getTaskIDs(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error.toString()));
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      return ListView.builder(
+                        itemCount: _tIDs.length,
+                        itemBuilder: (context, index){
+                          return OwnerTasksWidget(tasksID: _tIDs[index],);
+                        },
+                      );
+                    }
+                    else {
+                      return const Text("loading");
+                    }
+                  }
+              ),
+            ),
           ],
         ),
       ),
