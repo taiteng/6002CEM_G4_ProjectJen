@@ -6,10 +6,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserRentWidget extends StatelessWidget {
 
   final UserRentModel userRentModel;
+  final String propertyID;
 
   UserRentWidget({
     Key? key,
     required this.userRentModel,
+    required this.propertyID,
   }) : super(key: key);
 
   final User? user = FirebaseAuth.instance.currentUser;
@@ -17,7 +19,9 @@ class UserRentWidget extends StatelessWidget {
   deleteUser() async{
     try{
       final docUser = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').doc(userRentModel.UID.toString());
+      final docRentUser = FirebaseFirestore.instance.collection('Rent').doc(userRentModel.UID.toString()).collection('UnderProperty').doc(propertyID.toString());
       await docUser.delete();
+      await docRentUser.delete();
     } catch (e){
       print(e);
     }

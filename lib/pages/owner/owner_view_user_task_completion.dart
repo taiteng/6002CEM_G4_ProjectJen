@@ -22,11 +22,13 @@ class _OwnerViewUserTaskCompletionState extends State<OwnerViewUserTaskCompletio
 
   List<String> _taskCompletionIDs = [];
 
-  Future getTaskIDs() async{
-    await FirebaseFirestore.instance.collection('TasksCompletion').doc(widget.taskID).collection('TaskCompletionIDs').get().then(
+  Future getTaskCompletionIDs() async{
+    await FirebaseFirestore.instance.collection('TaskCompletion').get().then(
           (snapshot) => snapshot.docs.forEach((taskComp) {
         if (taskComp.exists) {
-          _taskCompletionIDs.add(taskComp.reference.id);
+          if(taskComp['tID'] == widget.taskID){
+            _taskCompletionIDs.add(taskComp.reference.id);
+          }
         } else {
           print("Ntg to see here");
         }
@@ -62,7 +64,7 @@ class _OwnerViewUserTaskCompletionState extends State<OwnerViewUserTaskCompletio
           children: [
             Expanded(
               child: FutureBuilder(
-                  future: getTaskIDs(),
+                  future: getTaskCompletionIDs(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Center(child: Text(snapshot.error.toString()));
@@ -71,7 +73,7 @@ class _OwnerViewUserTaskCompletionState extends State<OwnerViewUserTaskCompletio
                         physics: const BouncingScrollPhysics(),
                         itemCount: _taskCompletionIDs.length,
                         itemBuilder: (context, index){
-                          return OwnerTaskCompletionWidget(taskCompletionID: _taskCompletionIDs[index], taskID: widget.taskID,);
+                          return OwnerTaskCompletionWidget(taskCompletionID: _taskCompletionIDs[index],);
                         },
                       );
                     }

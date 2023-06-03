@@ -28,7 +28,6 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
 
   List<String> _propertyList = [];
 
-
   final User? user = FirebaseAuth.instance.currentUser;
 
   Future uploadToFirebase() async{
@@ -43,15 +42,16 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
         }),
       );
 
-      await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').add({
+      await FirebaseFirestore.instance.collection('Task').add({
         'Title' : titleController.text,
         'Description' : descriptionController.text,
         'DueDate' : dueDateController.text,
+        'oID' : user?.uid.toString(),
         'pID' : propertyID.toString(),
         'pName' : propertyValue.toString(),
       });
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
+      Navigator.pop(context);
     } catch (e){
       print(e);
     }

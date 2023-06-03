@@ -70,6 +70,13 @@ class _OwnerHomeState extends State<OwnerHome> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
                 },
               ),
+              GButton(
+                icon: Icons.question_answer,
+                text: 'Inquiry',
+                onPressed: () {
+
+                },
+              ),
             ],
           ),
         ),

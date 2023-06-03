@@ -132,7 +132,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
                         physics: const BouncingScrollPhysics(),
                         itemCount: userList.length,
                         itemBuilder: (context, index){
-                          return UserRentWidget(userRentModel: userList[index],);
+                          return UserRentWidget(userRentModel: userList[index], propertyID: widget.propertyID);
                         },
                       );
                     }
