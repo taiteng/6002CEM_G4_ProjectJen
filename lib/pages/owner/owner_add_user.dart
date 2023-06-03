@@ -34,6 +34,10 @@ class _OwnerAddUserState extends State<OwnerAddUser> {
               'pID' : widget.propertyID.toString(),
             });
 
+            await FirebaseFirestore.instance.collection('Rent').doc(uidController.text.toString()).collection('UnderProperty').doc(widget.propertyID.toString()).set({
+              'pID' : widget.propertyID.toString(),
+            });
+
             Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID.toString(),),),);
           } else {
             showDialog(

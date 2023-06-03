@@ -22,7 +22,7 @@ class _OwnerTaskState extends State<OwnerTask> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   Future getTaskIDs() async{
-    await FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').get().then(
+    await FirebaseFirestore.instance.collection('Task').where('oID', isEqualTo: user?.uid.toString()).get().then(
           (snapshot) => snapshot.docs.forEach((tasks) {
         if (tasks.exists) {
           _tIDs.add(tasks.reference.id);
@@ -69,6 +69,13 @@ class _OwnerTaskState extends State<OwnerTask> {
               GButton(
                 icon: Icons.task,
                 text: 'Task',
+              ),
+              GButton(
+                icon: Icons.question_answer,
+                text: 'Inquiry',
+                onPressed: () {
+
+                },
               ),
             ],
           ),

@@ -14,8 +14,15 @@ class OwnerTasksWidget extends StatelessWidget {
 
   deleteTask() async{
     try{
-      final docTask = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks').doc(tasksID);
+      final docTask = FirebaseFirestore.instance.collection('Task').doc(tasksID);
       await docTask.delete();
+
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection('TaskCompletion');
+      QuerySnapshot querySnapshot = await collectionRef.where('tID', isEqualTo: tasksID).get();
+
+      for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
+        await docSnapshot.reference.delete();
+      }
     } catch (e){
       print(e);
     }
@@ -23,9 +30,8 @@ class OwnerTasksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User? user = FirebaseAuth.instance.currentUser;
 
-    CollectionReference _tasks = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('Tasks');
+    CollectionReference _tasks = FirebaseFirestore.instance.collection('Task');
 
     return FutureBuilder<DocumentSnapshot>(
       future: _tasks.doc(tasksID).get(),
