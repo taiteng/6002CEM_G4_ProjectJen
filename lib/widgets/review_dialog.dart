@@ -47,11 +47,12 @@ class _ReviewDialogState extends State<ReviewDialog> {
       ),
       submitButtonText: 'Submit',
       onSubmitted: (response) async {
-        await FirebaseFirestore.instance.collection("Reviews").doc(widget.pid).collection("UserReviews").doc().set(
+        await FirebaseFirestore.instance.collection("Reviews").doc(widget.pid).set(
             {
               "Name": username,
               "Comment": response.comment,
               "Rating": response.rating.toString(),
+              "PID" : widget.pid,
             });
       },
     );

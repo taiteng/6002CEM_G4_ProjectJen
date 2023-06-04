@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/pages/search.dart';
 import 'package:projectjen/widgets/property_list_card.dart';
 
 class Home extends StatefulWidget {
@@ -13,7 +14,15 @@ class _HomeState extends State<Home> {
   bool sellButtonClicked = false;
   bool buyButtonClicked = true;
 
+  String _propertyType = "All";
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _searchController.dispose();
+    super.dispose();
+  }
 
   //Get properties by date in descending order
   final Stream<QuerySnapshot> _property = FirebaseFirestore.instance
@@ -21,29 +30,16 @@ class _HomeState extends State<Home> {
       .orderBy('Date', descending: true)
       .snapshots();
 
-  //Get current propertyID
-  // getCurrentPropertyID() async {
-  //   await FirebaseFirestore.instance.doc('Property').collection('PropertyID').get().then(
-  //           (snapshot) => snapshot.docs.forEach((propertyID) {
-  //             if(propertyID.exists){
-  //               propertyIDList.add(propertyID.reference.id);
-  //             }else{
-  //               print("No id");
-  //             }
-  //           }));
-  // }
-
-  // void _beginSearch() {
-  //   String searchQuery = _searchController.text;
-  //   if (searchQuery.isNotEmpty) {
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => ResultsScreen(searchQuery),
-  //       ),
-  //     );
-  //   }
-  // }
+  void beginSearch(String value) {
+    if (value.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Search(searchControllerText: _searchController, propertyType: _propertyType,),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +70,7 @@ class _HomeState extends State<Home> {
                               ),
                               onPressed: () {
                                 setState(() {
+                                  _propertyType = "Sell";
                                   buyButtonClicked = true;
                                   sellButtonClicked = false;
                                 });
@@ -118,6 +115,7 @@ class _HomeState extends State<Home> {
                                         Colors.white),
                               ),
                               onPressed: () {
+                                _propertyType = "Rent";
                                 setState(() {
                                   buyButtonClicked = false;
                                   sellButtonClicked = true;
@@ -197,7 +195,7 @@ class _HomeState extends State<Home> {
                                         contentPadding:
                                             const EdgeInsets.symmetric(
                                                 horizontal: 10.0),
-                                        hintText: "E.g. Penang Condominium",
+                                        hintText: "Search Penang Condominium",
                                         hintStyle: const TextStyle(
                                           color: Colors.deepOrangeAccent,
                                         ),
@@ -209,36 +207,11 @@ class _HomeState extends State<Home> {
                                       ),
                                       textInputAction: TextInputAction.search,
                                       onSubmitted: (value) {
-                                        //_beginSearch();
+                                        beginSearch(value);
                                       },
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.deepOrangeAccent,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all<Color>(
-                                                  Colors.orangeAccent),
-                                          padding: MaterialStateProperty.all<
-                                                  EdgeInsetsGeometry>(
-                                              EdgeInsets.zero),
-                                        ),
-                                        onPressed: () {},
-                                        child: const Icon(
-                                          Icons.filter_list_rounded,
-                                          color: Colors.white,
-                                        ),
                                       ),
                                     ),
                                   ),
