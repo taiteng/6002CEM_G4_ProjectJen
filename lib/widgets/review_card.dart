@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ReviewCard extends StatefulWidget {
   final String pid, name, rating, comment, imageUrl;
@@ -19,8 +18,6 @@ class ReviewCard extends StatefulWidget {
 }
 
 class _ReviewCardState extends State<ReviewCard> {
-
-
   @override
   Widget build(BuildContext context) {
     return Row(
