@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projectjen/widgets/rating_bar_widget.dart';
 
 class PropertyDetailWidget extends StatefulWidget {
-  final String name,
+  final String id,
+      name,
       salesType,
       address,
       amenities,
@@ -23,19 +24,13 @@ class PropertyDetailWidget extends StatefulWidget {
       required this.amenities,
       required this.category,
       required this.facilities,
-      required this.contact});
+      required this.contact, required this.id});
 
   @override
   State<PropertyDetailWidget> createState() => _PropertyDetailWidgetState();
 }
 
 class _PropertyDetailWidgetState extends State<PropertyDetailWidget> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -55,13 +50,13 @@ class _PropertyDetailWidgetState extends State<PropertyDetailWidget> {
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            RatingBarWidget(),
+            RatingBarWidget(id: widget.id),
             ElevatedButton(
               onPressed: () {},
               child: Container(

@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
 import 'package:projectjen/pages/owner/owner_add_task.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
+import 'package:projectjen/pages/owner/owner_inquiry_form.dart';
 import 'package:projectjen/pages/owner/owner_rent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,7 +75,7 @@ class _OwnerTaskState extends State<OwnerTask> {
                 icon: Icons.question_answer,
                 text: 'Inquiry',
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerInquiryForm(),),);
                 },
               ),
             ],

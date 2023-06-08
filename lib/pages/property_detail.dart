@@ -63,7 +63,8 @@ class _PropertyDetailState extends State<PropertyDetail> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.pop(context);
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -96,6 +97,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
               child: Column(
                 children: [
                   PropertyDetailWidget(
+                    id: widget.id,
                     name: widget.name,
                     salesType: widget.salesType,
                     address: widget.address,
@@ -111,7 +113,11 @@ class _PropertyDetailState extends State<PropertyDetail> {
                   const SizedBox(
                     height: 30,
                   ),
-                  PropertyFormWidget(id: widget.id),
+                  PropertyFormWidget(
+                      id: widget.id,
+                      name: widget.name,
+                      salesType: widget.salesType,
+                      price: widget.price),
                   const SizedBox(
                     height: 25,
                   ),
