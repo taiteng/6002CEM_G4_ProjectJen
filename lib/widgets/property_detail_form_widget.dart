@@ -5,9 +5,15 @@ import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class PropertyFormWidget extends StatefulWidget {
-  final String id;
+  final String id, name, salesType;
+  final int price;
 
-  const PropertyFormWidget({super.key, required this.id});
+  const PropertyFormWidget(
+      {super.key,
+      required this.id,
+      required this.name,
+      required this.salesType,
+      required this.price});
 
   @override
   State<PropertyFormWidget> createState() => _PropertyFormWidgetState();
@@ -52,10 +58,12 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
         .doc(widget.id.toString())
         .set({
       "uID": user?.uid.toString(),
+      "pID": widget.id.toString(),
       "Name": nameController.text,
       "Email": emailController.text,
       "Phone": phoneController.text.toString(),
-      "Comments": commentsController.text,
+      "Comments": "I have some question or doubt about the ${widget.name} "
+          "which is currently for ${widget.salesType} in RM${widget.price}. ${commentsController.text}",
       'Date': currentDate.toString(),
     });
 
@@ -65,7 +73,6 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
     commentsController.clear();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,8 +81,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
             alignment: Alignment.centerLeft,
             child: Text(
               "Inquiry Form",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             )),
         const SizedBox(
           height: 15,
@@ -113,8 +119,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                     fillColor: Colors.grey[300],
                     contentPadding: const EdgeInsets.all(10.0),
                     hintText: "Name",
-                    hintStyle: TextStyle(
-                        color: Colors.grey[600], fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
                   )),
               const SizedBox(
                 height: 5,
@@ -130,8 +135,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                       return 'Please enter mobile phone number';
                     } else if (value.isNotEmpty) {
                       bool phoneValid =
-                      RegExp(r'(^(?:[+0]9)?[0-9]{10}$)')
-                          .hasMatch(value);
+                          RegExp(r'(^(?:[+0]9)?[0-9]{10}$)').hasMatch(value);
 
                       if (phoneValid) {
                         validEmail = true;
@@ -165,8 +169,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                     fillColor: Colors.grey[300],
                     contentPadding: const EdgeInsets.all(10.0),
                     hintText: "Mobile Phone",
-                    hintStyle: TextStyle(
-                        color: Colors.grey[600], fontSize: 12),
+                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
                   )),
               const SizedBox(
                 height: 5,
@@ -178,7 +181,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                     return 'Please enter email';
                   } else if (value.isNotEmpty) {
                     bool emailValid = RegExp(
-                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                         .hasMatch(value);
 
                     if (emailValid) {
@@ -213,8 +216,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                   fillColor: Colors.grey[300],
                   contentPadding: const EdgeInsets.all(10.0),
                   hintText: "Email",
-                  hintStyle: TextStyle(
-                      color: Colors.grey[600], fontSize: 12),
+                  hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
               ),
               const SizedBox(
@@ -252,8 +254,7 @@ class _PropertyFormWidgetState extends State<PropertyFormWidget> {
                   fillColor: Colors.grey[300],
                   contentPadding: const EdgeInsets.all(10.0),
                   hintText: "Comments",
-                  hintStyle: TextStyle(
-                      color: Colors.grey[600], fontSize: 12),
+                  hintStyle: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
               ),
               Row(

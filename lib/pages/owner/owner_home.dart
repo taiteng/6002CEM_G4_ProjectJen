@@ -8,6 +8,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/owner/owner_rent.dart';
 import 'package:projectjen/pages/owner/owner_task.dart';
 
+import 'owner_inquiry_form.dart';
+
 class OwnerHome extends StatefulWidget {
   const OwnerHome({Key? key}) : super(key: key);
 
@@ -72,9 +74,9 @@ class _OwnerHomeState extends State<OwnerHome> {
               ),
               GButton(
                 icon: Icons.question_answer,
-                text: 'Inquiry',
+                text: 'Inquiry Form Lists',
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerInquiryForm(),),);
                 },
               ),
             ],

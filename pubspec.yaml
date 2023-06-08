@@ -17,6 +17,7 @@ dependencies:
   rating_dialog: ^2.0.4
   flutter_rating_bar: ^4.0.1
   smooth_star_rating: ^1.1.1
+  flutter_email_sender: ^6.0.0
 
 dev_dependencies:
   flutter_test:

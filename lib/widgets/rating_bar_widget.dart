@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 
 class RatingBarWidget extends StatefulWidget {
-  const RatingBarWidget({super.key});
+  final String id;
+
+  const RatingBarWidget({super.key, required this.id});
 
   @override
   State<RatingBarWidget> createState() => _RatingBarWidgetState();
@@ -13,31 +15,29 @@ class RatingBarWidget extends StatefulWidget {
 class _RatingBarWidgetState extends State<RatingBarWidget> {
   double totalAvgRating = 0.0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    averageRating();
-  }
-
   void averageRating() async {
     List<double> avgRating = [];
 
     await FirebaseFirestore.instance
         .collection("Reviews")
+        .where(FieldPath.documentId, isEqualTo: widget.id)
         .get()
         .then((snapshot) => snapshot.docs.forEach((rating) {
-      avgRating.add(double.parse(rating.data()["Rating"].toString()));
-    }));
+          if(rating.exists) {
+            avgRating.add(double.parse(rating.data()["Rating"].toString()));
+          } else
+            print("No Ratings");
+        }));
 
-    //issue causing setstate error if navigate to property detail and go back
-    setState(() {
-      totalAvgRating = avgRating.average;
-    });
+    if (mounted) {
+      if(avgRating.length == 0){
+        return null;
+      }else{
+        setState(() {
+          totalAvgRating = avgRating.average;
+        });
+      }
+    }
   }
 
   @override

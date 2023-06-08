@@ -31,9 +31,6 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
   void initState() {
     super.initState();
     checkFavouriteProperty();
-    setState(() {
-
-    });
   }
 
   // Check if the current propertyID exists in Firestore
@@ -45,8 +42,9 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
         .doc(widget.id.toString())
         .get();
 
+    isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
     setState(() {
-      isFavourite = propertyIDSnapshot.exists; //return true if exist, else false
+
     });
   }
 
@@ -65,10 +63,8 @@ class _FavouritePropertyState extends State<FavouriteProperty> {
       await favouriteRef.set({'PID': widget.id.toString()});
       widget.refreshFavourite();
     }
-
-
+    isFavourite = !isFavourite;
     setState(() {
-      isFavourite = !isFavourite;
     });
   }
 

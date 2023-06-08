@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:projectjen/pages/hidden_drawer_menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/pages/owner/owner_inquiry_form.dart';
 import 'package:projectjen/widgets/owner_get_rent_property.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:projectjen/pages/owner/owner_task.dart';
@@ -70,10 +71,17 @@ class _OwnerRentState extends State<OwnerRent> {
                 },
               ),
               GButton(
+                icon: Icons.task,
+                text: 'Task',
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
+                },
+              ),
+              GButton(
                 icon: Icons.question_answer,
                 text: 'Inquiry',
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerInquiryForm(),),);
                 },
               ),
             ],

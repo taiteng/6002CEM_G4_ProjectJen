@@ -52,7 +52,6 @@ class _PropertyListCardState extends State<PropertyListCard> {
   @override
   void initState() {
     super.initState();
-    checkFavouriteProperty();
   }
 
   // Check if the current propertyID exists in Firestore
@@ -64,10 +63,12 @@ class _PropertyListCardState extends State<PropertyListCard> {
         .doc(widget.id)
         .get();
 
-    setState(() {
-      isFavourite =
-          propertyIDSnapshot.exists; //return true if exist, else false
-    });
+    if (mounted) {
+      setState(() {
+        isFavourite =
+            propertyIDSnapshot.exists; //return true if exist, else false
+      });
+    }
   }
 
   // Toggle the favourite status of the property
@@ -130,6 +131,8 @@ class _PropertyListCardState extends State<PropertyListCard> {
 
   @override
   Widget build(BuildContext context) {
+    checkFavouriteProperty();
+
     return InkWell(
       onTap: () async {
         await insertIntoRecentlyViewedAndIncreaseNumOfVisits();

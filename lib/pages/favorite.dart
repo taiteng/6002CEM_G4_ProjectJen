@@ -68,7 +68,7 @@ class _FavouriteState extends State<Favourite> {
           children: [
             ClipRRect(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
@@ -98,7 +98,7 @@ class _FavouriteState extends State<Favourite> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Icon(
                                   Icons.error_outline_outlined,
                                   size: 50,
