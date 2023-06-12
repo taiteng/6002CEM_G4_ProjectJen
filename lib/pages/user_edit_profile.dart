@@ -235,9 +235,14 @@ class _UserEditProfileState extends State<UserEditProfile> {
                     height: 200,
                   ),
                 )
-                    : Text(
-                  "(No Image Received)",
-                  style: TextStyle(fontSize: 16),
+                    : Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.network(
+                    widget.profilePic.toString(),
+                    fit: BoxFit.cover,
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                  ),
                 ),
                 SizedBox(height: 10,),
                 ElevatedButton(
