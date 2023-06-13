@@ -51,7 +51,7 @@ class _OwnerAddTaskState extends State<OwnerAddTask> {
         'pName' : propertyValue.toString(),
       });
 
-      Navigator.pop(context);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
     } catch (e){
       print(e);
     }
