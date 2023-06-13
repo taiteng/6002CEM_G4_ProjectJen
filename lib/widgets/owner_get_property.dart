@@ -103,12 +103,16 @@ class GetOwnerProperty extends StatelessWidget {
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {},
-                                    child: Text(
-                                      "RM" + data['Price'].toString() + "/month",
-                                      style: const TextStyle(
-                                          fontWeight:
-                                          FontWeight.bold,
-                                          fontSize: 10),
+                                    child: Container(
+                                      child: data["SalesType"] == "Rent"
+                                          ? Text(
+                                        "RM${data["Price"]}/month",
+                                        style: const TextStyle(fontSize: 12),
+                                      )
+                                          : Text(
+                                        "RM${data["Price"]}",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
                                     ),
                                   ),
                                 ],

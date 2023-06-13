@@ -20,6 +20,7 @@ class _SearchState extends State<Search> {
   String searchText = "";
   bool filterHighSelection = false;
   bool filterLowSelection = false;
+  String salesType = "default";
   late Stream<QuerySnapshot> _property;
 
   @override
@@ -30,24 +31,45 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    //Retrieve Data based on the variables
     if (filterLowSelection && !filterHighSelection) {
-      _property = FirebaseFirestore.instance
+      if(salesType == "default") {
+        _property = FirebaseFirestore.instance
           .collection('Property')
           .orderBy("Price")
           .snapshots();
-      print("Hi i am in low to high");
+      }else{
+        _property = FirebaseFirestore.instance
+            .collection('Property')
+            .where("SalesType", isEqualTo: salesType)
+            .orderBy("Price")
+            .snapshots();
+      }
     } else if (filterHighSelection && !filterLowSelection) {
-      _property = FirebaseFirestore.instance
-          .collection('Property')
-          .orderBy("Price", descending: true)
-          .snapshots();
-      print("Hi i am in low to high");
-    } else {
-      _property = FirebaseFirestore.instance.collection('Property').snapshots();
-      print("Hi i am in default");
+      if(salesType == "default") {
+        _property = FirebaseFirestore.instance
+            .collection('Property')
+            .orderBy("Price", descending: true)
+            .snapshots();
+      }else{
+        _property = FirebaseFirestore.instance
+            .collection('Property')
+            .where("SalesType", isEqualTo: salesType)
+            .orderBy("Price", descending: true)
+            .snapshots();
+      }
+    } else if (!filterHighSelection && !filterLowSelection){
+      if(salesType == "default") {
+        _property = FirebaseFirestore.instance
+            .collection('Property')
+            .snapshots();
+      }else{
+        _property = FirebaseFirestore.instance
+            .collection('Property')
+            .where("SalesType", isEqualTo: salesType)
+            .snapshots();
+      }
     }
-    print("Filter Low Selection $filterLowSelection");
-    print("Filter High Selection $filterHighSelection");
 
     return Scaffold(
       appBar: AppBar(
@@ -165,7 +187,7 @@ class _SearchState extends State<Search> {
                                           title:
                                               Text("Filter for $searchText"),
                                           content: Container(
-                                            height: 150,
+                                            height: 250,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -173,6 +195,7 @@ class _SearchState extends State<Search> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     ElevatedButton(
                                                       onPressed: () {
@@ -197,6 +220,7 @@ class _SearchState extends State<Search> {
                                                   ],
                                                 ),
                                                 Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     ElevatedButton(
                                                       onPressed: () {
@@ -215,6 +239,41 @@ class _SearchState extends State<Search> {
                                                               .arrow_downward),
                                                           Text(
                                                               "Price: Highest to Lowest"),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        salesType = "Rent";
+                                                        setState(() {
+
+                                                        });
+                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                      },
+                                                      child: Row(
+                                                        children: const [
+                                                          Text(
+                                                              "Rent"),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        salesType = "Sell";
+                                                        setState(() {
+
+                                                        });
+                                                        Navigator.of(context, rootNavigator: true).pop('dialog');
+                                                      },
+                                                      child: Row(
+                                                        children: const [
+                                                          Text(
+                                                              "Sell"),
                                                         ],
                                                       ),
                                                     ),
@@ -259,6 +318,32 @@ class _SearchState extends State<Search> {
                                     });
                                   },
                                   child: const Text("Price: Lowest to Highest"),
+                                ),
+                              if (salesType == "Rent")
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      salesType = "default";
+                                      setState(() {
+
+                                      });
+                                    },
+                                    child: const Text("Type: Rent"),
+                                  ),
+                                ),
+                              if (salesType == "Sell")
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: OutlinedButton(
+                                    onPressed: () {
+                                      salesType = "default";
+                                      setState(() {
+
+                                      });
+                                    },
+                                    child: const Text("Type: Sell"),
+                                  ),
                                 ),
                             ],
                           )

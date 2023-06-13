@@ -218,10 +218,16 @@ class _PropertyListCardState extends State<PropertyListCard> {
                           ),
                           ElevatedButton(
                             onPressed: () {},
-                            child: Text(
-                              "RM" + widget.price.toString() + "/month",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 10),
+                            child: Container(
+                              child: widget.salesType == "Rent"
+                                  ? Text(
+                                "RM${widget.price}/month",
+                                style: const TextStyle(fontSize: 12),
+                              )
+                                  : Text(
+                                "RM${widget.price}",
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
                           ),
                         ],
