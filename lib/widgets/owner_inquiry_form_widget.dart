@@ -61,16 +61,10 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
         .collection("InquiryFormProperty")
         .doc(widget.inquiryID)
         .delete();
-
-    // if(mounted){
-    //   Navigator.of(context, rootNavigator: true).pop();
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    //final _dialog =
-
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
