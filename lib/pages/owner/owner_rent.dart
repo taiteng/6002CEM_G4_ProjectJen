@@ -71,13 +71,6 @@ class _OwnerRentState extends State<OwnerRent> {
                 },
               ),
               GButton(
-                icon: Icons.task,
-                text: 'Task',
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerTask(),),);
-                },
-              ),
-              GButton(
                 icon: Icons.question_answer,
                 text: 'Inquiry',
                 onPressed: () {
