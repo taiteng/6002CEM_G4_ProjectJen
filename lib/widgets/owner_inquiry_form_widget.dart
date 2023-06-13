@@ -62,49 +62,14 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
         .doc(widget.inquiryID)
         .delete();
 
-    if(mounted){
-      Navigator.of(context, rootNavigator: true).pop();
-    }
+    // if(mounted){
+    //   Navigator.of(context, rootNavigator: true).pop();
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _dialog = AlertDialog(
-      title: const Text("Reply"),
-      content: SingleChildScrollView(
-        child:ListBody(
-          children: <Widget>[
-            Form(
-              key: _replyKey,
-              child: TextFormField(
-                controller: replyController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter something before you reply!';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 10,
-
-              ),
-            ),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Send'),
-          onPressed: () async {
-              if (_replyKey.currentState!.validate()) {
-                replyButton = true;
-                await openEmail(context);
-              }
-          },
-        ),
-      ],
-    );
+    //final _dialog =
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -136,9 +101,43 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
                               showDialog(
                                 barrierDismissible: true,
                                 context: context,
-                                builder: (BuildContext context) {
-                                  return _dialog;
-                                },
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Reply"),
+                                  content: SingleChildScrollView(
+                                    child:ListBody(
+                                      children: <Widget>[
+                                        Form(
+                                          key: _replyKey,
+                                          child: TextFormField(
+                                            controller: replyController,
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return 'Please enter something before you reply!';
+                                              }
+                                              return null;
+                                            },
+                                            keyboardType: TextInputType.multiline,
+                                            minLines: 1,
+                                            maxLines: 10,
+
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Send'),
+                                      onPressed: () async {
+                                        if (_replyKey.currentState!.validate()) {
+                                          replyButton = true;
+                                          openEmail(context);
+                                          Navigator.of(context, rootNavigator: true).pop('dialog');
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                             child: const Text("Reply")
