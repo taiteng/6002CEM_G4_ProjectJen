@@ -316,14 +316,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          signInWithFacebook();
-                        },
-                        padding: EdgeInsets.zero,
-                        icon: Image.asset('assets/images/facebook.png'),
-                        iconSize: 45,
-                      ),
                       const SizedBox(height: 20, width: 20,),
                       IconButton(
                         onPressed: () async {
