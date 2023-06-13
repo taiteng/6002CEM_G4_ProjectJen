@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:projectjen/pages/user_edit_profile.dart';
 import 'package:projectjen/data/user_function.dart';
+import 'package:projectjen/pages/user_login.dart';
 import 'package:projectjen/pages/user_recently_viewed.dart';
 import 'package:provider/provider.dart';
 import 'package:projectjen/data/google_sign_in.dart';
@@ -32,10 +33,12 @@ class _UserSettingsState extends State<UserSettings> {
 
   void signOut() async{
     await FirebaseAuth.instance.signOut();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLogin(),),);
   }
 
   void signOutTwitter() async{
     await FirebaseAuth.instance.signOut();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLogin(),),);
   }
 
   void signOutFacebook() async{
