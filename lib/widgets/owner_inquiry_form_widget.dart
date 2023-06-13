@@ -18,16 +18,7 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
   bool replyButton = false;
   TextEditingController replyController = TextEditingController();
 
-  static const formSnackBar = SnackBar(
-    content: Text('Message Replied'),
-  );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  Future<bool> openEmail(BuildContext context) async{
+  openEmail(BuildContext context) async{
     String? encodeQueryParameters(Map<String, String> params) {
       return params.entries
           .map((MapEntry<String, String> e) =>
@@ -45,35 +36,20 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
 
     if(await canLaunchUrl(emailLaunchUri)){
       await launchUrl(emailLaunchUri);
-      return true;
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(formSnackBar);
+      deleteReplyMessage();
     }else{
       throw Exception('Could not launch $emailLaunchUri');
     }
   }
 
-  checkEmailSendCondition(BuildContext context) async{
-    bool mailSend = await openEmail(context);
-
-    if(mailSend){
-      closeDialog();
-    }
-  }
-
-  void closeDialog(){
-    deleteReplyMessage();
-    if(mounted){
-      Navigator.of(context).pop();
-    }
-  }
 
   @override
   void dispose(){
     //To solve the bug from triggering dispose method when closing the alert dialog.
     if(replyButton) {
       replyController.dispose();
-      print("hello");
+      print("asdasd");
+      print(replyButton);
     }
     super.dispose();
   }
@@ -85,6 +61,10 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
         .collection("InquiryFormProperty")
         .doc(widget.inquiryID)
         .delete();
+
+    if(mounted){
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 
   @override
@@ -117,13 +97,10 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
         TextButton(
           child: const Text('Send'),
           onPressed: () async {
-            if (_replyKey.currentState!.validate()) {
-              replyButton = true;
-
-              await openEmail(context);
-              checkEmailSendCondition(context);
-
-            }
+              if (_replyKey.currentState!.validate()) {
+                replyButton = true;
+                await openEmail(context);
+              }
           },
         ),
       ],
@@ -159,11 +136,14 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
                               showDialog(
                                 barrierDismissible: true,
                                 context: context,
-                                builder: (context) => _dialog,
+                                builder: (BuildContext context) {
+                                  return _dialog;
+                                },
                               );
                             },
                             child: const Text("Reply")
                         ),
+
                       ],
                     )
                   ],
