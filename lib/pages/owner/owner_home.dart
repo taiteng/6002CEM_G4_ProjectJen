@@ -124,6 +124,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                       return Center(child: Text(snapshot.error.toString()));
                     } else if (snapshot.connectionState == ConnectionState.done) {
                       return ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         itemCount: _pIDs.length,
                         itemBuilder: (context, index){
                           return GetOwnerProperty(propertyID: _pIDs[index],);
