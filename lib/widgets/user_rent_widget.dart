@@ -2,26 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:projectjen/model/user_rent_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/pages/owner/owner_rent_assign.dart';
 
-class UserRentWidget extends StatelessWidget {
+class UserRentWidget extends StatefulWidget {
 
   final UserRentModel userRentModel;
-  final String propertyID;
+  final String propertyID, propertyName;
 
   UserRentWidget({
     Key? key,
     required this.userRentModel,
     required this.propertyID,
+    required this.propertyName,
   }) : super(key: key);
 
+  @override
+  State<UserRentWidget> createState() => _UserRentWidgetState();
+}
+
+class _UserRentWidgetState extends State<UserRentWidget> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   deleteUser() async{
     try{
-      final docUser = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').doc(userRentModel.UID.toString());
-      final docRentUser = FirebaseFirestore.instance.collection('Rent').doc(userRentModel.UID.toString()).collection('UnderProperty').doc(propertyID.toString());
+      final docUser = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('RentUserID').doc(widget.userRentModel.UID.toString());
+      final docRentUser = FirebaseFirestore.instance.collection('Rent').doc(widget.userRentModel.UID.toString()).collection('UnderProperty').doc(widget.propertyID.toString());
       await docUser.delete();
       await docRentUser.delete();
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID, propertyName: widget.propertyName,),),);
     } catch (e){
       print(e);
     }
@@ -53,7 +62,7 @@ class UserRentWidget extends StatelessWidget {
                 height: 50,
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
-                    userRentModel.profileURL.toString(),
+                    widget.userRentModel.profileURL.toString(),
                   ),
                 ),
               ),
@@ -62,7 +71,7 @@ class UserRentWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userRentModel.username.toString(),
+                    widget.userRentModel.username.toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 15,
@@ -71,7 +80,7 @@ class UserRentWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    userRentModel.UID.toString(),
+                    widget.userRentModel.UID.toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 10,

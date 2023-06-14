@@ -30,6 +30,7 @@ class _GetOwnerRentPropertyState extends State<GetOwnerRentProperty> {
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(
                   propertyID: data['PropertyID'],
+                  propertyName: data['Name'],
                 ),),);
               },
               child: Container(

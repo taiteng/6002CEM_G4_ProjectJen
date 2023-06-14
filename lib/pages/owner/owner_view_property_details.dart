@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:projectjen/pages/owner/owner_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:projectjen/widgets/rating_bar_widget.dart';
 
 class OwnerViewPropertyDetails extends StatefulWidget {
 
@@ -39,9 +40,11 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
 
   List<String> _uRVIDs = [];
   List<String> _uFIDs = [];
+  List<String> _uRIDs = [];
 
   int RecentlyViewedCount = 0;
   int FavouriteCount = 0;
+  int RentCount = 0;
 
   getRecentlyViewedUserID() async{
     await FirebaseFirestore.instance.collection('RecentlyViewed').get().then(
@@ -65,6 +68,50 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
         }
       }),
     );
+  }
+
+  getRentUserID() async{
+    await FirebaseFirestore.instance.collection('Rent').get().then(
+          (snapshot) => snapshot.docs.forEach((users) {
+        if (users.exists) {
+          _uRIDs.add(users.reference.id);
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
+  deleteFromReviews() async{
+    await FirebaseFirestore.instance.collection('Reviews').get().then(
+          (snapshot) => snapshot.docs.forEach((property) async {
+        if (property.exists) {
+          if(property.reference.id.toString() == widget.propertyID.toString()){
+            final ReviewsPropertyID = FirebaseFirestore.instance.collection('Reviews').doc(widget.propertyID.toString());
+            await ReviewsPropertyID.delete();
+          }
+        } else {
+          print("Ntg to see here");
+        }
+      }),
+    );
+  }
+
+  deleteFromTaskAndTaskCompletion() async{
+    CollectionReference collectionRef = FirebaseFirestore.instance.collection('Tasks');
+    QuerySnapshot taskQuerySnapshot = await collectionRef.where('pID', isEqualTo: widget.propertyID).get();
+
+    for (QueryDocumentSnapshot docTaskSnapshot in taskQuerySnapshot.docs) {
+
+      CollectionReference collectionRef = FirebaseFirestore.instance.collection('TaskCompletion');
+      QuerySnapshot taskCompletionQuerySnapshot = await collectionRef.where('tID', isEqualTo: docTaskSnapshot.reference.id).get();
+
+      for (QueryDocumentSnapshot docTaskCompletionSnapshot in taskCompletionQuerySnapshot.docs) {
+        await docTaskCompletionSnapshot.reference.delete();
+      }
+
+      await docTaskSnapshot.reference.delete();
+    }
   }
   
   deleteProperty() async {
@@ -103,6 +150,29 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
               if(propertyID.reference.id.toString() == widget.propertyID.toString()){
                 final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.propertyID.toString());
                 await FavouritePropertyID.delete();
+              }
+            } else {
+              print("Ntg to see here");
+            }
+          }),
+        );
+
+        FavouriteCount++;
+      }
+
+      await deleteFromReviews();
+
+      await deleteFromTaskAndTaskCompletion();
+
+      await getRentUserID();
+
+      while(RentCount < _uRIDs.length){
+        await FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').get().then(
+              (snapshot) => snapshot.docs.forEach((propertyID) async {
+            if (propertyID.exists) {
+              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
+                final RentPropertyID = FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').doc(widget.propertyID.toString());
+                await RentPropertyID.delete();
               }
             } else {
               print("Ntg to see here");
@@ -217,19 +287,45 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
-                            Icons.location_on_outlined,
-                            size: 20,
-                            color: Colors.grey,
+                          const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.grey[500],
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                widget.numOfVisits.toString(),
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.grey[500]),
+                              ),
+                            ],
                           ),
-                          Text(
-                            widget.address,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                          const SizedBox(height: 5,),
+                          RatingBarWidget(id: widget.propertyID),
+                          const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on_outlined,
+                                size: 20,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                widget.address,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

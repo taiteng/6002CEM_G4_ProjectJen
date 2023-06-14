@@ -102,14 +102,6 @@ class _OwnerTaskState extends State<OwnerTask> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.refresh,),
-            color: Colors.white,
-            tooltip: 'Refresh',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerTask(),),);
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.add_task,),
             color: Colors.white,
             tooltip: 'Add Icon',

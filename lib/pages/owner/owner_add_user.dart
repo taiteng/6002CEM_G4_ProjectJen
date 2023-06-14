@@ -5,11 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OwnerAddUser extends StatefulWidget {
 
-  final String propertyID;
+  final String propertyID, propertyName;
 
   const OwnerAddUser({
     Key? key,
     required this.propertyID,
+    required this.propertyName,
   }) : super(key: key);
 
   @override
@@ -38,7 +39,7 @@ class _OwnerAddUserState extends State<OwnerAddUser> {
               'pID' : widget.propertyID.toString(),
             });
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID.toString(),),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID, propertyName: widget.propertyName,),),);
           } else {
             showDialog(
               context: context,
@@ -75,7 +76,7 @@ class _OwnerAddUserState extends State<OwnerAddUser> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID.toString(),),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID, propertyName: widget.propertyName,),),);
           },
         ),
       ),
