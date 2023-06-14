@@ -8,11 +8,12 @@ import 'package:projectjen/widgets/user_rent_widget.dart';
 
 class OwnerRentAssign extends StatefulWidget {
 
-  final String propertyID;
+  final String propertyID, propertyName;
 
   const OwnerRentAssign({
     Key? key,
     required this.propertyID,
+    required this.propertyName,
   }) : super(key: key);
 
   @override
@@ -83,7 +84,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
               bottomLeft: Radius.circular(25)),
         ),
         elevation: 0.00,
-        title: const Text('Owner Rent Assign'),
+        title: Text('Owner Rent Assign: ${widget.propertyName}'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -92,19 +93,11 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.refresh,),
-            color: Colors.white,
-            tooltip: 'Refresh',
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerRentAssign(propertyID: widget.propertyID,),),);
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.person_add,),
             color: Colors.white,
             tooltip: 'Add Icon',
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerAddUser(propertyID: widget.propertyID.toString()),),);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerAddUser(propertyID: widget.propertyID, propertyName: widget.propertyName,),),);
             },
           ),
         ],
@@ -132,7 +125,7 @@ class _OwnerRentAssignState extends State<OwnerRentAssign> {
                         physics: const BouncingScrollPhysics(),
                         itemCount: userList.length,
                         itemBuilder: (context, index){
-                          return UserRentWidget(userRentModel: userList[index], propertyID: widget.propertyID);
+                          return UserRentWidget(userRentModel: userList[index], propertyID: widget.propertyID, propertyName: widget.propertyName);
                         },
                       );
                     }

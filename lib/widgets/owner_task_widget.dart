@@ -2,27 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:projectjen/pages/owner/owner_edit_task.dart';
+import 'package:projectjen/pages/owner/owner_task.dart';
 import 'package:projectjen/pages/owner/owner_view_user_task_completion.dart';
 
-class OwnerTasksWidget extends StatelessWidget {
+class OwnerTasksWidget extends StatefulWidget {
 
   final String tasksID;
 
-  final User? user = FirebaseAuth.instance.currentUser;
 
   OwnerTasksWidget({Key? key, required this.tasksID}) : super(key: key);
 
+  @override
+  State<OwnerTasksWidget> createState() => _OwnerTasksWidgetState();
+}
+
+class _OwnerTasksWidgetState extends State<OwnerTasksWidget> {
+  final User? user = FirebaseAuth.instance.currentUser;
+
   deleteTask() async{
     try{
-      final docTask = FirebaseFirestore.instance.collection('Task').doc(tasksID);
+      final docTask = FirebaseFirestore.instance.collection('Task').doc(widget.tasksID);
       await docTask.delete();
 
       CollectionReference collectionRef = FirebaseFirestore.instance.collection('TaskCompletion');
-      QuerySnapshot querySnapshot = await collectionRef.where('tID', isEqualTo: tasksID).get();
+      QuerySnapshot querySnapshot = await collectionRef.where('tID', isEqualTo: widget.tasksID).get();
 
       for (QueryDocumentSnapshot docSnapshot in querySnapshot.docs) {
         await docSnapshot.reference.delete();
       }
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerTask(),),);
     } catch (e){
       print(e);
     }
@@ -34,7 +43,7 @@ class OwnerTasksWidget extends StatelessWidget {
     CollectionReference _tasks = FirebaseFirestore.instance.collection('Task');
 
     return FutureBuilder<DocumentSnapshot>(
-      future: _tasks.doc(tasksID).get(),
+      future: _tasks.doc(widget.tasksID).get(),
       builder: ((context, snapshot){
         if (snapshot.connectionState == ConnectionState.done){
           Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
@@ -42,7 +51,7 @@ class OwnerTasksWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerViewUserTaskCompletion(taskID: tasksID, pName: data['pName'], pID: data['pID'],),),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerViewUserTaskCompletion(taskID: widget.tasksID, pName: data['pName'], pID: data['pID'],),),);
               },
               child: Container(
                 height: 120,
@@ -109,7 +118,7 @@ class OwnerTasksWidget extends StatelessWidget {
                           RawMaterialButton(
                             onPressed: () {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerEditTask(
-                                taskID: tasksID,
+                                taskID: widget.tasksID,
                                 title: data['Title'],
                                 desc: data['Description'],
                                 dueDate: data['DueDate'],

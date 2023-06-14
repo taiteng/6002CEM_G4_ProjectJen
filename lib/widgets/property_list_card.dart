@@ -92,9 +92,7 @@ class _PropertyListCardState extends State<PropertyListCard> {
 
   Future<void> insertIntoRecentlyViewedAndIncreaseNumOfVisits() async {
     try {
-      await FirebaseFirestore.instance
-          .collection('RecentlyViewed')
-          .doc(user?.uid.toString())
+      await FirebaseFirestore.instance.collection('RecentlyViewed').doc(user?.uid.toString())
           .collection('PropertyIDs')
           .doc(widget.id.toString())
           .set({
@@ -102,9 +100,7 @@ class _PropertyListCardState extends State<PropertyListCard> {
         'pID': widget.id.toString(),
       });
 
-      await FirebaseFirestore.instance
-          .collection('Property')
-          .doc(widget.id.toString())
+      await FirebaseFirestore.instance.collection('Property').doc(widget.id.toString())
           .set({
         'OID' : widget.oid,
         'Name': widget.name,
