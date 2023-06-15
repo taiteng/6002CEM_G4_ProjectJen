@@ -48,6 +48,8 @@ class _UserSettingsState extends State<UserSettings> {
   void signOutGoogle() async{
     final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     await provider.googleLogout();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const UserLogin(),),);
   }
 
   bool roleSwitchController = false;
