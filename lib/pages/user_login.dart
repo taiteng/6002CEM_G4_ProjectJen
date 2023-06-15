@@ -53,16 +53,15 @@ class _UserLoginPageState extends State<UserLoginPage> {
   }
 
   void signInWithTwitter() async {
-    //API Key: fjd995xhFyzcCjOFtxTEmSEVr
-    //API Key Secret: 6xV2yo1KaU4svMK58Wfsy7nwFDzHqI7B0z598Y3H55BAM9H4Qw
     //Client ID: OVVTOXN0a1dMYzJDOWRLOG40SDE6MTpjaQ
     //Client Secret: aR64QO7DDp230ZxAn0bDHMF_PBfkUqiWwA80pRWQGsYo-B33dk
     //Callback URL: https://projectjen-624d5.firebaseapp.com/__/auth/handler
+    //flutter-twitter-login://
 
     try{
       final twitterLogin = TwitterLogin(
-          apiKey: 'fjd995xhFyzcCjOFtxTEmSEVr',
-          apiSecretKey: '6xV2yo1KaU4svMK58Wfsy7nwFDzHqI7B0z598Y3H55BAM9H4Qw',
+          apiKey: '8giAOuNNByH3afjhiftTq5VH6',
+          apiSecretKey: 'GPUCf7Zg1THtlqc4X6u5jeX00yzwgvNJiQFZw4nOI0mjbOV93a',
           redirectURI: 'flutter-twitter-login://'
       );
 
@@ -321,6 +320,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         onPressed: () async {
                           final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
                           await provider.googleLogin();
+
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HiddenDrawer(pageNum: 0,)));
                         },
                         padding: EdgeInsets.zero,
                         icon: Image.asset('assets/images/google-plus.png'),

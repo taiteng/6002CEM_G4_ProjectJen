@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 import 'package:projectjen/pages/home.dart';
+import 'package:projectjen/pages/news.dart';
 import 'package:projectjen/pages/user_settings.dart';
 import 'package:projectjen/pages/user_task.dart';
 
@@ -66,6 +67,15 @@ class _HiddenDrawerState extends State<HiddenDrawer> {
           colorLineSelected: Colors.deepPurpleAccent,
         ),
         const UserTask(),
+      ),
+      ScreenHiddenDrawer(
+        ItemHiddenMenu(
+          name: 'News',
+          baseStyle: myTextStyle,
+          selectedStyle: myTextStyle,
+          colorLineSelected: Colors.deepPurpleAccent,
+        ),
+        const NewsPage(),
       ),
     ];
   }
