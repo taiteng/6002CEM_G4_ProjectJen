@@ -1,28 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../model/article_model.dart';
+import '../model/news_model.dart';
 
-class NewsApiService{
-  final endPointUrl = Uri.parse(
-      "https://newsapi.org/v2/top-headlines?country=us&apiKey=4919fdfcc35846aea1ff72f6d3063c53"
-  );
+class NewsApiService {
+  String apilink2 =
+      "https://newsapi.org/v2/top-headlines?country=us&category=realestate&apiKey=d387b58ae8254db685545577fb74d7fe";
 
-  Future<List<Article>> getArticle() async{
-    final res = await http.get(endPointUrl);
-
-    if(res.statusCode == 200){
-
-      Map<String, dynamic> json = jsonDecode(res.body);
-      print(json);
-      List<dynamic> body = json['articles'];
-      print(body[0]['title']);
-
-      List<Article> articles =
-      body.map((dynamic item) => Article.fromJson(item)).toList();
-
-      return articles;
-    }else{
-      throw("Cannot get the Articles");
+  Future<NewsModal?> getNews() async {
+    String apilink =
+        "https://newsapi.org/v2/everything?q=realestate&sortBy=popularity&apiKey=d387b58ae8254db685545577fb74d7fe";
+    var response = await http.get(Uri.parse(apilink));
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      return NewsModal.fromJson(json);
     }
+    return null;
   }
 }
