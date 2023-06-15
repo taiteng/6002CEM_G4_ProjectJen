@@ -49,6 +49,16 @@ class _UserForgotPasswordState extends State<UserForgotPassword> {
     }
   }
 
+  /*
+  The first part before @ checks for the local part of the email address:
+  ([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*) matches one or more characters that are not <, >, (, ), [, \, ., ,, ;, :, whitespace, @, or ". This ensures that there are no invalid characters in the local part.
+  (\.[^<>()[\]\\.,;:\s@\"]+)* allows for periods followed by one or more characters that are not the same set of invalid characters. This allows for the presence of periods in the local part but ensures they are followed by valid characters.
+  (\".+\") allows for the local part to be enclosed in double quotes. This is an alternative format for the local part that allows certain special characters. For example, an email like "john.doe"@example.com is valid.
+  The second part after @ checks for the domain part of the email address:
+  (\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\]) matches an IP address enclosed in square brackets. This allows for email addresses in the format [192.168.0.1].
+  (([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}) matches the domain name, which consists of one or more groups of alphanumeric characters or hyphens followed by a period. The last group must be two or more alphabetical characters. This ensures that the domain name is valid, such as example.com.
+  */
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
