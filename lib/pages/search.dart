@@ -5,12 +5,10 @@ import 'hidden_drawer_menu.dart';
 
 class Search extends StatefulWidget {
   final TextEditingController searchControllerText;
-  final String propertyType;
 
   const Search(
       {super.key,
-      required this.searchControllerText,
-      required this.propertyType});
+      required this.searchControllerText});
 
   @override
   State<Search> createState() => _SearchState();
@@ -22,6 +20,12 @@ class _SearchState extends State<Search> {
   bool filterLowSelection = false;
   String salesType = "default";
   late Stream<QuerySnapshot> _property;
+
+  @override
+  void initState() {
+    super.initState();
+    searchText = widget.searchControllerText.text;
+  }
 
   @override
   void dispose() {
@@ -366,7 +370,7 @@ class _SearchState extends State<Search> {
                   color: Colors.white,
                   child: Column(
                     children: [
-                      StreamBuilder(
+                        StreamBuilder(
                         stream: _property,
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {

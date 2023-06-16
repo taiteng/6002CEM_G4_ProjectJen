@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WhatsappWidget extends StatefulWidget {
-  final String imageURL, name, salesType;
+  final String imageURL, name, salesType, contact;
   final int price;
 
-  const WhatsappWidget({super.key, required this.salesType, required this.imageURL, required this.name, required this.price});
+  const WhatsappWidget({super.key, required this.salesType, required this.imageURL, required this.name, required this.price, required this.contact});
 
   @override
   State<WhatsappWidget> createState() => _WhatsappWidgetState();
@@ -26,7 +26,7 @@ class _WhatsappWidgetState extends State<WhatsappWidget> {
       onTap: () {
         String message =
             "${widget.imageURL}\nHi, I am interested in ${widget.name} which is for ${widget.salesType} at RM${widget.price}.";
-        launchWhatsApp("0143096966", message);
+        launchWhatsApp(widget.contact.toString(), message);
       },
       child: IgnorePointer(
         child: SizedBox(

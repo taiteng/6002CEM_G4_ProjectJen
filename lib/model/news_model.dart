@@ -41,7 +41,6 @@ class NewsModal {
     }
     return map;
   }
-
 }
 
 /// source : {"id":null,"name":"Investor's Business Daily"}
@@ -130,7 +129,6 @@ class Articles {
     map['content'] = _content;
     return map;
   }
-
 }
 
 /// id : null

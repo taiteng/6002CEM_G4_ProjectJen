@@ -77,6 +77,7 @@ class _PropertyDetailState extends State<PropertyDetail> {
             name: widget.name,
             price: widget.price,
             salesType: widget.salesType,
+            contact: widget.contact,
           ),
         ],
       ),

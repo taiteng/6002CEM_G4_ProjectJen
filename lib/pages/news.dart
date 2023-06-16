@@ -16,7 +16,7 @@ class _NewsPageState extends State<NewsPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xff2b2b2c),
+        backgroundColor: Colors.white38,
         body: Column(
           children: [
             Expanded(
@@ -50,7 +50,7 @@ class _NewsPageState extends State<NewsPage> {
                                         child: Text(
                                           "${l1.articles![index].title}",
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
@@ -63,7 +63,7 @@ class _NewsPageState extends State<NewsPage> {
                                         child: Text(
                                           "${l1.articles![index].description}",
                                           style: TextStyle(
-                                            color: Colors.white70,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
