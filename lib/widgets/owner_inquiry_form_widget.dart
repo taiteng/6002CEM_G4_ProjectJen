@@ -27,7 +27,7 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
     }
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
-      path: 'esoonbojio@gmail.com',
+      path: widget.email.toString(),
       query: encodeQueryParameters(<String, String>{
         'subject': 'Inquiry Form for ${widget.name}',
         'body': replyController.text.toString(),
@@ -48,8 +48,6 @@ class _OwnerInquiryFormWidgetState extends State<OwnerInquiryFormWidget> {
     //To solve the bug from triggering dispose method when closing the alert dialog.
     if(replyButton) {
       replyController.dispose();
-      print("asdasd");
-      print(replyButton);
     }
     super.dispose();
   }

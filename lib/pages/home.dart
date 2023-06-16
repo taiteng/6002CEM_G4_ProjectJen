@@ -11,15 +11,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool sellButtonClicked = false;
-  bool buyButtonClicked = true;
-
-  String _propertyType = "All";
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _searchController.dispose();
     super.dispose();
   }
@@ -32,10 +27,11 @@ class _HomeState extends State<Home> {
 
   void beginSearch(String value) {
     if (value.isNotEmpty) {
+
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Search(searchControllerText: _searchController, propertyType: _propertyType,),
+          builder: (context) => Search(searchControllerText: _searchController,),
         ),
       );
     }
