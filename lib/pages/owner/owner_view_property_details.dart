@@ -1,3 +1,4 @@
+import 'package:projectjen/model/property_list_model.dart';
 import 'package:projectjen/pages/owner/owner_edit_property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,26 +9,11 @@ import 'package:projectjen/widgets/rating_bar_widget.dart';
 
 class OwnerViewPropertyDetails extends StatefulWidget {
 
-  final String propertyID, name, address, amenities, category, facilities, contact, image, date, state, salesType;
-  final int price, lotSize, numOfVisits, beds, bathrooms;
+  final PropertyListModel pModel;
 
-  const OwnerViewPropertyDetails({Key? key,
-    required this.propertyID,
-    required this.name,
-    required this.address,
-    required this.amenities,
-    required this.category,
-    required this.facilities,
-    required this.contact,
-    required this.image,
-    required this.date,
-    required this.state,
-    required this.salesType,
-    required this.price,
-    required this.lotSize,
-    required this.numOfVisits,
-    required this.beds,
-    required this.bathrooms,
+  const OwnerViewPropertyDetails({
+    Key? key,
+    required this.pModel,
   }) : super(key: key);
 
   @override
@@ -58,6 +44,25 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
     );
   }
 
+  deleteFromRecentlyViewed() async {
+    while(RecentlyViewedCount < _uRVIDs.length){
+      await FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').get().then(
+            (snapshot) => snapshot.docs.forEach((propertyID) async {
+          if (propertyID.exists) {
+            if(propertyID.reference.id.toString() == widget.pModel.PropertyID.toString()){
+              final RecentlyViewedPropertyID = FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').doc(widget.pModel.PropertyID.toString());
+              await RecentlyViewedPropertyID.delete();
+            }
+          } else {
+            print("Ntg to see here");
+          }
+        }),
+      );
+
+      RecentlyViewedCount++;
+    }
+  }
+
   getFavouriteUserID() async{
     await FirebaseFirestore.instance.collection('Favourite').get().then(
           (snapshot) => snapshot.docs.forEach((users) {
@@ -68,6 +73,25 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
         }
       }),
     );
+  }
+
+  deleteFromFavourite() async{
+    while(FavouriteCount < _uFIDs.length){
+      await FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').get().then(
+            (snapshot) => snapshot.docs.forEach((propertyID) async {
+          if (propertyID.exists) {
+            if(propertyID.reference.id.toString() == widget.pModel.PropertyID.toString()){
+              final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.pModel.PropertyID.toString());
+              await FavouritePropertyID.delete();
+            }
+          } else {
+            print("Ntg to see here");
+          }
+        }),
+      );
+
+      FavouriteCount++;
+    }
   }
 
   getRentUserID() async{
@@ -82,12 +106,33 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
     );
   }
 
+  deleteFromRent() async{
+    while(RentCount < _uRIDs.length){
+      await FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').get().then(
+            (snapshot) => snapshot.docs.forEach((propertyID) async {
+          if (propertyID.exists) {
+            if(propertyID.reference.id.toString() == widget.pModel.PropertyID.toString()){
+              final RentPropertyID = FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').doc(propertyID.reference.id.toString());
+              await RentPropertyID.delete();
+            }
+          } else {
+            print("Ntg to see here");
+          }
+        }),
+      );
+
+      FavouriteCount++;
+    }
+
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const OwnerHome(),));
+  }
+
   deleteFromReviews() async{
     await FirebaseFirestore.instance.collection('Reviews').get().then(
           (snapshot) => snapshot.docs.forEach((property) async {
         if (property.exists) {
-          if(property.reference.id.toString() == widget.propertyID.toString()){
-            final ReviewsPropertyID = FirebaseFirestore.instance.collection('Reviews').doc(widget.propertyID.toString());
+          if(property.reference.id.toString() == widget.pModel.PropertyID.toString()){
+            final ReviewsPropertyID = FirebaseFirestore.instance.collection('Reviews').doc(widget.pModel.PropertyID.toString());
             await ReviewsPropertyID.delete();
           }
         } else {
@@ -99,7 +144,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
 
   deleteFromTaskAndTaskCompletion() async{
     CollectionReference collectionRef = FirebaseFirestore.instance.collection('Tasks');
-    QuerySnapshot taskQuerySnapshot = await collectionRef.where('pID', isEqualTo: widget.propertyID).get();
+    QuerySnapshot taskQuerySnapshot = await collectionRef.where('pID', isEqualTo: widget.pModel.PropertyID).get();
 
     for (QueryDocumentSnapshot docTaskSnapshot in taskQuerySnapshot.docs) {
 
@@ -116,74 +161,18 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
   
   deleteProperty() async {
     try{
-      final docProperty = FirebaseFirestore.instance.collection('Property').doc(widget.propertyID.toString());
+      final docProperty = FirebaseFirestore.instance.collection('Property').doc(widget.pModel.PropertyID.toString());
       await docProperty.delete();
-
-      final docOwnerProperty = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.propertyID.toString());
+      final docOwnerProperty = FirebaseFirestore.instance.collection('OwnerProperty').doc(user?.uid.toString()).collection('OwnerPropertyIDs').doc(widget.pModel.PropertyID.toString());
       await docOwnerProperty.delete();
-
       await getRecentlyViewedUserID();
-
-      while(RecentlyViewedCount < _uRVIDs.length){
-        await FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').get().then(
-              (snapshot) => snapshot.docs.forEach((propertyID) async {
-            if (propertyID.exists) {
-              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
-                final RecentlyViewedPropertyID = FirebaseFirestore.instance.collection('RecentlyViewed').doc(_uRVIDs[RecentlyViewedCount]).collection('PropertyIDs').doc(widget.propertyID.toString());
-                await RecentlyViewedPropertyID.delete();
-              }
-            } else {
-              print("Ntg to see here");
-            }
-          }),
-        );
-
-        RecentlyViewedCount++;
-      }
-
+      await deleteFromRecentlyViewed();
       await getFavouriteUserID();
-
-      while(FavouriteCount < _uFIDs.length){
-        await FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').get().then(
-              (snapshot) => snapshot.docs.forEach((propertyID) async {
-            if (propertyID.exists) {
-              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
-                final FavouritePropertyID = FirebaseFirestore.instance.collection('Favourite').doc(_uFIDs[FavouriteCount]).collection('FavouriteProperty').doc(widget.propertyID.toString());
-                await FavouritePropertyID.delete();
-              }
-            } else {
-              print("Ntg to see here");
-            }
-          }),
-        );
-
-        FavouriteCount++;
-      }
-
+      await deleteFromFavourite();
       await deleteFromReviews();
-
       await deleteFromTaskAndTaskCompletion();
-
       await getRentUserID();
-
-      while(RentCount < _uRIDs.length){
-        await FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').get().then(
-              (snapshot) => snapshot.docs.forEach((propertyID) async {
-            if (propertyID.exists) {
-              if(propertyID.reference.id.toString() == widget.propertyID.toString()){
-                final RentPropertyID = FirebaseFirestore.instance.collection('Rent').doc(_uRIDs[RentCount]).collection('UnderProperty').doc(widget.propertyID.toString());
-                await RentPropertyID.delete();
-              }
-            } else {
-              print("Ntg to see here");
-            }
-          }),
-        );
-
-        FavouriteCount++;
-      }
-
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const OwnerHome(),),);
+      await deleteFromRent();
     } catch (e){
       print(e);
     }
@@ -220,22 +209,22 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
               heroTag: 'EditBtn',
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerEditProperty(
-                  propertyID: widget.propertyID.toString(),
-                  name: widget.name.toString(),
-                  date: widget.date.toString(),
-                  address: widget.address.toString(),
-                  amenities: widget.amenities.toString(),
-                  category: widget.category.toString(),
-                  facilities: widget.facilities.toString(),
-                  contact : widget.contact.toString(),
-                  image: widget.image.toString(),
-                  state: widget.state.toString(),
-                  salesType: widget.salesType.toString(),
-                  price: widget.price,
-                  lotSize: widget.lotSize,
-                  numOfVisits: widget.numOfVisits,
-                  beds: widget.beds,
-                  bathrooms: widget.bathrooms,
+                  propertyID: widget.pModel.PropertyID.toString(),
+                  name: widget.pModel.Name.toString(),
+                  date: widget.pModel.Date.toString(),
+                  address: widget.pModel.Address.toString(),
+                  amenities: widget.pModel.Amenities.toString(),
+                  category: widget.pModel.Category.toString(),
+                  facilities: widget.pModel.Facilities.toString(),
+                  contact : widget.pModel.Contact.toString(),
+                  image: widget.pModel.Image.toString(),
+                  state: widget.pModel.State.toString(),
+                  salesType: widget.pModel.SalesType.toString(),
+                  price: widget.pModel.Price,
+                  lotSize: widget.pModel.LotSize,
+                  numOfVisits: widget.pModel.NumOfVisits,
+                  beds: widget.pModel.Bedrooms,
+                  bathrooms: widget.pModel.Bathrooms,
                 ),),);
               },
               backgroundColor: Colors.pinkAccent,
@@ -261,7 +250,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
               height: 300,
               width: MediaQuery.of(context).size.width,
               child: Image.network(
-                widget.image,
+                widget.pModel.Image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -274,7 +263,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                       Row(
                         children: [
                           Text(
-                            widget.name,
+                            widget.pModel.Name,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -302,14 +291,14 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                                 width: 5,
                               ),
                               Text(
-                                widget.numOfVisits.toString(),
+                                widget.pModel.NumOfVisits.toString(),
                                 style: TextStyle(
                                     fontSize: 10, color: Colors.grey[500]),
                               ),
                             ],
                           ),
                           const SizedBox(height: 5,),
-                          RatingBarWidget(id: widget.propertyID),
+                          RatingBarWidget(id: widget.pModel.PropertyID),
                           const SizedBox(height: 5,),
                           Row(
                             children: [
@@ -319,7 +308,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                                 color: Colors.grey,
                               ),
                               Text(
-                                widget.address,
+                                widget.pModel.Address,
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey,
@@ -332,13 +321,13 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                       ElevatedButton(
                         onPressed: () {},
                         child: Container(
-                          child: widget.salesType == "Rent"
+                          child: widget.pModel.SalesType == "Rent"
                               ? Text(
-                            "RM${widget.price}/month",
+                            "RM${widget.pModel.Price}/month",
                             style: const TextStyle(fontSize: 12),
                           )
                               : Text(
-                            "RM${widget.price}",
+                            "RM${widget.pModel.Price}",
                             style: const TextStyle(fontSize: 12),
                           ),
                         ),
@@ -368,7 +357,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                                 size: 15,
                               ),
                               Text(
-                                "  ${widget.beds.toString()} Beds",
+                                "  ${widget.pModel.Bedrooms.toString()} Beds",
                                 style: const TextStyle(
                                   fontSize: 12,
                                 ),
@@ -394,7 +383,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                                 size: 15,
                               ),
                               Text(
-                                "  ${widget.bathrooms.toString()} Bathrooms",
+                                "  ${widget.pModel.Bathrooms.toString()} Bathrooms",
                                 style: const TextStyle(
                                   fontSize: 12,
                                 ),
@@ -420,7 +409,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                                 size: 15,
                               ),
                               Text(
-                                "  ${widget.lotSize} Sqft",
+                                "  ${widget.pModel.LotSize} Sqft",
                                 style: const TextStyle(
                                   fontSize: 12,
                                 ),
@@ -441,7 +430,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${widget.salesType} Details",
+                            "${widget.pModel.SalesType} Details",
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -449,7 +438,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                             height: 10,
                           ),
                           Text(
-                            "Amenities: ${widget.amenities}",
+                            "Amenities: ${widget.pModel.Amenities}",
                             style: const TextStyle(
                               fontSize: 12,
                             ),
@@ -458,7 +447,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                             height: 5,
                           ),
                           Text(
-                            "LotSize: ${widget.lotSize}",
+                            "LotSize: ${widget.pModel.LotSize}",
                             style: const TextStyle(
                               fontSize: 12,
                             ),
@@ -467,7 +456,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                             height: 5,
                           ),
                           Text(
-                            "Category: ${widget.category}",
+                            "Category: ${widget.pModel.Category}",
                             style: const TextStyle(
                               fontSize: 12,
                             ),
@@ -476,7 +465,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                             height: 5,
                           ),
                           Text(
-                            "Facilities: ${widget.facilities}",
+                            "Facilities: ${widget.pModel.Facilities}",
                             style: const TextStyle(
                               fontSize: 12,
                             ),
@@ -485,7 +474,7 @@ class _OwnerViewPropertyDetailsState extends State<OwnerViewPropertyDetails> {
                             height: 15,
                           ),
                           Text(
-                            "Feel free to contact me at ${widget.contact} for more information!",
+                            "Feel free to contact me at ${widget.pModel.Contact} for more information!",
                             style: const TextStyle(
                               fontSize: 12,
                             ),

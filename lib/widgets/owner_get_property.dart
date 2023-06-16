@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:projectjen/model/property_list_model.dart';
 import 'package:projectjen/pages/owner/owner_view_property_details.dart';
 
 class GetOwnerProperty extends StatelessWidget {
@@ -23,24 +24,27 @@ class GetOwnerProperty extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerViewPropertyDetails(
-                  propertyID: data['PropertyID'],
-                  name: data['Name'],
-                  date: data['Date'],
-                  address: data['Address'],
-                  amenities: data['Amenities'],
-                  category: data['Category'],
-                  facilities: data['Facilities'],
-                  contact : data['Contact'],
-                  image: data['Image'],
-                  state: data['State'],
-                  salesType: data['SalesType'],
-                  price: data['Price'],
-                  lotSize: data['LotSize'],
-                  numOfVisits: data['NumOfVisits'],
-                  beds: data['Beds'],
-                  bathrooms: data['Bathrooms'],
-                ),),);
+                PropertyListModel _propertyListModel = PropertyListModel(
+                  PropertyID: data['PropertyID'],
+                  Name: data['Name'],
+                  Date: data['Date'],
+                  Address: data['Address'],
+                  Amenities: data['Amenities'],
+                  Category: data['Category'],
+                  Facilities: data['Facilities'],
+                  Contact: data['Contact'],
+                  Image: data['Image'],
+                  State: data['State'],
+                  SalesType: data['SalesType'],
+                  Price: data['Price'],
+                  LotSize: data['LotSize'],
+                  NumOfVisits: data['NumOfVisits'],
+                  Bedrooms: data['Beds'],
+                  Bathrooms: data['Bathrooms'],
+                  OID: data['OID'],
+                );
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OwnerViewPropertyDetails(pModel: _propertyListModel,),),);
               },
               child: Card(
                 elevation: 1,

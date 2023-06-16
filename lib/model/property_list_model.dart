@@ -1,41 +1,41 @@
 class PropertyListModel {
-  final String propertyID;
-  final String address;
-  final String state;
-  final String amenities;
-  final int bathrooms;
-  final int bedrooms;
-  final String category;
-  final String facilities;
-  final int lotSize;
-  final String image;
-  final int price;
-  final String salesType;
-  final String OwnerID;
-  final String date;
-  final String contact;
-  final String name;
-  final String numOfVisits;
+  final String PropertyID;
+  final String Address;
+  final String State;
+  final String Amenities;
+  final int Bathrooms;
+  final int Bedrooms;
+  final String Category;
+  final String Facilities;
+  final int LotSize;
+  final String Image;
+  final int Price;
+  final String SalesType;
+  final String OID;
+  final String Date;
+  final String Contact;
+  final String Name;
+  final int NumOfVisits;
 
   PropertyListModel(
       {
-        required this.amenities,
-        required this.bathrooms,
-        required this.bedrooms,
-        required this.category,
-        required this.facilities,
-        required this.lotSize,
-        required this.image,
-        required this.address,
-        required this.price,
-        required this.salesType,
-        required this.numOfVisits,
-        required this.state,
-        required this.contact,
-        required this.propertyID,
-        required this.name,
-        required this.date,
-        required this.OwnerID,
+        required this.Amenities,
+        required this.Bathrooms,
+        required this.Bedrooms,
+        required this.Category,
+        required this.Facilities,
+        required this.LotSize,
+        required this.Image,
+        required this.Address,
+        required this.Price,
+        required this.SalesType,
+        required this.NumOfVisits,
+        required this.State,
+        required this.Contact,
+        required this.PropertyID,
+        required this.Name,
+        required this.Date,
+        required this.OID,
       });
 
 }
