@@ -1,16 +1,12 @@
 # projectjen
 
-A new Flutter project.
+A Flutter Project by 6002CEM Group 4.
 
-## Getting Started
+## Brief
 
-This project is a starting point for a Flutter application.
+ProjectJen is an android application designed to simplify the real estate journey for users. It offers a user-friendly interface and a range of features for buying, renting, and selling properties. Upon logging in, users are greeted with a Home Page displaying recent property listings. The app provides filtering and search options to narrow down the search based on specific criteria. The Property Details Page offers information about properties, including images, pricing, and facilities. Users can contact property owners directly via WhatsApp. Additional features include a Favorite Page, Settings Page, and registration and login options. For property owners, there's an Owner's Page to post properties, monitor performance, and manage tasks. ProjectJen aims to provide a hassle-free experience in property listing and management.
 
-A few resources to get you started if this is your first Flutter project:
+##Youtube Demo Link
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://youtu.be/oBBYvTzsnE0
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
