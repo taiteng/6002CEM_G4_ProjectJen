@@ -25,8 +25,8 @@ class _WhatsappWidgetState extends State<WhatsappWidget> {
     return InkWell(
       onTap: () {
         String message =
-            "${widget.imageURL}\nHi, I am interested in ${widget.name} which is for ${widget.salesType} at RM${widget.price}.";
-        launchWhatsApp(widget.contact.toString(), message);
+            "${widget.imageURL} \n Hi, I am interested in ${widget.name} which is for ${widget.salesType} at RM${widget.price}. ";
+        launchWhatsApp(widget.contact.toString(), Uri.encodeComponent(message));
       },
       child: IgnorePointer(
         child: SizedBox(
